@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Location {
+  id               BigInt @id @default(autoincrement())
+  name             String @unique
+  status           Boolean
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  assets           Asset[]
+  instructors      User[]
+  events           Event[]
+}
+
+model LicenseType {
+  id            BigInt  @id @default(autoincrement())
+  name          String  @unique
+  color         String @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  assets        LicenseTypeOnAsset[]
+}
+
+model Asset {
+  id            BigInt  @id @default(autoincrement())
+  name          String  @unique
+  plate         String  @unique
+  status        Boolean
+  locationId    BigInt  @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  licenseTypes  LicenseTypeOnAsset[]
+  location      Location @relation(fields: [locationId], references: [id])
+}
+
+model LicenseTypeOnAsset {
+  licenseType       LicenseType @relation(fields: [licenseTypeId], references: [id])
+  licenseTypeId     BigInt @unique
+  asset   Asset @relation(fields: [assetId], references: [id])
+  assetId     BigInt @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@id([licenseTypeId, assetId])
+}
+
+model User {
+  id            BigInt @id @default(autoincrement())
+  authId        String @unique
+  name          String
+  color         String @unique
+  locationId    BigInt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  eventsAsInstructor Event[] @relation("InstructorRelation")
+  eventsAsCreator    Event[] @relation("CreatorRelation")
+  access        UserAccess?
+  location      Location @relation(fields: [locationId], references: [id])
+  logs          Log[]
+}
+
+model UserAccess {
+  id            BigInt @id @default(autoincrement())
+  admin         Boolean @default(false)
+  instructor    Boolean @default(false)
+  receptionist  Boolean @default(false)
+  userId        BigInt @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id               BigInt @id @default(autoincrement())
+  customerName     String
+  customerId       String
+  phone            String
+  price            Float?
+  cashAdvance      Float?
+  date             DateTime
+  endDate          DateTime
+  customerPass     Boolean @default(false)
+  paid             Boolean @default(false)
+  customerPaidDate DateTime
+  status           String
+  locationId       BigInt @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  instructor       User?  @relation("InstructorRelation", fields: [instructorId], references: [id])
+  instructorId     BigInt @unique
+  createdBy        User?  @relation("CreatorRelation", fields: [createdById], references: [id])
+  createdById      BigInt @unique
+  location         Location @relation(fields: [locationId], references: [id])
+
+  @@index(fields: [date, endDate, instructorId, createdById])
+}
+
+model Log {
+  id            BigInt   @id @default(autoincrement())
+  modelName     String
+  modelId       BigInt
+  action        String
+  changes       String
+  changedById   BigInt
+  changedBy     User     @relation(fields: [changedById], references: [id])
+  createdAt     DateTime @default(now())
+}
