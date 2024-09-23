@@ -1,0 +1,18 @@
+@import url("@fontsource-variable/montserrat");
+@import url("@fontsource-variable/montserrat/wght-italic.css");
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-family: 'Montserrat Variable', sans-serif;
+    box-sizing: border-box;
+}
+
+button:focus, button:focus-visible, svg:focus, svg:focus-visible {
+    outline: none;
+    --tw-ring-color: none !important;
+    --tw-ring-width: 0;
+}
