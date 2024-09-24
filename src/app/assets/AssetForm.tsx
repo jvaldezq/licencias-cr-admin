@@ -3,28 +3,32 @@
 import {useCallback, useState} from "react";
 import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
 import {FormInput} from "@/components/Forms/Input/FormInput";
-import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
 import {Button} from "@/components/ui/button";
 import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
-import {useCreateMutation, useGetLocationById, useUpdateMutation} from "@/app/locations/clientService";
+import {useCreateMutation, useGetAssetById, useGetLocationList, useUpdateMutation} from "@/app/assets/clientService";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
+import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
+import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {EditIcon} from "@/assets/icons/EditIcon";
 
-export interface LocationForm {
+export interface AssetForm {
     name: string;
+    plate: string;
     status: boolean;
+    locationId: number;
 }
 
-export interface FormProps extends FormRenderProps<LocationForm> {
+export interface FormProps extends FormRenderProps<AssetForm> {
 }
 
 const MainForm = (props: FormProps) => {
     const {handleSubmit} = props;
+    const {data, isLoading} = useGetLocationList();
 
-    return <form id="location-form" onSubmit={handleSubmit} className="flex flex-col gap-6 py-4">
+    return <form id="asset-form" onSubmit={handleSubmit} className="flex flex-col gap-6 py-4">
         <Field
             name="name"
             component={FormInput as unknown as SupportedInputs}
@@ -32,6 +36,21 @@ const MainForm = (props: FormProps) => {
             label='Nombre'
             autoFocus={true}
             validate={value => (value ? undefined : 'Requerido')}
+        />
+        <Field
+            name="plate"
+            component={FormInput as unknown as SupportedInputs}
+            placeholder='Placa'
+            label='Placa'
+            validate={value => (value ? undefined : 'Requerido')}
+        />
+        <Field
+            name="locationId"
+            component={FormDropdown as unknown as SupportedInputs}
+            placeholder='Sede'
+            label='Sede'
+            options={data || []}
+            isLoading={isLoading}
         />
         <Field
             name="status"
@@ -42,12 +61,12 @@ const MainForm = (props: FormProps) => {
     </form>
 }
 
-export function CreateLocation() {
+function CreateAsset() {
     const [open, setOpen] = useState(false);
     const {mutateAsync, isLoading} = useCreateMutation();
     const router = useRouter();
 
-    const onSubmit = useCallback((data: LocationForm) => {
+    const onSubmit = useCallback((data: AssetForm) => {
         mutateAsync(data).then(() => {
             router.refresh();
             setOpen(false);
@@ -57,19 +76,18 @@ export function CreateLocation() {
     return (<Dialog
         open={open}
         onOpenChange={setOpen}
-        title="Creación de Sede"
+        title="Creación de Vehículo"
         footer={isLoading ? null : <Button
-            type="submit" form="location-form"
+            type="submit" form="asset-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
         trigger={<Button
             className="bg-secondary text-white rounded-3xl animate-fade-left animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
             <Loader/>
-            <p className="text-sm">Creando una nueva Sede</p>
+            <p className="text-sm">Creando una nuevo Vehículo</p>
         </div> : <Form
             initialValues={{
-                name: undefined,
-                status: true
+                name: undefined, plate: undefined, status: true, locationId: undefined
             }}
             onSubmit={onSubmit}
             validateOnBlur={true}
@@ -79,13 +97,13 @@ export function CreateLocation() {
     </Dialog>)
 }
 
-export function EditLocation({id}: { id: number }) {
+function EditAsset({id}: { id: number }) {
     const [open, setOpen] = useState(false);
     const {mutateAsync, isLoading} = useUpdateMutation();
-    const {data} = useGetLocationById(id);
+    const {data} = useGetAssetById(id);
     const router = useRouter();
 
-    const onSubmit = useCallback((data: LocationForm) => {
+    const onSubmit = useCallback((data: AssetForm) => {
         mutateAsync(data).then(() => {
             router.refresh();
             setOpen(false);
@@ -99,14 +117,14 @@ export function EditLocation({id}: { id: number }) {
     return (<Dialog
         open={open}
         onOpenChange={setOpen}
-        title="Creación de Sede"
+        title="Creación de Vehículo"
         footer={isLoading ? null : <Button
-            type="submit" form="location-form"
+            type="submit" form="asset-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
         trigger={<Button variant="outline"><EditIcon /></Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
             <Loader/>
-            <p className="text-sm">Creando una nueva Sede</p>
+            <p className="text-sm">Creando una nuevo Vehículo</p>
         </div> : <Form
             initialValues={initialValues}
             onSubmit={onSubmit}
@@ -118,7 +136,7 @@ export function EditLocation({id}: { id: number }) {
 }
 
 
-export function CreateLocationWrapper() {
+export function CreateAssetWrapper() {
     const queryClient = new QueryClient({
         queryCache: new QueryCache({
             onError: error => {
@@ -128,11 +146,11 @@ export function CreateLocationWrapper() {
     });
 
     return <QueryClientProvider client={queryClient}>
-        <CreateLocation/>
+        <CreateAsset/>
     </QueryClientProvider>
 }
 
-export function EditLocationWrapper({id}: { id: number }) {
+export function EditAssetWrapper({id}: { id: number }) {
     const queryClient = new QueryClient({
         queryCache: new QueryCache({
             onError: error => {
@@ -142,6 +160,6 @@ export function EditLocationWrapper({id}: { id: number }) {
     });
 
     return <QueryClientProvider client={queryClient}>
-        <EditLocation id={id}/>
+        <EditAsset id={id}/>
     </QueryClientProvider>
 }

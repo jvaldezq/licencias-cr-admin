@@ -11,7 +11,7 @@ export const serverApi = async (props: ServerApiProps) => {
         const {path, params, body, method = 'GET', revalidate = 60} = props;
         const parameters = params ? `?${new URLSearchParams(params).toString()}` : '';
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}${parameters}`, {
-            method, next: {revalidate}, body: JSON.stringify(body)
+            method, next: {revalidate}, body: JSON.stringify(body),
         });
 
         if (!res.ok) {

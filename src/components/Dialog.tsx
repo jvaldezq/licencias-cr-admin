@@ -9,11 +9,13 @@ interface Props {
     children?: ReactNode;
     title?: string;
     description?: string;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 export function Dialog(props: Props) {
-    const {trigger, title, description, footer, children} = props;
-    return (<CnDialog>
+    const {trigger, title, description, footer, children, open, onOpenChange} = props;
+    return (<CnDialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
                 {trigger}
             </DialogTrigger>
@@ -27,7 +29,7 @@ export function Dialog(props: Props) {
                 {children}
                 <DialogFooter className="flex gap-4">
                     <DialogClose>Cancelar</DialogClose>
-                    <DialogClose>{footer}</DialogClose>
+                    {footer}
                 </DialogFooter>
             </DialogContent>
         </CnDialog>)

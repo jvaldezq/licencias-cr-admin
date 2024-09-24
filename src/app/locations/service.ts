@@ -1,5 +1,5 @@
 import {serverApi} from "@/lib/serverApi";
-import {ILocation, IUser} from "@/lib/definitions";
+import {ILocation} from "@/lib/definitions";
 
 export const fetchLocations = async (): Promise<ILocation[]> => {
     try {

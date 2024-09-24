@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import {NextResponse} from 'next/server';
+import {revalidatePath} from 'next/cache'
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -9,17 +10,63 @@ BigInt.prototype.toJSON = function () {
 
 export async function GET(request: Request) {
     try {
-        const user = await prisma.location.findMany({
-            select: {
-                id: true,
-                name: true,
-                status: true,
-            },
-        });
+        const {searchParams} = new URL(request.url);
+        const listParams = searchParams.get('list');
 
-        return NextResponse.json(user, {status: 200});
+        if (listParams) {
+            const location = await prisma.location.findMany({
+                select: {
+                    id: true, name: true,
+                }, where: {
+                    status: {
+                        equals: true
+                    }
+                }
+            });
+
+            return NextResponse.json(location, {status: 200});
+        } else {
+            const location = await prisma.location.findMany({
+                select: {
+                    id: true, name: true, status: true,
+                },
+            });
+
+            return NextResponse.json(location, {status: 200});
+        }
     } catch (error) {
-        console.log('Error fetching locations', error);
+        console.error('Error fetching locations', error);
+        return NextResponse.json({error}, {status: 500});
+    }
+}
+
+export async function POST(request: Request) {
+    try {
+        const body = await request.json();
+        const location = await prisma.location.create({
+            data: body
+        });
+        revalidatePath('/locations', 'page')
+        return NextResponse.json(location, {status: 200});
+    } catch (error) {
+        console.error('Creating location', error);
+        return NextResponse.json({error}, {status: 500});
+    }
+}
+
+export async function PATCH(request: Request) {
+    try {
+        const body = await request.json();
+        const location = await prisma.location.update({
+            where: {
+                id: body.id
+            },
+            data: body
+        });
+        revalidatePath('/locations', 'page')
+        return NextResponse.json(location, {status: 200});
+    } catch (error) {
+        console.error('Updating location', error);
         return NextResponse.json({error}, {status: 500});
     }
 }

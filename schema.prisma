@@ -33,7 +33,7 @@ model Asset {
   name          String  @unique
   plate         String  @unique
   status        Boolean
-  locationId    BigInt  @unique
+  locationId    BigInt
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   licenseTypes  LicenseTypeOnAsset[]
@@ -42,7 +42,7 @@ model Asset {
 
 model LicenseTypeOnAsset {
   licenseType       LicenseType @relation(fields: [licenseTypeId], references: [id])
-  licenseTypeId     BigInt @unique
+  licenseTypeId     BigInt
   asset   Asset @relation(fields: [assetId], references: [id])
   assetId     BigInt @unique
   createdAt     DateTime  @default(now())
@@ -90,13 +90,13 @@ model Event {
   paid             Boolean @default(false)
   customerPaidDate DateTime
   status           String
-  locationId       BigInt @unique
+  locationId       BigInt
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   instructor       User?  @relation("InstructorRelation", fields: [instructorId], references: [id])
-  instructorId     BigInt @unique
+  instructorId     BigInt
   createdBy        User?  @relation("CreatorRelation", fields: [createdById], references: [id])
-  createdById      BigInt @unique
+  createdById      BigInt
   location         Location @relation(fields: [locationId], references: [id])
 
   @@index(fields: [date, endDate, instructorId, createdById])

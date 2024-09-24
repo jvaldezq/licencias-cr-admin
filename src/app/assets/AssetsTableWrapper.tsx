@@ -2,13 +2,11 @@
 
 import {ColumnDef} from "@tanstack/react-table";
 import {Button} from "@/components/ui/button";
-import {ArrowUpDown, MoreHorizontal} from "lucide-react";
+import {ArrowUpDown} from "lucide-react";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
-import {
-    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import {IAsset, ILocation} from "@/lib/definitions";
+import {EditAssetWrapper} from "@/app/assets/AssetForm";
 
 interface Props {
     data: IAsset[]
@@ -70,20 +68,7 @@ const columns: ColumnDef<IAsset>[] = [{
         Acciones
         </Button>)
     }, enableHiding: false, cell: ({row}) => {
-        return (<DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4"/>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                >
-                    Editar
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>)
+        return <EditAssetWrapper id={row.original.id} />
     },
 },]
 

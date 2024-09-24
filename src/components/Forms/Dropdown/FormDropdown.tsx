@@ -6,14 +6,16 @@ import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import {Button} from "@/components/ui/button";
 import {useMediaQuery} from "@/hooks/use-media-query";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
+import {InputLoader} from "@/components/InputLoader";
 
 interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
     options: {
         name: string; id: string
     }[];
+    isLoading?: boolean;
 }
 
-export const Dropdown = (props: IProps) => {
+export const FormDropdown = (props: IProps) => {
     const {
         className,
         label,
@@ -27,13 +29,14 @@ export const Dropdown = (props: IProps) => {
         wrapperClassName,
         childrenClassName,
         options,
+        isLoading,
         ...rest
     } = props;
     const [open, setOpen] = useState(false)
     const [search, setSearch] = useState('')
     const {onChange, value} = input;
     const isDesktop = useMediaQuery("(min-width: 768px)")
-    const valueLabel = options?.find(option => option?.id === value)?.name
+    const valueLabel = options?.find(option => option?.id == value)?.name
 
     return <InputWrapper
         name={name}
@@ -46,10 +49,11 @@ export const Dropdown = (props: IProps) => {
         meta={meta}>
         {isDesktop ? <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline"
-                        className="w-full justify-start text-tertiary text-xs overflow-hidden">
+                {isLoading ? <InputLoader/> : <Button variant="outline"
+                                                       className="w-full justify-start text-tertiary text-xs overflow-hidden">
                     {valueLabel ? valueLabel : placeholder}
-                </Button>
+                </Button>}
+
             </PopoverTrigger>
             <PopoverContent className="w-fit p-0" align="start">
                 <Command>
@@ -75,10 +79,10 @@ export const Dropdown = (props: IProps) => {
             </PopoverContent>
         </Popover> : <Drawer open={open} onOpenChange={setOpen} fadeFromIndex={undefined} snapPoints={undefined}>
             <DrawerTrigger asChild>
-                <Button variant="outline"
-                        className="justify-start w-full text-tertiary text-xs">
+                {isLoading ? <InputLoader/> : <Button variant="outline"
+                                                       className="justify-start w-full text-tertiary text-xs">
                     {valueLabel ? valueLabel : placeholder}
-                </Button>
+                </Button>}
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mt-4 border-t">

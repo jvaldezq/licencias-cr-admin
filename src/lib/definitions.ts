@@ -1,5 +1,5 @@
 export interface ILocation {
-    id: bigint;
+    id: number;
     name: string;
     status: boolean;
     createdAt: Date;
@@ -10,7 +10,7 @@ export interface ILocation {
 }
 
 export interface ILicenseType {
-    id: bigint;
+    id: number;
     name: string;
     color: string;
     createdAt: Date;
@@ -19,11 +19,11 @@ export interface ILicenseType {
 }
 
 export interface IAsset {
-    id: bigint;
+    id: number;
     name: string;
     plate: string;
     status: boolean;
-    locationId: bigint;
+    locationId: number;
     createdAt: Date;
     updatedAt: Date;
     licenseTypes: ILicenseTypeOnAsset[];
@@ -32,19 +32,19 @@ export interface IAsset {
 
 export interface ILicenseTypeOnAsset {
     licenseType: ILicenseType;
-    licenseTypeId: bigint;
+    licenseTypeId: number;
     asset: IAsset;
-    assetId: bigint;
+    assetId: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
 export interface IUser {
-    id: bigint;
+    id: number;
     authId: string;
     name: string;
     color: string;
-    locationId: bigint;
+    locationId: number;
     createdAt: Date;
     updatedAt: Date;
     eventsAsInstructor: IEvent[];
@@ -55,18 +55,18 @@ export interface IUser {
 }
 
 export interface IUserAccess {
-    id: bigint;
+    id: number;
     admin: boolean;
     instructor: boolean;
     receptionist: boolean;
-    userId: bigint;
+    userId: number;
     createdAt: Date;
     updatedAt: Date;
     user: IUser;
 }
 
 export interface IEvent {
-    id: bigint;
+    id: number;
     customerName: string;
     customerId: string;
     phone: string;
@@ -78,23 +78,23 @@ export interface IEvent {
     paid: boolean;
     customerPaidDate: Date;
     status: string;
-    locationId: bigint;
+    locationId: number;
     createdAt: Date;
     updatedAt: Date;
     instructor?: IUser;
-    instructorId: bigint;
+    instructorId: number;
     createdBy?: IUser;
-    createdById: bigint;
+    createdById: number;
     location: ILocation;
 }
 
 export interface Log {
-    id: bigint;
+    id: number;
     modelName: string;
-    modelId: bigint;
+    modelId: number;
     action: string;
     changes: string;
-    changedById: bigint;
+    changedById: number;
     changedBy: IUser;
     createdAt: Date;
 }

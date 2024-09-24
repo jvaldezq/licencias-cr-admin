@@ -17,7 +17,6 @@ import {
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
-import {ILicenseType, ILocation} from "@/lib/definitions";
 
 
 interface Props<T> {
@@ -36,13 +35,13 @@ export function DataTable<T>(props: Props<T>) {
         data,
         columns,
         onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
+        // onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        // getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        // getFilteredRowModel: getFilteredRowModel(),
+        // onColumnVisibilityChange: setColumnVisibility,
+        // onRowSelectionChange: setRowSelection,
         state: {
             sorting, columnFilters, columnVisibility, rowSelection,
         },
