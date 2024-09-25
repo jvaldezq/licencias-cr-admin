@@ -13,6 +13,7 @@ interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'ch
         name: string; id: string
     }[];
     isLoading?: boolean;
+    disabled?: boolean;
 }
 
 export const FormDropdown = (props: IProps) => {
@@ -30,6 +31,7 @@ export const FormDropdown = (props: IProps) => {
         childrenClassName,
         options,
         isLoading,
+        disabled,
         ...rest
     } = props;
     const [open, setOpen] = useState(false)
@@ -49,8 +51,8 @@ export const FormDropdown = (props: IProps) => {
         meta={meta}>
         {isDesktop ? <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                {isLoading ? <InputLoader/> : <Button variant="outline"
-                                                       className="w-full justify-start text-tertiary text-xs overflow-hidden">
+                {isLoading ? <InputLoader/> : <Button disabled={disabled} variant="outline"
+                                                      className="w-full justify-start text-tertiary text-xs overflow-hidden">
                     {valueLabel ? valueLabel : placeholder}
                 </Button>}
 
@@ -79,8 +81,8 @@ export const FormDropdown = (props: IProps) => {
             </PopoverContent>
         </Popover> : <Drawer open={open} onOpenChange={setOpen} fadeFromIndex={undefined} snapPoints={undefined}>
             <DrawerTrigger asChild>
-                {isLoading ? <InputLoader/> : <Button variant="outline"
-                                                       className="justify-start w-full text-tertiary text-xs">
+                {isLoading ? <InputLoader/> : <Button disabled={disabled} variant="outline"
+                                                      className="justify-start w-full text-tertiary text-xs">
                     {valueLabel ? valueLabel : placeholder}
                 </Button>}
             </DrawerTrigger>

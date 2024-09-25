@@ -63,7 +63,7 @@ export function CreateLicense() {
         title="Creación de Licencia"
         footer={isLoading ? null : <Button
             type="submit" form="license-form"
-            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
+            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}
         trigger={<Button
             className="bg-secondary text-white rounded-3xl animate-fade-left animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
@@ -74,7 +74,6 @@ export function CreateLicense() {
                 name: undefined, color: undefined
             }}
             onSubmit={onSubmit}
-            validateOnBlur={true}
         >
             {(formProps) => <MainForm {...formProps} />}
         </Form>}
@@ -104,7 +103,7 @@ export function EditLicense({id}: { id: number }) {
         title="Creación de Licencia"
         footer={isLoading ? null : <Button
             type="submit" form="license-form"
-            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
+            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Editar</Button>}
         trigger={<Button variant="outline"><EditIcon/></Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
             <Loader/>
@@ -112,7 +111,6 @@ export function EditLicense({id}: { id: number }) {
         </div> : <Form
             initialValues={initialValues}
             onSubmit={onSubmit}
-            validateOnBlur={true}
         >
             {(formProps) => <MainForm {...formProps} />}
         </Form>}

@@ -28,7 +28,7 @@ const MainForm = (props: FormProps) => {
     const {handleSubmit} = props;
     const {data, isLoading} = useGetLocationList();
 
-    return <form id="asset-form" onSubmit={handleSubmit} className="flex flex-col gap-6 py-4">
+    return <form id="asset-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
             name="name"
             component={FormInput as unknown as SupportedInputs}
@@ -79,7 +79,7 @@ function CreateAsset() {
         title="Creación de Vehículo"
         footer={isLoading ? null : <Button
             type="submit" form="asset-form"
-            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
+            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}
         trigger={<Button
             className="bg-secondary text-white rounded-3xl animate-fade-left animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
@@ -90,7 +90,6 @@ function CreateAsset() {
                 name: undefined, plate: undefined, status: true, locationId: undefined
             }}
             onSubmit={onSubmit}
-            validateOnBlur={true}
         >
             {(formProps) => <MainForm {...formProps} />}
         </Form>}
@@ -120,7 +119,7 @@ function EditAsset({id}: { id: number }) {
         title="Creación de Vehículo"
         footer={isLoading ? null : <Button
             type="submit" form="asset-form"
-            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
+            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Editar</Button>}
         trigger={<Button variant="outline"><EditIcon /></Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
             <Loader/>
@@ -128,7 +127,6 @@ function EditAsset({id}: { id: number }) {
         </div> : <Form
             initialValues={initialValues}
             onSubmit={onSubmit}
-            validateOnBlur={true}
         >
             {(formProps) => <MainForm {...formProps} />}
         </Form>}
