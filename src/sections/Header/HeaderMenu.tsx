@@ -10,6 +10,7 @@ import {LocationsIcon} from "@/assets/icons/LocationsIcon";
 import {CarIcon} from "@/assets/icons/CarIcon";
 import {LicenseIcon} from "@/assets/icons/LicenseIcon";
 import {CalendarIcon} from "@/assets/icons/CalendarIcon";
+import {PeopleIcon} from "@/assets/icons/PeopleIcon";
 
 
 interface Props {
@@ -56,6 +57,13 @@ export const HeaderMenu = (props: Props) => {
                             className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/licenses' && isSelected}`}
                             key="licenses" href="/licenses">
                             <LicenseIcon/> Licencias (Tipos)
+                        </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <Link
+                            className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/people' && isSelected}`}
+                            key="people" href="/people">
+                            <PeopleIcon/> Planilla
                         </Link>
                     </SheetClose>
                 </>}
