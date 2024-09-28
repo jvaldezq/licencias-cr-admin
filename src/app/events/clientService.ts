@@ -1,7 +1,7 @@
 import {IEvent, ILocation, IUser} from "@/lib/definitions";
 import {clientApi} from "@/lib/clientApi";
 import {useMutation, useQuery} from "react-query";
-import {EventForm} from "@/app/EventsForm";
+import {EventForm} from "@/app/events/EventsForm";
 
 const createEvent = async (data: EventForm): Promise<IEvent> => {
     const newListing = await clientApi.post('/event', data);

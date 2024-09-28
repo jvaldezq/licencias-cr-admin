@@ -12,12 +12,24 @@ import {
     useCreateMutation,
     useGetInstructorListByLocationId,
     useGetLocationList,
-} from "@/app/clientService";
+} from "@/app/events/clientService";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 
+const EVENT_TYPES = [
+    {
+        name: 'Clase de manejo',
+        id: '1'
+    },
+    {
+        name: 'Prueba de manejo',
+        id: '2'
+    },
+]
+
 export interface EventForm {
+    type: string;
     customerName: string;
     customerId: string;
     phone: string;
@@ -43,9 +55,11 @@ const MainForm = (props: FormProps) => {
 
     const {handleSubmit} = props;
 
-    console.log('hello', props);
+    console.log('hello', instructors);
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
+        <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion del
+            cliente</p>
         <Field
             name="customerName"
             component={FormInput as unknown as SupportedInputs}
@@ -59,7 +73,6 @@ const MainForm = (props: FormProps) => {
             component={FormInput as unknown as SupportedInputs}
             placeholder='Teléfono'
             label='Teléfono'
-            autoFocus={true}
             validate={value => (value ? undefined : 'Requerido')}
         />
         <Field
@@ -67,24 +80,15 @@ const MainForm = (props: FormProps) => {
             component={FormInput as unknown as SupportedInputs}
             placeholder='Cliente cédula'
             label='Cliente cédula'
-            autoFocus={true}
             validate={value => (value ? undefined : 'Requerido')}
         />
+        <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de cita</p>
         <Field
-            name="price"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Precio'
-            label='Precio'
-            autoFocus={true}
-            validate={value => (value ? undefined : 'Requerido')}
-        />
-        <Field
-            name="date"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Fecha y hora'
-            label='Fecha y hora'
-            autoFocus={true}
-            validate={value => (value ? undefined : 'Requerido')}
+            name="type"
+            component={FormDropdown as unknown as SupportedInputs}
+            placeholder='Tipo'
+            label='Tipo'
+            options={EVENT_TYPES}
         />
         <Field
             name="locationId"
@@ -95,6 +99,25 @@ const MainForm = (props: FormProps) => {
             isLoading={isLocationsLoading}
         />
         <Field
+            name="date"
+            component={FormInput as unknown as SupportedInputs}
+            type="datetime-local"
+            placeholder='Fecha y hora'
+            label='Fecha y hora'
+            validate={value => (value ? undefined : 'Requerido')}
+            wrapperClassName="col-span-2"
+        />
+        <Field
+            name="date"
+            component={FormInput as unknown as SupportedInputs}
+            type="time"
+            placeholder='Hora de finalización'
+            label='Hora de finalización'
+            min="10:00" max="13:00"
+            validate={value => (value ? undefined : 'Requerido')}
+            wrapperClassName="col-span-2"
+        />
+        <Field
             name="instructorId"
             component={FormDropdown as unknown as SupportedInputs}
             placeholder='Instructor'
@@ -102,6 +125,15 @@ const MainForm = (props: FormProps) => {
             options={instructors || []}
             isLoading={isInstructorsLoading}
             disabled={!instructors}
+        />
+
+        <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de precio</p>
+        <Field
+            name="price"
+            component={FormInput as unknown as SupportedInputs}
+            placeholder='Precio'
+            label='Precio'
+            validate={value => (value ? undefined : 'Requerido')}
         />
         <Field
             name="paid"
@@ -135,9 +167,10 @@ export function CreateEvent() {
             className="bg-secondary text-white rounded-3xl animate-fade-left animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}>
         {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
             <Loader/>
-            <p className="text-sm">Creando una nueva Evento</p>
+            <p className="text-sm">Creando una nueva Cita</p>
         </div> : <Form
             initialValues={{
+                type: undefined,
                 customerName: undefined,
                 customerId: undefined,
                 phone: undefined,

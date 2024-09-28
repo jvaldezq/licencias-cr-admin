@@ -31,9 +31,9 @@ export const HeaderMenu = (props: Props) => {
             </SheetHeader>
             <div className="grow flex flex-col gap-4">
                 <SheetClose asChild>
-                    <Link className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/' && isSelected}`}
-                          key="calendar" href="/">
-                        <CalendarIcon/> Calendario
+                    <Link className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/events' && isSelected}`}
+                          key="calendar" href="/events">
+                        <CalendarIcon/> Citas
                     </Link>
                 </SheetClose>
                 {user?.access?.admin && <>
@@ -69,10 +69,10 @@ export const HeaderMenu = (props: Props) => {
                 </>}
             </div>
             <SheetFooter>
-                <Link className="font-light text-sm text-primary/[0.8] hover:text-primary" key="logout"
+                <a className="font-light text-sm text-primary/[0.8] hover:text-primary" key="logout"
                       href="/api/auth/logout">
                     Logout
-                </Link>
+                </a>
             </SheetFooter>
         </SheetContent>
     </Sheet>

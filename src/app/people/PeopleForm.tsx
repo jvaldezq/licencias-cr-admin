@@ -38,7 +38,6 @@ const MainForm = (props: FormProps) => {
             component={FormInput as unknown as SupportedInputs}
             placeholder='Color'
             label='Color'
-            autoFocus={true}
             type="color"
             validate={value => (value ? undefined : 'Requerido')}
         />

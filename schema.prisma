@@ -98,8 +98,19 @@ model Event {
   createdBy        User?  @relation("CreatorRelation", fields: [createdById], references: [id])
   createdById      BigInt
   location         Location @relation(fields: [locationId], references: [id])
+  typeId           BigInt
+  type             EventType @relation(fields: [typeId], references: [id])
 
   @@index(fields: [date, endDate, instructorId, createdById])
+}
+
+model EventType {
+  id            BigInt  @id @default(autoincrement())
+  name          String  @unique
+  color         String @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  events        Event[]
 }
 
 model Log {

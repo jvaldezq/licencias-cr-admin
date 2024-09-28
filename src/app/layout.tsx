@@ -1,7 +1,7 @@
 import type {Metadata, Viewport} from "next";
 import "@/styles/globals.css";
 import {UserProvider} from "@auth0/nextjs-auth0/client";
-import Header from "@/sections/Header/Header";
+import Header from "@/components/Header/Header";
 
 export const metadata: Metadata = {
     title: "Licencia Costa Rica", description: "Plataforma administrativa para la gestión de licencias de conducir en Costa Rica",

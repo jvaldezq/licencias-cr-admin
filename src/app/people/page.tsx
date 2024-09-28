@@ -8,7 +8,6 @@ import {fetchUsers} from "@/app/people/service";
 export default async function Home() {
     const data = await fetchUsers();
 
-    console.log(data);
     return (<main className="max-w-screen-2xl mx-auto px-6 pt-24">
         <Suspense fallback={<PageSkeleton/>}>
             <div className="flex justify-between items-center my-4">

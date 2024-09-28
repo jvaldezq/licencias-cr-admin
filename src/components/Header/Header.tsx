@@ -1,7 +1,7 @@
 import {MenuIcon} from "@/assets/icons/MenuIcon";
-import {HeaderMenu} from "@/sections/Header/HeaderMenu";
+import {HeaderMenu} from "@/components/Header/HeaderMenu";
 import {getSession} from "@auth0/nextjs-auth0";
-import {fetchUserInfo} from "@/sections/Header/service";
+import {fetchUserInfo} from "@/components/Header/service";
 
 export default async function Header() {
     const session = await getSession();
