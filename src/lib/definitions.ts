@@ -30,6 +30,7 @@ export interface IAsset {
     events: IEvent[];
     licenseTypeId: number;
     licenseType: ILicenseType;
+    schedule: ISchedule[];
 }
 
 export interface IUser {
@@ -45,6 +46,7 @@ export interface IUser {
     access?: IUserAccess;
     location: ILocation;
     logs: ILog[];
+    schedule: ISchedule[];
 }
 
 export interface IUserAccess {
@@ -80,6 +82,8 @@ export interface IEvent {
     customerId: number;
     customer: ICustomer;
     isMissingInfo: boolean;
+    licenseTypeId: number;
+    licenseType: ILicenseType;
 }
 
 export interface ICustomer {
@@ -95,15 +99,15 @@ export interface ICustomer {
 
 export interface ISchedule {
     id: number;
-    eventStartDate: Date;
-    eventEndDate: Date;
-    instructorStartDate: Date;
-    instructorEndDate: Date;
-    assetStartDate: Date;
-    assetEndDate: Date;
+    startDate: Date;
+    endDate: Date;
     createdAt: Date;
     updatedAt: Date;
     event?: IEvent;
+    assetId?: number;
+    asset?: IAsset;
+    userId?: number;
+    user?: IUser;
 }
 
 export interface IPayment {
@@ -138,24 +142,20 @@ export interface ILog {
 }
 
 export interface IEventForm {
-    type: number;
+    typeId: number;
     customer: {
         name: string;
         identification: string;
         phone: string;
     };
     payment: {
-        price?: number;
+        price: number;
         cashAdvance?: number;
         paid: boolean;
     }
     schedule: {
-        eventStartDate: Date;
-        eventEndDate: Date;
-        instructorStartDate?: Date;
-        instructorEndDate?: Date;
-        assetStartDate?: Date;
-        assetEndDate?: Date;
+        startDate: Date;
+        endDate: Date;
     }
     locationId: number;
     assetId?: number;

@@ -77,23 +77,23 @@ model Event {
   isMissingInfo Boolean      @default(true)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  instructorId  BigInt?
-  createdById   BigInt
-  locationId    BigInt
-  typeId        BigInt
-  paymentId     BigInt       @unique
-  customerId    BigInt?
-  licenseTypeId BigInt?
   assetId       BigInt?
   asset         Asset?       @relation(fields: [assetId], references: [id])
+  createdById   BigInt
   createdBy     User         @relation("CreatorRelation", fields: [createdById], references: [id])
-  customer      Customer?    @relation(fields: [customerId], references: [id])
+  customerId    BigInt
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  instructorId  BigInt?
   instructor    User?        @relation("InstructorRelation", fields: [instructorId], references: [id])
+  licenseTypeId BigInt?
   licenseType   LicenseType? @relation(fields: [licenseTypeId], references: [id])
+  locationId    BigInt
   location      Location     @relation(fields: [locationId], references: [id])
+  paymentId     BigInt       @unique
   payment       Payment      @relation(fields: [paymentId], references: [id])
   scheduleId    BigInt       @unique
   schedule      Schedule     @relation(fields: [scheduleId], references: [id])
+  typeId        BigInt
   type          EventType    @relation(fields: [typeId], references: [id])
 
   @@index([instructorId, createdById, scheduleId, paymentId, customerId, locationId, licenseTypeId])

@@ -19,7 +19,7 @@ import {
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
-import {IEventForm} from "@/lib/definitions";
+import {IEventForm, IUser} from "@/lib/definitions";
 
 
 export interface FormProps extends FormRenderProps<IEventForm> {
@@ -35,18 +35,18 @@ const MainForm = (props: FormProps) => {
         data: instructors, isLoading: isInstructorsLoading
     } = useGetInstructorListByLocationId(values?.locationId);
 
-    const isClassType = eventTypes?.find(t => t.id === +values?.type)?.name.includes('Clase');
+    const isClassType = eventTypes?.find(t => t.id === +values?.typeId)?.name.includes('Clase');
     const showInstructorAndAsset = isClassType ?
-        values?.locationId && values?.licenseTypeId && values?.schedule?.eventStartDate && values?.schedule?.eventEndDate :
-        values?.locationId && values?.licenseTypeId && values?.schedule?.eventStartDate;
+        values?.locationId && values?.licenseTypeId && values?.schedule?.startDate && values?.schedule?.endDate :
+        values?.locationId && values?.licenseTypeId && values?.schedule?.startDate;
     const showPrice = isClassType ?
-        (values?.licenseTypeId && values?.schedule?.eventStartDate && values?.schedule?.eventEndDate)
+        (values?.licenseTypeId && values?.schedule?.startDate && values?.schedule?.endDate)
         :
-        (values?.licenseTypeId && values?.schedule?.eventStartDate);
+        (values?.licenseTypeId && values?.schedule?.startDate);
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
-            name="type"
+            name="typeId"
             component={FormDropdown as unknown as SupportedInputs}
             placeholder='Tipo de cita'
             label='Tipo de cita'
@@ -54,7 +54,7 @@ const MainForm = (props: FormProps) => {
             isLoading={isEventTypesLoading}
             validate={value => (value ? undefined : 'Requerido')}
         />
-        {values?.type && <>
+        {values?.typeId && <>
             <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion del
                 cliente</p>
             <Field
@@ -101,16 +101,15 @@ const MainForm = (props: FormProps) => {
                     validate={value => (value ? undefined : 'Requerido')}
                 />
                 <Field
-                    name="schedule.eventStartDate"
+                    name="schedule.startDate"
                     component={FormInput as unknown as SupportedInputs}
                     type="datetime-local"
-                    placeholder='Fecha y hora'
-                    label='Fecha y hora'
+                    label={isClassType ? 'Fecha/Hora de inicio' : 'Fecha/Hora de prueba'}
                     validate={value => (value ? undefined : 'Requerido')}
                     wrapperClassName="col-span-2"
                 />
                 {isClassType && <Field
-                    name="schedule.eventEndDate"
+                    name="schedule.endDate"
                     component={FormInput as unknown as SupportedInputs}
                     type="time"
                     placeholder='Hora de finalización'
@@ -149,6 +148,7 @@ const MainForm = (props: FormProps) => {
                     component={FormInput as unknown as SupportedInputs}
                     placeholder='Precio'
                     label='Precio'
+                    validate={value => (value ? undefined : 'Requerido')}
                 />
                 <Field
                     name="payment.paid"
@@ -167,18 +167,18 @@ const MainForm = (props: FormProps) => {
     </form>
 }
 
-export function CreateEvent() {
+export function CreateEvent({user}: { user: IUser}) {
     const [open, setOpen] = useState(false);
     const {mutateAsync, isLoading} = useCreateMutation();
     const router = useRouter();
 
     const onSubmit = useCallback((data: IEventForm) => {
-        console.log(data);
-        // mutateAsync(data).then(() => {
-        //     router.refresh();
-        //     setOpen(false);
-        // });
-    }, []);
+        const eventData = { ...data, createdById: user.id };
+        mutateAsync(eventData).then(() => {
+            router.refresh();
+            setOpen(false);
+        });
+    }, [user, mutateAsync, router]);
 
     return (<Dialog
         open={open}
@@ -200,7 +200,7 @@ export function CreateEvent() {
     </Dialog>)
 }
 
-export function CreateEventWrapper() {
+export function CreateEventWrapper({user}: { user: IUser}) {
     const queryClient = new QueryClient({
         queryCache: new QueryCache({
             onError: error => {
@@ -210,6 +210,6 @@ export function CreateEventWrapper() {
     });
 
     return <QueryClientProvider client={queryClient}>
-        <CreateEvent/>
+        <CreateEvent user={user} />
     </QueryClientProvider>
 }
