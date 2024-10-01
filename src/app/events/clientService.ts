@@ -1,10 +1,19 @@
-import {IEvent, IEventForm, IEventType, ILocation, IUser} from "@/lib/definitions";
+import {IAsset, IEvent, IEventForm, IEventType, ILocation, IUser} from "@/lib/definitions";
 import {clientApi} from "@/lib/clientApi";
 import {useMutation, useQuery} from "react-query";
+import {AssetsByProps} from "@/app/events/types";
 
 const createEvent = async (data: IEventForm): Promise<IEvent> => {
     const newListing = await clientApi.post('/event', data);
     return newListing.data;
+};
+
+export const useCreateMutation = () => {
+    return useMutation({
+        mutationFn: (data: IEventForm) => {
+            return createEvent(data);
+        }, mutationKey: ['event-create'],
+    });
 };
 
 const updateEvent = async (data: IEventForm): Promise<IEvent> => {
@@ -12,64 +21,17 @@ const updateEvent = async (data: IEventForm): Promise<IEvent> => {
     return newListing.data;
 };
 
-const getEventById = async (id: number): Promise<IEvent> => {
-    const event = await clientApi.get(`/event/${id}`);
-    return event.data;
-};
-
-const getLocationList = async (): Promise<ILocation[]> => {
-    const locationList = await clientApi.get('/location', {
-        params: {
-            list: true
-        }
-    });
-    return locationList.data;
-};
-
-const getInstructorListByLocationId = async (id: number): Promise<IUser[]> => {
-    const userList = await clientApi.get('/user/list', {
-        params: {
-            isInstructor: true,
-            locationId: id
-        }
-    });
-    return userList.data;
-};
-
-const getEventTypesList = async (): Promise<IEventType[]> => {
-    const locationList = await clientApi.get('/event-type', {
-        params: {
-            list: true
-        }
-    });
-    return locationList.data;
-};
-
-const getLicenseList = async (): Promise<IEventType[]> => {
-    const locationList = await clientApi.get('/license', {
-        params: {
-            list: true
-        }
-    });
-    return locationList.data;
-};
-
-export const useCreateMutation = () => {
-    return useMutation({
-        mutationFn: (data: IEventForm) => {
-            return createEvent(data);
-        },
-        mutationKey: ['event-create'],
-    });
-};
-
 export const useUpdateMutation = () => {
     return useMutation({
         mutationFn: (data: IEventForm) => {
             return updateEvent(data);
-        },
-        mutationKey: ['event-update'],
+        }, mutationKey: ['event-update'],
     });
+};
+
+const getEventById = async (id: number): Promise<IEvent> => {
+    const event = await clientApi.get(`/event/${id}`);
+    return event.data;
 };
 
 export const useGetEventById = (id: number) => {
@@ -82,6 +44,15 @@ export const useGetEventById = (id: number) => {
     });
 };
 
+const getLocationList = async (): Promise<ILocation[]> => {
+    const locationList = await clientApi.get('/location', {
+        params: {
+            list: true
+        }
+    });
+    return locationList.data;
+};
+
 export const useGetLocationList = () => {
     return useQuery({
         staleTime: 1000 * 60 * 5,
@@ -90,6 +61,15 @@ export const useGetLocationList = () => {
         queryFn: getLocationList,
         retry: 2,
     });
+};
+
+const getInstructorListByLocationId = async (id: number): Promise<IUser[]> => {
+    const userList = await clientApi.get('/user/list', {
+        params: {
+            isInstructor: true, locationId: id
+        }
+    });
+    return userList.data;
 };
 
 export const useGetInstructorListByLocationId = (id: number) => {
@@ -103,6 +83,15 @@ export const useGetInstructorListByLocationId = (id: number) => {
     });
 };
 
+const getEventTypesList = async (): Promise<IEventType[]> => {
+    const locationList = await clientApi.get('/event-type', {
+        params: {
+            list: true
+        }
+    });
+    return locationList.data;
+};
+
 export const useGetEventTypesList = () => {
     return useQuery({
         staleTime: 1000 * 60 * 5,
@@ -113,12 +102,42 @@ export const useGetEventTypesList = () => {
     });
 };
 
+const getLicenseList = async (): Promise<IEventType[]> => {
+    const locationList = await clientApi.get('/license', {
+        params: {
+            list: true
+        }
+    });
+    return locationList.data;
+};
+
 export const useGetLicenseList = () => {
     return useQuery({
         staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
         queryKey: ["license-list"],
         queryFn: getLicenseList,
+        retry: 2,
+    });
+};
+
+
+const getAssetsByList = async (data: AssetsByProps): Promise<IAsset[]> => {
+    const assetList = await clientApi.get('/asset', {
+        params: {
+            list: true, ...data
+        }
+    });
+    return assetList.data;
+};
+
+export const useGetAssetsByList = (data: AssetsByProps) => {
+    return useQuery({
+        enabled: !!data?.licenseTypeId && !!data?.locationId,
+        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false,
+        queryKey: ["asset-by-list", data?.licenseTypeId, data?.locationId],
+        queryFn: () => getAssetsByList(data),
         retry: 2,
     });
 };

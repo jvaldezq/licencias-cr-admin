@@ -41,6 +41,7 @@ model Asset {
   events             Event[]
   licenseTypeId      BigInt
   licenseType        LicenseType            @relation(fields: [licenseTypeId], references: [id])
+  schedule           Schedule[]
 }
 
 model User {
@@ -56,6 +57,7 @@ model User {
   logs               Log[]
   location           Location    @relation(fields: [locationId], references: [id])
   access             UserAccess?
+  schedule           Schedule[]
 }
 
 model UserAccess {
@@ -79,11 +81,10 @@ model Event {
   createdById   BigInt
   locationId    BigInt
   typeId        BigInt
-  assetId       BigInt?
-  scheduleId    BigInt       @unique
   paymentId     BigInt       @unique
   customerId    BigInt?
   licenseTypeId BigInt?
+  assetId       BigInt?
   asset         Asset?       @relation(fields: [assetId], references: [id])
   createdBy     User         @relation("CreatorRelation", fields: [createdById], references: [id])
   customer      Customer?    @relation(fields: [customerId], references: [id])
@@ -91,6 +92,7 @@ model Event {
   licenseType   LicenseType? @relation(fields: [licenseTypeId], references: [id])
   location      Location     @relation(fields: [locationId], references: [id])
   payment       Payment      @relation(fields: [paymentId], references: [id])
+  scheduleId    BigInt       @unique
   schedule      Schedule     @relation(fields: [scheduleId], references: [id])
   type          EventType    @relation(fields: [typeId], references: [id])
 
@@ -110,15 +112,15 @@ model Customer {
 
 model Schedule {
   id                  BigInt   @id @default(autoincrement())
-  eventStartDate      DateTime
-  eventEndDate        DateTime
-  instructorStartDate DateTime
-  instructorEndDate   DateTime
-  assetStartDate      DateTime
-  assetEndDate        DateTime
+  startDate           DateTime
+  endDate             DateTime
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   event               Event?
+  assetId             BigInt?
+  asset               Asset?       @relation(fields: [assetId], references: [id])
+  userId              BigInt?
+  user                User?     @relation(fields: [userId], references: [id])
 }
 
 model Payment {
@@ -147,7 +149,7 @@ model Log {
   modelId     BigInt
   action      String
   changes     String
-  changedById BigInt
   createdAt   DateTime @default(now())
+  changedById BigInt
   changedBy   User     @relation(fields: [changedById], references: [id])
 }

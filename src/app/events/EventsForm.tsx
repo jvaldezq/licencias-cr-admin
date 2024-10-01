@@ -9,7 +9,12 @@ import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
 import {
-    useCreateMutation, useGetEventTypesList, useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList,
+    useCreateMutation,
+    useGetAssetsByList,
+    useGetEventTypesList,
+    useGetInstructorListByLocationId,
+    useGetLicenseList,
+    useGetLocationList,
 } from "@/app/events/clientService";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
@@ -21,16 +26,23 @@ export interface FormProps extends FormRenderProps<IEventForm> {
 }
 
 const MainForm = (props: FormProps) => {
-    const {values} = props;
+    const {values, handleSubmit} = props;
     const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
     const {data: eventTypes, isLoading: isEventTypesLoading} = useGetEventTypesList();
     const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
+    const {data: assets, isLoading: isAssetsLoading} = useGetAssetsByList({licenseTypeId: values?.licenseTypeId, locationId: values?.locationId})
     const {
         data: instructors, isLoading: isInstructorsLoading
-    } = useGetInstructorListByLocationId(props.values.locationId);
-    const {handleSubmit} = props;
+    } = useGetInstructorListByLocationId(values?.locationId);
 
     const isClassType = eventTypes?.find(t => t.id === +values?.type)?.name.includes('Clase');
+    const showInstructorAndAsset = isClassType ?
+        values?.locationId && values?.licenseTypeId && values?.schedule?.eventStartDate && values?.schedule?.eventEndDate :
+        values?.locationId && values?.licenseTypeId && values?.schedule?.eventStartDate;
+    const showPrice = isClassType ?
+        (values?.licenseTypeId && values?.schedule?.eventStartDate && values?.schedule?.eventEndDate)
+        :
+        (values?.licenseTypeId && values?.schedule?.eventStartDate);
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
@@ -107,27 +119,29 @@ const MainForm = (props: FormProps) => {
                     wrapperClassName="col-span-2"
                 />}
 
-                <Field
-                    name="instructorId"
-                    component={FormDropdown as unknown as SupportedInputs}
-                    placeholder='Instructor'
-                    label='Instructor'
-                    options={instructors || []}
-                    isLoading={isInstructorsLoading}
-                    disabled={!instructors}
-                />
+                {showInstructorAndAsset && <>
+                    <Field
+                        name="instructorId"
+                        component={FormDropdown as unknown as SupportedInputs}
+                        placeholder='Instructor'
+                        label='Instructor'
+                        options={instructors || []}
+                        isLoading={isInstructorsLoading}
+                        disabled={!instructors}
+                    />
 
-                <Field
-                    name="assetId"
-                    component={FormDropdown as unknown as SupportedInputs}
-                    placeholder='Vehículo'
-                    label='Vehículo'
-                    options={instructors || []}
-                    isLoading={isInstructorsLoading}
-                    disabled={!instructors}
-                />
+                    <Field
+                        name="assetId"
+                        component={FormDropdown as unknown as SupportedInputs}
+                        placeholder='Vehículo'
+                        label='Vehículo'
+                        options={assets || []}
+                        isLoading={isAssetsLoading}
+                        disabled={!assets}
+                    />
+                </>}
             </>}
-            {(values?.licenseTypeId && values?.schedule?.eventStartDate) && <>
+            {showPrice && <>
                 <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de
                     precio</p>
                 <Field

@@ -10,13 +10,44 @@ BigInt.prototype.toJSON = function () {
 
 export async function GET(request: Request) {
     try {
-        const user = await prisma.asset.findMany({
-            select: {
-                id: true, name: true, plate: true, status: true, location: true, licenseType: true
-            },
-        });
+        const {searchParams} = new URL(request.url);
+        const list = searchParams.get('list');
+        const licenseTypeId = searchParams.get('licenseTypeId');
+        const locationId = searchParams.get('locationId');
 
-        return NextResponse.json(user, {status: 200});
+        const licenseType = licenseTypeId ? {
+            licenseTypeId: {
+                equals: +licenseTypeId
+            }
+        } : {};
+
+        const location = locationId ? {
+            locationId: {
+                equals: +locationId
+            }
+        } : {};
+
+        if (list) {
+            const asset = await prisma.asset.findMany({
+                select: {
+                    id: true, name: true,
+                }, where: {
+                    status: {
+                        equals: true
+                    }, ...licenseType, ...location
+                }
+            });
+
+            return NextResponse.json(asset, {status: 200});
+        } else {
+            const asset = await prisma.asset.findMany({
+                select: {
+                    id: true, name: true, plate: true, status: true, location: true, licenseType: true
+                },
+            });
+
+            return NextResponse.json(asset, {status: 200});
+        }
     } catch (error) {
         console.error('Error fetching assets', error);
         return NextResponse.json({error}, {status: 500});
@@ -43,8 +74,7 @@ export async function PATCH(request: Request) {
         const asset = await prisma.asset.update({
             where: {
                 id: body.id
-            },
-            data: body
+            }, data: body
         });
         revalidatePath('/assets', 'page')
         return NextResponse.json(asset, {status: 200});

@@ -59,7 +59,6 @@ const columns: ColumnDef<IAsset>[] = [{
             <ArrowUpDown className="ml-2 h-4 w-4"/>
         </Button>)
     }, cell: ({row}) => {
-        console.log('ROW', row);
         const license = row.getValue("licenseType") as ILicenseType;
         return <div className="capitalize">{license?.name}</div>
     },
