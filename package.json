@@ -10,7 +10,9 @@
     "db:reset": "npx prisma migrate reset",
     "db:push": "npx prisma db push",
     "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev",
+    "migrate:create": "npx prisma migrate dev --create-only",
+    "migrate": "npx prisma migrate dev",
+    "migrate:prod": "npx prisma migrate deploy",
     "db:studio": "npx prisma studio"
   },
   "dependencies": {

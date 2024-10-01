@@ -19,7 +19,7 @@ interface Props {
 const columns: ColumnDef<ILicenseType>[] = [{
     accessorKey: "name", header: ({column}) => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -30,7 +30,7 @@ const columns: ColumnDef<ILicenseType>[] = [{
 }, {
     accessorKey: "color", header: () => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
         >
             Color
@@ -41,7 +41,7 @@ const columns: ColumnDef<ILicenseType>[] = [{
 }, {
     id: "actions", header: () => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
         >
         Acciones

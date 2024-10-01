@@ -51,8 +51,6 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
         [onChange],
     );
 
-    console.log('props', props);
-
     return (
         <InputWrapper
             name={name}

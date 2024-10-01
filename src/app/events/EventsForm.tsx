@@ -9,138 +9,147 @@ import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
 import {
-    useCreateMutation,
-    useGetInstructorListByLocationId,
-    useGetLocationList,
+    useCreateMutation, useGetEventTypesList, useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList,
 } from "@/app/events/clientService";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
+import {IEventForm} from "@/lib/definitions";
 
-const EVENT_TYPES = [
-    {
-        name: 'Clase de manejo',
-        id: '1'
-    },
-    {
-        name: 'Prueba de manejo',
-        id: '2'
-    },
-]
 
-export interface EventForm {
-    type: string;
-    customerName: string;
-    customerId: string;
-    phone: string;
-    price?: number;
-    cashAdvance?: number;
-    date: Date;
-    endDate: Date;
-    customerPass?: boolean;
-    paid?: boolean;
-    customerPaidDate?: Date;
-    status?: string;
-    locationId: number;
-    instructorId?: number;
-    createdById?: number;
-}
-
-export interface FormProps extends FormRenderProps<EventForm> {
+export interface FormProps extends FormRenderProps<IEventForm> {
 }
 
 const MainForm = (props: FormProps) => {
+    const {values} = props;
     const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
-    const {data: instructors, isLoading: isInstructorsLoading} = useGetInstructorListByLocationId(props.values.locationId);
-
+    const {data: eventTypes, isLoading: isEventTypesLoading} = useGetEventTypesList();
+    const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
+    const {
+        data: instructors, isLoading: isInstructorsLoading
+    } = useGetInstructorListByLocationId(props.values.locationId);
     const {handleSubmit} = props;
 
-    console.log('hello', instructors);
+    const isClassType = eventTypes?.find(t => t.id === +values?.type)?.name.includes('Clase');
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
-        <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion del
-            cliente</p>
-        <Field
-            name="customerName"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Cliente nombre'
-            label='Cliente nombre'
-            autoFocus={true}
-            validate={value => (value ? undefined : 'Requerido')}
-        />
-        <Field
-            name="phone"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Teléfono'
-            label='Teléfono'
-            validate={value => (value ? undefined : 'Requerido')}
-        />
-        <Field
-            name="customerId"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Cliente cédula'
-            label='Cliente cédula'
-            validate={value => (value ? undefined : 'Requerido')}
-        />
-        <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de cita</p>
         <Field
             name="type"
             component={FormDropdown as unknown as SupportedInputs}
-            placeholder='Tipo'
-            label='Tipo'
-            options={EVENT_TYPES}
-        />
-        <Field
-            name="locationId"
-            component={FormDropdown as unknown as SupportedInputs}
-            placeholder='Sede'
-            label='Sede'
-            options={locations || []}
-            isLoading={isLocationsLoading}
-        />
-        <Field
-            name="date"
-            component={FormInput as unknown as SupportedInputs}
-            type="datetime-local"
-            placeholder='Fecha y hora'
-            label='Fecha y hora'
+            placeholder='Tipo de cita'
+            label='Tipo de cita'
+            options={eventTypes || []}
+            isLoading={isEventTypesLoading}
             validate={value => (value ? undefined : 'Requerido')}
-            wrapperClassName="col-span-2"
         />
-        <Field
-            name="date"
-            component={FormInput as unknown as SupportedInputs}
-            type="time"
-            placeholder='Hora de finalización'
-            label='Hora de finalización'
-            min="10:00" max="13:00"
-            validate={value => (value ? undefined : 'Requerido')}
-            wrapperClassName="col-span-2"
-        />
-        <Field
-            name="instructorId"
-            component={FormDropdown as unknown as SupportedInputs}
-            placeholder='Instructor'
-            label='Instructor'
-            options={instructors || []}
-            isLoading={isInstructorsLoading}
-            disabled={!instructors}
-        />
+        {values?.type && <>
+            <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion del
+                cliente</p>
+            <Field
+                name="customer.name"
+                component={FormInput as unknown as SupportedInputs}
+                placeholder='Cliente nombre'
+                label='Cliente nombre'
+                autoFocus={true}
+                validate={value => (value ? undefined : 'Requerido')}
+            />
+            <Field
+                name="customer.phone"
+                component={FormInput as unknown as SupportedInputs}
+                placeholder='Teléfono'
+                label='Teléfono'
+                validate={value => (value ? undefined : 'Requerido')}
+            />
+            <Field
+                name="customer.identification"
+                component={FormInput as unknown as SupportedInputs}
+                placeholder='Cliente cédula'
+                label='Cliente cédula'
+                validate={value => (value ? undefined : 'Requerido')}
+            />
+            {(values?.customer?.name && values?.customer?.identification && values?.customer?.phone) && <>
+                <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de
+                    cita</p>
+                <Field
+                    name="locationId"
+                    component={FormDropdown as unknown as SupportedInputs}
+                    placeholder='Sede'
+                    label='Sede'
+                    options={locations || []}
+                    isLoading={isLocationsLoading}
+                    validate={value => (value ? undefined : 'Requerido')}
+                />
+                <Field
+                    name="licenseTypeId"
+                    component={FormDropdown as unknown as SupportedInputs}
+                    placeholder='Tipo licencia'
+                    label='Tipo licencia'
+                    options={licenses || []}
+                    isLoading={isLicensesLoading}
+                    validate={value => (value ? undefined : 'Requerido')}
+                />
+                <Field
+                    name="schedule.eventStartDate"
+                    component={FormInput as unknown as SupportedInputs}
+                    type="datetime-local"
+                    placeholder='Fecha y hora'
+                    label='Fecha y hora'
+                    validate={value => (value ? undefined : 'Requerido')}
+                    wrapperClassName="col-span-2"
+                />
+                {isClassType && <Field
+                    name="schedule.eventEndDate"
+                    component={FormInput as unknown as SupportedInputs}
+                    type="time"
+                    placeholder='Hora de finalización'
+                    label='Hora de finalización'
+                    validate={value => (value ? undefined : 'Requerido')}
+                    wrapperClassName="col-span-2"
+                />}
 
-        <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de precio</p>
-        <Field
-            name="price"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Precio'
-            label='Precio'
-            validate={value => (value ? undefined : 'Requerido')}
-        />
-        <Field
-            name="paid"
-            component={FormSwitch as unknown as SupportedInputs}
-            placeholder='Pagó'
-            label='Pagó'
-        />
+                <Field
+                    name="instructorId"
+                    component={FormDropdown as unknown as SupportedInputs}
+                    placeholder='Instructor'
+                    label='Instructor'
+                    options={instructors || []}
+                    isLoading={isInstructorsLoading}
+                    disabled={!instructors}
+                />
+
+                <Field
+                    name="assetId"
+                    component={FormDropdown as unknown as SupportedInputs}
+                    placeholder='Vehículo'
+                    label='Vehículo'
+                    options={instructors || []}
+                    isLoading={isInstructorsLoading}
+                    disabled={!instructors}
+                />
+            </>}
+            {(values?.licenseTypeId && values?.schedule?.eventStartDate) && <>
+                <p className="col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de
+                    precio</p>
+                <Field
+                    name="payment.price"
+                    component={FormInput as unknown as SupportedInputs}
+                    placeholder='Precio'
+                    label='Precio'
+                />
+                <Field
+                    name="payment.paid"
+                    component={FormSwitch as unknown as SupportedInputs}
+                    placeholder='Pagó total'
+                    label='Pagó total'
+                />
+                {!values?.payment?.paid && <Field
+                    name="payment.cashAdvance"
+                    component={FormInput as unknown as SupportedInputs}
+                    placeholder='Adelanto'
+                    label='Adelanto'
+                />}
+            </>}
+        </>}
     </form>
 }
 
@@ -149,11 +158,12 @@ export function CreateEvent() {
     const {mutateAsync, isLoading} = useCreateMutation();
     const router = useRouter();
 
-    const onSubmit = useCallback((data: EventForm) => {
-        mutateAsync(data).then(() => {
-            router.refresh();
-            setOpen(false);
-        });
+    const onSubmit = useCallback((data: IEventForm) => {
+        console.log(data);
+        // mutateAsync(data).then(() => {
+        //     router.refresh();
+        //     setOpen(false);
+        // });
     }, []);
 
     return (<Dialog
@@ -169,23 +179,6 @@ export function CreateEvent() {
             <Loader/>
             <p className="text-sm">Creando una nueva Cita</p>
         </div> : <Form
-            initialValues={{
-                type: undefined,
-                customerName: undefined,
-                customerId: undefined,
-                phone: undefined,
-                price: undefined,
-                cashAdvance: undefined,
-                date: undefined,
-                endDate: undefined,
-                customerPass: undefined,
-                paid: undefined,
-                customerPaidDate: undefined,
-                status: undefined,
-                locationId: undefined,
-                instructorId: undefined,
-                createdById: undefined,
-            }}
             onSubmit={onSubmit}
         >
             {(formProps) => <MainForm {...formProps} />}

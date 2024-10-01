@@ -7,7 +7,13 @@ import {Button} from "@/components/ui/button";
 import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
-import {useCreateMutation, useGetAssetById, useGetLocationList, useUpdateMutation} from "@/app/assets/clientService";
+import {
+    useCreateMutation,
+    useGetAssetById,
+    useGetLicenseList,
+    useGetLocationList,
+    useUpdateMutation
+} from "@/app/assets/clientService";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
@@ -27,6 +33,7 @@ export interface FormProps extends FormRenderProps<AssetForm> {
 const MainForm = (props: FormProps) => {
     const {handleSubmit} = props;
     const {data, isLoading} = useGetLocationList();
+    const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
 
     return <form id="asset-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
@@ -51,6 +58,15 @@ const MainForm = (props: FormProps) => {
             label='Sede'
             options={data || []}
             isLoading={isLoading}
+        />
+        <Field
+            name="licenseTypeId"
+            component={FormDropdown as unknown as SupportedInputs}
+            placeholder='Tipo licencia'
+            label='Tipo licencia'
+            options={licenses || []}
+            isLoading={isLicensesLoading}
+            validate={value => (value ? undefined : 'Requerido')}
         />
         <Field
             name="status"

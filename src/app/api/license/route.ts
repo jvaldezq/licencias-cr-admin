@@ -10,13 +10,26 @@ BigInt.prototype.toJSON = function () {
 
 export async function GET(request: Request) {
     try {
-        const user = await prisma.licenseType.findMany({
-            select: {
-                id: true, name: true, color: true,
-            },
-        });
+        const {searchParams} = new URL(request.url);
+        const listParams = searchParams.get('list');
 
-        return NextResponse.json(user, {status: 200});
+        if (listParams) {
+            const location = await prisma.licenseType.findMany({
+                select: {
+                    id: true, name: true,
+                }
+            });
+
+            return NextResponse.json(location, {status: 200});
+        } else {
+            const user = await prisma.licenseType.findMany({
+                select: {
+                    id: true, name: true, color: true,
+                },
+            });
+
+            return NextResponse.json(user, {status: 200});
+        }
     } catch (error) {
         console.error('Error fetching license types', error);
         return NextResponse.json({error}, {status: 500});

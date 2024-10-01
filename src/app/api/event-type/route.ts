@@ -1,6 +1,6 @@
-import {NextResponse} from 'next/server';
 import prisma from '@/lib/prisma';
-import {revalidatePath} from "next/cache";
+import {NextResponse} from 'next/server';
+import {revalidatePath} from 'next/cache'
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -10,15 +10,19 @@ BigInt.prototype.toJSON = function () {
 
 export async function GET(request: Request) {
     try {
-        const user = await prisma.asset.findMany({
+        // const {searchParams} = new URL(request.url);
+        // const listParams = searchParams.get('list');
+
+        const eventType = await prisma.eventType.findMany({
             select: {
-                id: true, name: true, plate: true, status: true, location: true, licenseType: true
+                id: true,
+                name: true,
             },
         });
 
-        return NextResponse.json(user, {status: 200});
+        return NextResponse.json(eventType, {status: 200});
     } catch (error) {
-        console.error('Error fetching assets', error);
+        console.error('Error fetching locations', error);
         return NextResponse.json({error}, {status: 500});
     }
 }
@@ -26,13 +30,13 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const asset = await prisma.asset.create({
+        const eventType = await prisma.eventType.create({
             data: body
         });
-        revalidatePath('/assets', 'page')
-        return NextResponse.json(asset, {status: 200});
+        revalidatePath('/locations', 'page')
+        return NextResponse.json(eventType, {status: 200});
     } catch (error) {
-        console.error('Creating asset', error);
+        console.error('Creating eventType', error);
         return NextResponse.json({error}, {status: 500});
     }
 }
@@ -40,16 +44,16 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
     try {
         const body = await request.json();
-        const asset = await prisma.asset.update({
+        const eventType = await prisma.eventType.update({
             where: {
                 id: body.id
             },
             data: body
         });
-        revalidatePath('/assets', 'page')
-        return NextResponse.json(asset, {status: 200});
+        revalidatePath('/locations', 'page')
+        return NextResponse.json(eventType, {status: 200});
     } catch (error) {
-        console.error('Updating asset', error);
+        console.error('Updating eventType', error);
         return NextResponse.json({error}, {status: 500});
     }
 }

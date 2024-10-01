@@ -3,123 +3,151 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Location {
-  id               BigInt @id @default(autoincrement())
-  name             String @unique
-  status           Boolean
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  assets           Asset[]
-  instructors      User[]
-  events           Event[]
+  id          BigInt   @id @default(autoincrement())
+  name        String   @unique
+  status      Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  assets      Asset[]
+  events      Event[]
+  instructors User[]
 }
 
 model LicenseType {
-  id            BigInt  @id @default(autoincrement())
-  name          String  @unique
-  color         String @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  assets        LicenseTypeOnAsset[]
+  id                 BigInt               @id @default(autoincrement())
+  name               String               @unique
+  color              String               @unique
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  events             Event[]
+  assets             Asset[]
 }
 
 model Asset {
-  id            BigInt  @id @default(autoincrement())
-  name          String  @unique
-  plate         String  @unique
-  status        Boolean
-  locationId    BigInt
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  licenseTypes  LicenseTypeOnAsset[]
-  location      Location @relation(fields: [locationId], references: [id])
-}
-
-model LicenseTypeOnAsset {
-  licenseType       LicenseType @relation(fields: [licenseTypeId], references: [id])
-  licenseTypeId     BigInt
-  asset   Asset @relation(fields: [assetId], references: [id])
-  assetId     BigInt @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  @@id([licenseTypeId, assetId])
+  id                 BigInt              @id @default(autoincrement())
+  name               String              @unique
+  plate              String              @unique
+  status             Boolean
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  locationId         BigInt
+  location           Location            @relation(fields: [locationId], references: [id])
+  events             Event[]
+  licenseTypeId      BigInt
+  licenseType        LicenseType            @relation(fields: [licenseTypeId], references: [id])
 }
 
 model User {
-  id            BigInt @id @default(autoincrement())
-  authId        String @unique
-  name          String
-  color         String @unique
-  locationId    BigInt
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  eventsAsInstructor Event[] @relation("InstructorRelation")
-  eventsAsCreator    Event[] @relation("CreatorRelation")
-  access        UserAccess?
-  location      Location @relation(fields: [locationId], references: [id])
-  logs          Log[]
+  id                 BigInt      @id @default(autoincrement())
+  authId             String      @unique
+  name               String
+  color              String      @unique
+  locationId         BigInt
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  eventsAsCreator    Event[]     @relation("CreatorRelation")
+  eventsAsInstructor Event[]     @relation("InstructorRelation")
+  logs               Log[]
+  location           Location    @relation(fields: [locationId], references: [id])
+  access             UserAccess?
 }
 
 model UserAccess {
-  id            BigInt @id @default(autoincrement())
-  admin         Boolean @default(false)
-  instructor    Boolean @default(false)
-  receptionist  Boolean @default(false)
-  userId        BigInt @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User @relation(fields: [userId], references: [id])
+  id           BigInt   @id @default(autoincrement())
+  admin        Boolean  @default(false)
+  instructor   Boolean  @default(false)
+  receptionist Boolean  @default(false)
+  userId       BigInt   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model Event {
-  id               BigInt @id @default(autoincrement())
-  customerName     String
-  customerId       String
-  phone            String
-  price            Float?
-  cashAdvance      Float?
-  date             DateTime
-  endDate          DateTime
-  customerPass     Boolean @default(false)
-  paid             Boolean @default(false)
-  customerPaidDate DateTime
-  status           String
-  locationId       BigInt
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  instructor       User?  @relation("InstructorRelation", fields: [instructorId], references: [id])
-  instructorId     BigInt
-  createdBy        User?  @relation("CreatorRelation", fields: [createdById], references: [id])
-  createdById      BigInt
-  location         Location @relation(fields: [locationId], references: [id])
-  typeId           BigInt
-  type             EventType @relation(fields: [typeId], references: [id])
+  id            BigInt       @id @default(autoincrement())
+  status        String
+  isMissingInfo Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  instructorId  BigInt?
+  createdById   BigInt
+  locationId    BigInt
+  typeId        BigInt
+  assetId       BigInt?
+  scheduleId    BigInt       @unique
+  paymentId     BigInt       @unique
+  customerId    BigInt?
+  licenseTypeId BigInt?
+  asset         Asset?       @relation(fields: [assetId], references: [id])
+  createdBy     User         @relation("CreatorRelation", fields: [createdById], references: [id])
+  customer      Customer?    @relation(fields: [customerId], references: [id])
+  instructor    User?        @relation("InstructorRelation", fields: [instructorId], references: [id])
+  licenseType   LicenseType? @relation(fields: [licenseTypeId], references: [id])
+  location      Location     @relation(fields: [locationId], references: [id])
+  payment       Payment      @relation(fields: [paymentId], references: [id])
+  schedule      Schedule     @relation(fields: [scheduleId], references: [id])
+  type          EventType    @relation(fields: [typeId], references: [id])
 
-  @@index(fields: [date, endDate, instructorId, createdById])
+  @@index([instructorId, createdById, scheduleId, paymentId, customerId, locationId, licenseTypeId])
+}
+
+model Customer {
+  id             BigInt   @id @default(autoincrement())
+  name           String
+  identification String
+  phone          String
+  testPassed     Boolean? @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  event          Event[]
+}
+
+model Schedule {
+  id                  BigInt   @id @default(autoincrement())
+  eventStartDate      DateTime
+  eventEndDate        DateTime
+  instructorStartDate DateTime
+  instructorEndDate   DateTime
+  assetStartDate      DateTime
+  assetEndDate        DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  event               Event?
+}
+
+model Payment {
+  id          BigInt    @id @default(autoincrement())
+  price       Float?
+  cashAdvance Float?
+  paid        Boolean?  @default(false)
+  paidDate    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  event       Event?
 }
 
 model EventType {
-  id            BigInt  @id @default(autoincrement())
-  name          String  @unique
-  color         String @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  events        Event[]
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique
+  color     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]
 }
 
 model Log {
-  id            BigInt   @id @default(autoincrement())
-  modelName     String
-  modelId       BigInt
-  action        String
-  changes       String
-  changedById   BigInt
-  changedBy     User     @relation(fields: [changedById], references: [id])
-  createdAt     DateTime @default(now())
+  id          BigInt   @id @default(autoincrement())
+  modelName   String
+  modelId     BigInt
+  action      String
+  changes     String
+  changedById BigInt
+  createdAt   DateTime @default(now())
+  changedBy   User     @relation(fields: [changedById], references: [id])
 }

@@ -28,7 +28,7 @@ export function Dialog(props: Props) {
         <DialogTrigger asChild>
             {trigger}
         </DialogTrigger>
-        <DialogContent className="w-full h-full md:h-auto overflow-y-scroll">
+        <DialogContent className="w-full h-full md:h-fit max-h-full overflow-y-scroll">
             <DialogHeader>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogDescription>

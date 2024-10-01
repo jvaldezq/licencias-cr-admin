@@ -15,21 +15,7 @@ export async function GET(request: Request) {
 
         const event = await prisma.event.findMany({
             select: {
-                id: true,
-                customerName: true,
-                customerId: true,
-                phone: true,
-                price: true,
-                cashAdvance: true,
-                date: true,
-                endDate: true,
-                customerPass: true,
-                paid: true,
-                customerPaidDate: true,
-                status: true,
-                location: true,
-                instructor: true,
-                createdBy: true,
+                id: true
             },
         });
 

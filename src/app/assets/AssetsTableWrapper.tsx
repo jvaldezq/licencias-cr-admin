@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {ArrowUpDown} from "lucide-react";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
-import {IAsset, ILocation} from "@/lib/definitions";
+import {IAsset, ILicenseType, ILocation} from "@/lib/definitions";
 import {EditAssetWrapper} from "@/app/assets/AssetForm";
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 const columns: ColumnDef<IAsset>[] = [{
     accessorKey: "name", header: ({column}) => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -26,7 +26,7 @@ const columns: ColumnDef<IAsset>[] = [{
 },{
     accessorKey: "plate", header: ({column}) => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -37,7 +37,7 @@ const columns: ColumnDef<IAsset>[] = [{
 }, {
     accessorKey: "location", header: ({column}) => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -49,9 +49,24 @@ const columns: ColumnDef<IAsset>[] = [{
         return <div className="capitalize">{location?.name}</div>
     },
 }, {
+    accessorKey: "licenseType", header: ({column}) => {
+        return (<Button
+            className="px-0 font-bold text-base"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+            Tipo licencia
+            <ArrowUpDown className="ml-2 h-4 w-4"/>
+        </Button>)
+    }, cell: ({row}) => {
+        console.log('ROW', row);
+        const license = row.getValue("licenseType") as ILicenseType;
+        return <div className="capitalize">{license?.name}</div>
+    },
+}, {
     accessorKey: "status", header: ({column}) => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -62,7 +77,7 @@ const columns: ColumnDef<IAsset>[] = [{
 }, {
     id: "actions", header: () => {
         return (<Button
-            className="px-0"
+            className="px-0 font-bold text-base"
             variant="ghost"
         >
         Acciones

@@ -39,7 +39,7 @@ button:focus, button:focus-visible, svg:focus, svg:focus-visible {
 
 /* HTML: <div class="loader"></div> */
 .input-loader {
-    width: 60px;
+    width: 30px;
     aspect-ratio: 4;
     --_g: no-repeat radial-gradient(circle closest-side,#ca0b10 90%,#0000);
     background:
