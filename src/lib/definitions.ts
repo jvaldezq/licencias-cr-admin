@@ -1,3 +1,4 @@
+
 export interface ILocation {
     id: number;
     name: string;
@@ -162,4 +163,11 @@ export interface IEventForm {
     licenseTypeId: number;
     instructorId?: number;
     createdById?: number;
+}
+
+export interface IEventFilter {
+    date: Date;
+    locationId: number;
+    instructorId: number;
+    licenseTypeId: number;
 }

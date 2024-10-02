@@ -17,40 +17,66 @@ button:focus, button:focus-visible, svg:focus, svg:focus-visible {
     --ring-width: 0;
 }
 
-
 /* HTML: <div class="loader"></div> */
 .loader {
-    width: 55px;
+    width: 4px;
+    color: #ca0b10;
     aspect-ratio: 1;
-    --g1:conic-gradient(from  90deg at 3px  3px ,#0000 90deg,#ca0b10 0);
-    --g2:conic-gradient(from -90deg at 22px 22px,#0000 90deg,#ca0b10 0);
-    background:var(--g1),var(--g1),var(--g1), var(--g2),var(--g2),var(--g2);
-    background-size: 25px 25px;
-    background-repeat: no-repeat;
-    animation: l7 1.5s infinite;
-}
-@keyframes l7 {
-    0%   {background-position:0    0   ,0 100%,100% 100% }
-    25%  {background-position:100% 0   ,0 100%,100% 100% }
-    50%  {background-position:100% 0   ,0 0   ,100% 100% }
-    75%  {background-position:100% 0   ,0 0   ,0    100% }
-    100% {background-position:100% 100%,0 0   ,0    100% }
+    border-radius: 50%;
+    box-shadow: 19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+    19px 0 0 5px, 38px 0 0 5px, 57px 0 0 5px,
+    19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 0px;
+    transform: translateX(-38px);
+    animation: l26 2s infinite linear;
 }
 
-/* HTML: <div class="loader"></div> */
-.input-loader {
-    width: 30px;
-    aspect-ratio: 4;
-    --_g: no-repeat radial-gradient(circle closest-side,#ca0b10 90%,#0000);
-    background:
-            var(--_g) 0%   50%,
-            var(--_g) 50%  50%,
-            var(--_g) 100% 50%;
-    background-size: calc(100%/3) 100%;
-    animation: l7 1s infinite linear;
+@keyframes l26 {
+    12.5% {
+        box-shadow: 19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 5px,
+        19px 0 0 5px, 38px 0 0 0px, 57px 0 0 5px,
+        19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 0px
+    }
+    25% {
+        box-shadow: 19px -19px 0 5px, 38px -19px 0 0px, 57px -19px 0 5px,
+        19px 0 0 0px, 38px 0 0 0px, 57px 0 0 0px,
+        19px 19px 0 0px, 38px 19px 0 5px, 57px 19px 0 0px
+    }
+    50% {
+        box-shadow: 19px -19px 0 5px, 38px -19px 0 5px, 57px -19px 0 0px,
+        19px 0 0 0px, 38px 0 0 0px, 57px 0 0 0px,
+        19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 5px
+    }
+    62.5% {
+        box-shadow: 19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+        19px 0 0 5px, 38px 0 0 0px, 57px 0 0 0px,
+        19px 19px 0 0px, 38px 19px 0 5px, 57px 19px 0 5px
+    }
+    75% {
+        box-shadow: 19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+        19px 0 0 0px, 38px 0 0 0px, 57px 0 0 5px,
+        19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 5px
+    }
+    87.5% {
+        box-shadow: 19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+        19px 0 0 0px, 38px 0 0 5px, 57px 0 0 0px,
+        19px 19px 0 5px, 38px 19px 0 0px, 57px 19px 0 0px
+    }
 }
-@keyframes l7 {
-    33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
-    50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
-    66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
+
+.input-loader {
+    color: #ca0b10;
+    width: 1px;
+    aspect-ratio: 1;
+    border-radius: 80%;
+    box-shadow: 19px 0 0 7px, 38px 0 0 3px, 57px 0 0 0;
+    animation: l21 .5s infinite alternate linear;
+}
+
+@keyframes l21 {
+    50% {
+        box-shadow: 19px 0 0 3px, 38px 0 0 7px, 57px 0 0 3px
+    }
+    100% {
+        box-shadow: 19px 0 0 0, 38px 0 0 3px, 57px 0 0 7px
+    }
 }

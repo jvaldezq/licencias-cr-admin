@@ -12,6 +12,45 @@ BigInt.prototype.toJSON = function () {
 
 export async function GET(request: Request) {
     try {
+        const {searchParams} = new URL(request.url);
+        const date = searchParams.get('date');
+        const locationIdParam = searchParams.get('locationId');
+        const instructorIdParam = searchParams.get('instructorId');
+        const licenseTypeIdParam = searchParams.get('licenseTypeId');
+
+        let dateFilter = {};
+        if (date) {
+            const startOfDay = dayjs(date).startOf('day').toISOString();
+            const endOfDay = dayjs(date).endOf('day').toISOString();
+            dateFilter = {
+                schedule: {
+                    startDate: {
+                        gte: startOfDay,
+                        lte: endOfDay,
+                    },
+                },
+            };
+        }
+        console.log(dateFilter)
+
+        const locationId = locationIdParam ? {
+            locationId: {
+                equals: +locationIdParam
+            }
+        } : {};
+
+        const instructorId = instructorIdParam ? {
+            instructorId: {
+                equals: +instructorIdParam
+            }
+        } : {};
+
+        const licenseTypeId = licenseTypeIdParam ? {
+            licenseTypeId: {
+                equals: +licenseTypeIdParam
+            }
+        } : {};
+
         const event = await prisma.event.findMany({
             select: {
                 id: true, status: true, isMissingInfo: true, asset: {
@@ -40,6 +79,12 @@ export async function GET(request: Request) {
                 schedule: {
                     startDate: 'desc'
                 }
+            },
+            where: {
+                ...dateFilter,
+                ...locationId,
+                ...instructorId,
+                ...licenseTypeId
             }
         });
 

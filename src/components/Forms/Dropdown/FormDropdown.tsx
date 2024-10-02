@@ -35,7 +35,6 @@ export const FormDropdown = (props: IProps) => {
         ...rest
     } = props;
     const [open, setOpen] = useState(false)
-    const [search, setSearch] = useState('')
     const {onChange, value} = input;
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const valueLabel = options?.find(option => option?.id == value)?.name
@@ -59,17 +58,17 @@ export const FormDropdown = (props: IProps) => {
             </PopoverTrigger>
             <PopoverContent className="w-fit p-0" align="start">
                 <Command>
-                    <CommandInput placeholder="Estado del filtro..." onValueChange={setSearch}/>
+                    <CommandInput placeholder="Estado del filtro..."/>
                     <CommandList>
                         <CommandEmpty
-                            className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>No se
-                            encontraron resultados.</CommandEmpty>
+                            className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>Sin resultados</CommandEmpty>
                         <CommandGroup>
                             {options?.map((option) => (<CommandItem
+                                className="cursor-pointer"
                                 key={option.id}
-                                value={`${option.id}`}
-                                onSelect={(value) => {
-                                    onChange(value);
+                                value={option.name}
+                                onSelect={() => {
+                                    onChange(option.id);
                                     setOpen(false)
                                 }}
                             >
@@ -89,17 +88,16 @@ export const FormDropdown = (props: IProps) => {
             <DrawerContent>
                 <div className="mt-4 border-t">
                     <Command>
-                        <CommandInput placeholder="Estado del filtro..." onValueChange={setSearch}/>
+                        <CommandInput placeholder="Estado del filtro..." />
                         <CommandList>
                             <CommandEmpty
-                                className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>No se
-                                encontraron resultados.</CommandEmpty>
+                                className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>Sin resultados</CommandEmpty>
                             <CommandGroup>
                                 {options?.map((option) => (<CommandItem
                                     key={option.id}
-                                    value={`${option.id}`}
-                                    onSelect={(value) => {
-                                        onChange(value);
+                                    value={option.name}
+                                    onSelect={() => {
+                                        onChange(option.id);
                                         setOpen(false)
                                     }}
                                 >

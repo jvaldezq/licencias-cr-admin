@@ -20,6 +20,7 @@ import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {IEventForm, IUser} from "@/lib/definitions";
+import dayjs from "dayjs";
 
 
 export interface FormProps extends FormRenderProps<IEventForm> {
@@ -104,6 +105,7 @@ const MainForm = (props: FormProps) => {
                     name="schedule.startDate"
                     component={FormInput as unknown as SupportedInputs}
                     type="datetime-local"
+                    step={900}
                     label={isClassType ? 'Fecha/Hora de inicio' : 'Fecha/Hora de prueba'}
                     validate={value => (value ? undefined : 'Requerido')}
                     wrapperClassName="col-span-2"
@@ -114,6 +116,7 @@ const MainForm = (props: FormProps) => {
                     type="time"
                     placeholder='Hora de finalización'
                     label='Hora de finalización'
+                    step={900}
                     validate={value => (value ? undefined : 'Requerido')}
                     wrapperClassName="col-span-2"
                 />}
@@ -184,7 +187,7 @@ export function CreateEvent({user}: { user: IUser}) {
         open={open}
         onOpenChange={setOpen}
         title="Creación de Evento"
-        footer={isLoading ? null : <Button
+        footer={isLoading && !user?.access?.instructor ? null : <Button
             type="submit" form="event-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Crear</Button>}
         trigger={<Button
