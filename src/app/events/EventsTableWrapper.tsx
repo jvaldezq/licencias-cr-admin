@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/clientService";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
@@ -142,8 +142,6 @@ const columns: ColumnDef<IEvent>[] = [{
 export const EventsTableWrapper = (props: Props) => {
     const {data, user} = props
     const searchParams = useSearchParams();
-    const {replace} = useRouter();
-    const pathname = usePathname();
     const queryClient = new QueryClient({
         queryCache: new QueryCache({
             onError: error => {
@@ -155,16 +153,8 @@ export const EventsTableWrapper = (props: Props) => {
     const instructorId = user?.access?.instructor ? user?.id : undefined;
 
     const onSubmit = useCallback((data: IEventFilter) => {
-        const params = new URLSearchParams(searchParams);
-        const paramsObj = JSON.stringify({
-            locationId: data?.locationId,
-            instructorId: data?.instructorId,
-            licenseTypeId: data?.licenseTypeId,
-            date: data?.date
-        })
-        params.set('filters', btoa(paramsObj));
-        replace(`${pathname}?${params.toString()}`);
-    }, [pathname, replace, searchParams]);
+        return data;
+    }, []);
 
     return <QueryClientProvider client={queryClient}>
         <Form
@@ -189,7 +179,9 @@ export interface FiltersFormProps extends FormRenderProps<IEventFilter> {
 }
 
 const FiltersForm = (props: FiltersFormProps) => {
-    const {values, form, user, handleSubmit} = props;
+    const {values, form, user} = props;
+    const {replace} = useRouter();
+    const pathname = usePathname();
     const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
     const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
     const {
@@ -198,7 +190,6 @@ const FiltersForm = (props: FiltersFormProps) => {
 
     return <form
         id="event-filter-form"
-        onSubmit={handleSubmit}
         className="py-3 my-6 border-y border-solid border-primary/[0.2] grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         <div className="col-span-full flex gap-4">
             <Button
@@ -206,11 +197,9 @@ const FiltersForm = (props: FiltersFormProps) => {
                 className="text-secondary rounded-3xl border-secondary border border-solid"
                 onClick={() => {
                     form.reset()
+                    replace(`${pathname}`);
                 }}
             >Limpiar filtros</Button>
-            <Button
-                type="submit" form="event-filter-form"
-                className="bg-secondary text-white rounded-3xl">Filtrar</Button>
         </div>
         <Field
             name="date"

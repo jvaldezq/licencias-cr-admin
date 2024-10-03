@@ -25,13 +25,11 @@ export async function GET(request: Request) {
             dateFilter = {
                 schedule: {
                     startDate: {
-                        gte: startOfDay,
-                        lte: endOfDay,
+                        gte: startOfDay, lte: endOfDay,
                     },
                 },
             };
         }
-        console.log(dateFilter)
 
         const locationId = locationIdParam ? {
             locationId: {
@@ -74,17 +72,12 @@ export async function GET(request: Request) {
                         name: true, color: true,
                     }
                 },
-            },
-            orderBy: {
+            }, orderBy: {
                 schedule: {
                     startDate: 'desc'
                 }
-            },
-            where: {
-                ...dateFilter,
-                ...locationId,
-                ...instructorId,
-                ...licenseTypeId
+            }, where: {
+                ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId
             }
         });
 
@@ -115,11 +108,24 @@ export async function POST(request: Request) {
             data: body?.customer
         })
 
-        const eventSchedulePromise = prisma.schedule.create({
-            data: {
-                startDate: dayjs(selectedDate).toISOString(), endDate: dayjs(endDate).toISOString(),
-            }
-        })
+        let eventSchedulePromise;
+        if (body?.schedule.endDate) {
+            eventSchedulePromise = prisma.schedule.create({
+                data: {
+                    startDate: dayjs(selectedDate).toISOString(),
+                    endDate: dayjs(endDate).toISOString(),
+                    userId: +body?.instructorId
+                }
+            })
+        } else {
+            eventSchedulePromise = prisma.schedule.create({
+                data: {
+                    startDate: dayjs(endDate).toISOString(),
+                    endDate: dayjs(selectedDate).toISOString(),
+                    userId: +body?.instructorId
+                }
+            })
+        }
 
         const paymentPromise = prisma.payment.create({
             data: {

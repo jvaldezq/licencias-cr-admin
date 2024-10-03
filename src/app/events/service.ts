@@ -6,9 +6,9 @@ export const fetchEvents = async (searchParams: {
 }, user: IUser): Promise<IEvent[]> => {
     try {
         const params = searchParams.filters ? atob(searchParams.filters) : '{}';
-        const instructorId = user?.access?.instructor ? user?.id : undefined;
+        const instructorId = user?.access?.instructor ? { instructorId: user?.id } : undefined;
         const paramsObj = {
-            locationId: user?.location?.id, instructorId: instructorId, date: new Date(), ...JSON.parse(params)
+            locationId: user?.location?.id, ...instructorId, date: new Date(), ...JSON.parse(params)
         }
         const response = await serverApi({
             method: 'GET', path: '/event', params: paramsObj

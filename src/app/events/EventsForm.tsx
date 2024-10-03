@@ -20,8 +20,6 @@ import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {IEventForm, IUser} from "@/lib/definitions";
-import dayjs from "dayjs";
-
 
 export interface FormProps extends FormRenderProps<IEventForm> {
 }

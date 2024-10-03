@@ -14,6 +14,7 @@ interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'ch
     }[];
     isLoading?: boolean;
     disabled?: boolean;
+    onFilter?: (value: string, key: string) => void;
 }
 
 export const FormDropdown = (props: IProps) => {
@@ -32,6 +33,7 @@ export const FormDropdown = (props: IProps) => {
         options,
         isLoading,
         disabled,
+        onFilter,
         ...rest
     } = props;
     const [open, setOpen] = useState(false)
@@ -69,7 +71,8 @@ export const FormDropdown = (props: IProps) => {
                                 value={option.name}
                                 onSelect={() => {
                                     onChange(option.id);
-                                    setOpen(false)
+                                    setOpen(false);
+                                    onFilter && onFilter(option.id, name);
                                 }}
                             >
                                 {option.name}
@@ -98,7 +101,8 @@ export const FormDropdown = (props: IProps) => {
                                     value={option.name}
                                     onSelect={() => {
                                         onChange(option.id);
-                                        setOpen(false)
+                                        setOpen(false);
+                                        onFilter && onFilter(option.id, name);
                                     }}
                                 >
                                     {option.name}
