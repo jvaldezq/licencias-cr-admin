@@ -37,7 +37,7 @@ export const getEventsList = async (filters: IEventFilter) => {
 
         const events = await prisma.event.findMany({
             select: {
-                id: true, status: true, isMissingInfo: true, date: true, asset: {
+                id: true, status: true, date: true, asset: {
                     select: {
                         name: true,
                     }
@@ -55,7 +55,7 @@ export const getEventsList = async (filters: IEventFilter) => {
                     }
                 },
             }, orderBy: {
-                // date: 'desc'
+                date: 'desc'
             }, where: {
                 ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId
             }
