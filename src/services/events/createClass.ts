@@ -1,57 +1,69 @@
 import prisma from '@/lib/prisma';
-import {IEventForm} from "@/lib/definitions";
-import dayjs from "dayjs";
+import { IEventForm } from '@/lib/definitions';
+import dayjs from 'dayjs';
 
 export const createClass = async (data: IEventForm) => {
-    if (!data?.customer) {
+    if (!data.customer) {
         throw new Error('Invalid customer data');
+    }
+
+    if (!data.payment) {
+        throw new Error('Invalid payment data');
     }
 
     const [startTimeHours, startTimeMinutes] = data?.startTime?.split(':') || [];
     const [endTimeHours, endTimeMinutes] = data?.endTime?.split(':') || [];
-    const selectedDate = dayjs(data?.date);
-    const eventDate = dayjs(selectedDate?.set('hour', +startTimeHours).set('minute', +startTimeMinutes).format('YYYY-MM-DDTHH:mm:ss')).toISOString();
-    const customerStartDate = dayjs(selectedDate?.set('hour', +startTimeHours).set('minute', +startTimeMinutes).format('YYYY-MM-DDTHH:mm:ss')).toISOString();
-    const customerEndDate = dayjs(selectedDate?.set('hour', +endTimeHours).set('minute', +endTimeMinutes).format('YYYY-MM-DDTHH:mm:ss')).toISOString();
+    const selectedDate = dayjs(data.date);
 
-    const customer = await prisma.customer.create({
-        data: {
-            name: data?.customer?.name || '',
-            identification: data?.customer.identification || '',
-            phone: data?.customer.phone || '',
-        }
-    })
+    // Compute event, start and end dates only once
+    const eventDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).toISOString();
+    const customerStartDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).toISOString();
+    const customerEndDate = selectedDate.set('hour', +endTimeHours).set('minute', +endTimeMinutes).toISOString();
 
-    prisma.schedule.create({
-        data: {
-            startDate: customerStartDate, endDate: customerEndDate, customerId: customer?.id,
-        }
-    })
+    try {
+        return await prisma.$transaction(async (prisma) => {
+            const customer = await prisma.customer.create({
+                data: {
+                    name: data?.customer?.name || '',
+                    identification: data?.customer?.identification || '',
+                    phone: data?.customer?.phone || '',
+                },
+            });
 
-    if (!data?.payment) {
-        throw new Error('Invalid payment data');
+            await prisma.schedule.create({
+                data: {
+                    startDate: customerStartDate,
+                    endDate: customerEndDate,
+                    customerId: customer.id,
+                },
+            });
+
+            const payment = await prisma.payment.create({
+                data: {
+                    price: data?.payment?.price ? +data.payment.price : 0,
+                    cashAdvance: data?.payment?.cashAdvance ? +data.payment.cashAdvance : 0,
+                    paid: data?.payment?.paid || false,
+                },
+            });
+
+            await prisma.event.create({
+                data: {
+                    status: 'Pendiente',
+                    assetId: data.assetId,
+                    createdById: data.createdById || 0,
+                    customerId: customer.id,
+                    instructorId: data.instructorId,
+                    licenseTypeId: data.licenseTypeId,
+                    locationId: data.locationId || 0,
+                    paymentId: payment.id,
+                    typeId: data.typeId,
+                    date: eventDate,
+                },
+            });
+
+            return 'Event created successfully';
+        });
+    } catch (error) {
+        throw new Error(`Failed to create class: ${error}`);
     }
-
-    const payment = await prisma.payment.create({
-        data: {
-            price: data?.payment?.price ? +data?.payment?.price : 0,
-            cashAdvance: data?.payment?.cashAdvance ? +data?.payment?.cashAdvance : 0,
-            paid: data?.payment?.paid || false,
-        }
-    });
-
-    return prisma.event.create({
-        data: {
-            status: 'Pendiente',
-            assetId: data?.assetId,
-            createdById: data?.createdById || 0,
-            customerId: customer?.id,
-            instructorId: data?.instructorId,
-            licenseTypeId: data?.licenseTypeId,
-            locationId: data?.locationId || 0,
-            paymentId: payment?.id,
-            typeId: data?.typeId,
-            date: eventDate,
-        }
-    });
-}
+};

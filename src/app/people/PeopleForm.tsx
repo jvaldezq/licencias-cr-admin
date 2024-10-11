@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
-import {useGetLocationList} from "@/app/events/clientService";
+import {useGetLocationList} from "@/app/events/services/client";
 import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
 
 export interface PeopleForm {

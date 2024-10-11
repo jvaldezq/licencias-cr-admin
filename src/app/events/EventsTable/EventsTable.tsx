@@ -1,24 +1,19 @@
 'use client';
 
 import {ColumnDef} from "@tanstack/react-table";
-import {IEvent, IEventFilter, IUser} from "@/lib/definitions";
+import {IEvent, IUser} from "@/lib/definitions";
 import {Button} from "@/components/ui/button";
 import {ArrowUpDown} from "lucide-react";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
 import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
-import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
-import {useCallback} from "react";
-import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
-import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/clientService";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
 dayjs.extend(advancedFormat);
 
 interface Props {
+    filters: string;
     data: IEvent[]
     user: IUser
 }
@@ -122,24 +117,11 @@ const columns: ColumnDef<IEvent>[] = [{
             {name}
         </div>
     },
-}
-//     {
-//     id: "actions", header: () => {
-//         return (<Button
-//             className="px-0 font-bold text-base"
-//             variant="ghost"
-//         >
-//         Acciones
-//         </Button>)
-//     }, enableHiding: false, cell: ({row}) => {
-//         return <EditEventsWrapper id={row.original.id} />
-//     },
-// },
-]
+}]
 
-export const EventsTableWrapper = (props: Props) => {
-    const {data, user} = props
-    const searchParams = useSearchParams();
+export const EventsTable = (props: Props) => {
+    const {data} = props
+
     const queryClient = new QueryClient({
         queryCache: new QueryCache({
             onError: error => {
@@ -148,89 +130,10 @@ export const EventsTableWrapper = (props: Props) => {
         })
     });
 
-    const instructorId = user?.access?.instructor ? user?.id : undefined;
-
-    const onSubmit = useCallback((data: IEventFilter) => {
-        return data;
-    }, []);
-
     return <QueryClientProvider client={queryClient}>
-        <Form
-            onSubmit={onSubmit}
-            initialValues={{
-                date: new Date(), locationId: user?.location?.id, instructorId: instructorId
-            }}
-            validateOnBlur={false}
-        >
-            {(formProps) => <FiltersForm {...formProps} user={user}/>}
-        </Form>
-
-        {
-            data ? <DataTable
-                data={data}
-                columns={columns}
-            /> : <div className="flex justify-center items-center">No hay datos</div>
-        }
+        {data ? <DataTable
+            data={data}
+            columns={columns}
+        /> : <div className="flex justify-center items-center">No hay datos</div>}
     </QueryClientProvider>
-}
-
-export interface FiltersFormProps extends FormRenderProps<IEventFilter> {
-    user: IUser
-}
-
-const FiltersForm = (props: FiltersFormProps) => {
-    const {values, form, user} = props;
-    const {replace} = useRouter();
-    const pathname = usePathname();
-    const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
-    const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
-    const {
-        data: instructors, isLoading: isInstructorsLoading
-    } = useGetInstructorListByLocationId(values?.locationId);
-
-    return <form
-        id="event-filter-form"
-        className="py-3 my-6 border-y border-solid border-primary/[0.2] grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        <div className="col-span-full flex gap-4">
-            <Button
-                variant="outline"
-                className="text-secondary rounded-3xl border-secondary border border-solid"
-                onClick={() => {
-                    form.reset()
-                    replace(`${pathname}`);
-                }}
-            >Limpiar filtros</Button>
-        </div>
-        <Field
-            name="date"
-            component={FormCalendar as unknown as SupportedInputs}
-            placeholder={dayjs().format('YYYY MMM DD')}
-            label="Fecha"
-        />
-        {(user?.access?.receptionist || user?.access?.admin) && <Field
-            name="locationId"
-            component={FormDropdown as unknown as SupportedInputs}
-            placeholder='Sede'
-            label='Sede'
-            options={locations || []}
-            isLoading={isLocationsLoading}
-        />}
-
-        <Field
-            name="instructorId"
-            component={FormDropdown as unknown as SupportedInputs}
-            placeholder='Instructor'
-            label='Instructor'
-            options={instructors || []}
-            isLoading={isInstructorsLoading}
-        />
-        <Field
-            name="licenseTypeId"
-            component={FormDropdown as unknown as SupportedInputs}
-            placeholder='Tipo licencia'
-            label='Tipo licencia'
-            options={licenses || []}
-            isLoading={isLicensesLoading}
-        />
-    </form>
 }

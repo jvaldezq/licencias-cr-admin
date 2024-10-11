@@ -15,7 +15,7 @@ import {
     useGetInstructorList,
     useGetLicenseList,
     useGetLocationList,
-} from "@/app/events/clientService";
+} from "@/app/events/services/client";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";

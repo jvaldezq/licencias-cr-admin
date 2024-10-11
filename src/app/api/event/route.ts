@@ -4,6 +4,8 @@ import {revalidatePath} from 'next/cache'
 import dayjs from "dayjs";
 import {createClass} from "@/services/events/createClass";
 import {createTest} from "@/services/events/createTest";
+import {IEventFilter} from "@/lib/definitions";
+import {getEventsList} from "@/services/events/getEventsList";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -14,69 +16,11 @@ BigInt.prototype.toJSON = function () {
 export async function GET(request: Request) {
     try {
         const {searchParams} = new URL(request.url);
-        const date = searchParams.get('date');
-        const locationIdParam = searchParams.get('locationId');
-        const instructorIdParam = searchParams.get('instructorId');
-        const licenseTypeIdParam = searchParams.get('licenseTypeId');
+        const filtersText = searchParams.get('filters') ?? '';
+        const filters = JSON.parse(atob(filtersText)) as IEventFilter;
+        const events = await getEventsList(filters);
 
-        let dateFilter = {};
-        if (date) {
-            const startOfDay = dayjs(date).startOf('day').toISOString();
-            const endOfDay = dayjs(date).endOf('day').toISOString();
-            dateFilter = {
-                schedule: {
-                    startDate: {
-                        gte: startOfDay, lte: endOfDay,
-                    },
-                },
-            };
-        }
-
-        const locationId = locationIdParam ? {
-            locationId: {
-                equals: +locationIdParam
-            }
-        } : {};
-
-        const instructorId = instructorIdParam ? {
-            instructorId: {
-                equals: +instructorIdParam
-            }
-        } : {};
-
-        const licenseTypeId = licenseTypeIdParam ? {
-            licenseTypeId: {
-                equals: +licenseTypeIdParam
-            }
-        } : {};
-
-        const event = await prisma.event.findMany({
-            select: {
-                id: true, status: true, isMissingInfo: true, date: true, asset: {
-                    select: {
-                        name: true,
-                    }
-                }, customer: {
-                    select: {
-                        name: true,
-                    }
-                }, instructor: true, licenseType: {
-                    select: {
-                        name: true, color: true,
-                    }
-                }, type: {
-                    select: {
-                        name: true, color: true,
-                    }
-                },
-            }, orderBy: {
-                // date: 'desc'
-            }, where: {
-                ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId
-            }
-        });
-
-        return NextResponse.json(event, {status: 200});
+        return NextResponse.json(events, {status: 200});
     } catch (error) {
         console.error('Error fetching locations', error);
         return NextResponse.json({error}, {status: 500});
@@ -87,15 +31,19 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        if (!body || !body.customer || !body.payment || !body.createdById || !body.date  || !body.locationId) {
+        if (!body || !body.customer || !body.payment || !body.createdById || !body.date || !body.locationId) {
             return NextResponse.json({error: 'Invalid inputs'}, {status: 400});
         }
 
-        const event = body?.endDate ? await createClass(body) : await createTest(body);
-
+        let res;
+        if (body?.typeId === 1) {
+            res = await createClass(body);
+        } else {
+            res = await createTest(body);
+        }
 
         revalidatePath('/events', 'page')
-        return NextResponse.json(event, {status: 200});
+        return NextResponse.json(res, {status: 200});
     } catch (error) {
         console.error('Creating event', error);
         return NextResponse.json({error}, {status: 500});
