@@ -24,16 +24,38 @@ const columns: ColumnDef<IUser>[] = [{
         </Button>)
     }, cell: ({row}) => <div className="capitalize">{row.getValue("name")}</div>,
 }, {
-    accessorKey: "color", header: () => {
+    accessorKey: "location.name", header: () => {
         return (<Button
             className="px-0 font-bold text-base"
             variant="ghost"
         >
-            Color
+            Sede
         </Button>)
-    }, cell: ({row}) => <div>
-        <div className='rounded-full h-4 w-4' style={{ background: row.getValue('color') }}/>
-    </div>,
+    }, cell: ({row}) => <div className="capitalize">{row?.original?.location?.name}</div>,
+}, {
+    accessorKey: "access.instructor", header: () => {
+        return (<Button
+            className="px-0 font-bold text-base"
+            variant="ghost"
+        >
+            Instructor
+        </Button>)
+    }, cell: ({row}) => {
+        const className = row?.original?.access?.instructor ? "bg-secondary border-secondary" : "border-secondary"
+        return <div className={`capitalize h-4 w-4 rounded-full border-solid border-2 ${className}`} />
+    },
+}, {
+    accessorKey: "access.receptionist", header: () => {
+        return (<Button
+            className="px-0 font-bold text-base"
+            variant="ghost"
+        >
+            Recepcionista
+        </Button>)
+    }, cell: ({row}) => {
+        const className = row?.original?.access?.receptionist ? "bg-secondary border-secondary" : "border-secondary"
+        return <div className={`capitalize h-4 w-4 rounded-full border-solid border-2 ${className}`} />
+    },
 }, {
     id: "actions", header: () => {
         return (<Button

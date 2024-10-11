@@ -1,3 +1,4 @@
+import {Dayjs} from "dayjs";
 
 export interface ILocation {
     id: number;
@@ -6,8 +7,8 @@ export interface ILocation {
     createdAt: Date;
     updatedAt: Date;
     assets: IAsset[];
-    instructors: IUser[];
     events: IEvent[];
+    instructors: IUser[];
 }
 
 export interface ILicenseType {
@@ -16,6 +17,7 @@ export interface ILicenseType {
     color: string;
     createdAt: Date;
     updatedAt: Date;
+    events: IEvent[];
     assets: IAsset[];
 }
 
@@ -38,15 +40,14 @@ export interface IUser {
     id: number;
     authId: string;
     name: string;
-    color: string;
     locationId: number;
     createdAt: Date;
     updatedAt: Date;
-    eventsAsInstructor: IEvent[];
     eventsAsCreator: IEvent[];
-    access?: IUserAccess;
-    location: ILocation;
+    eventsAsInstructor: IEvent[];
     logs: ILog[];
+    location?: ILocation;
+    access?: IUserAccess;
     schedule: ISchedule[];
 }
 
@@ -64,27 +65,26 @@ export interface IUserAccess {
 export interface IEvent {
     id: number;
     status: string;
+    isMissingInfo: boolean;
     createdAt: Date;
     updatedAt: Date;
-    instructorId?: number;
-    instructor?: IUser;
-    createdById: number;
-    createdBy?: IUser;
-    locationId: number;
-    location: ILocation;
-    typeId: number;
-    type: IEventType;
     assetId?: number;
     asset?: IAsset;
-    scheduleId: number;
-    schedule: ISchedule;
-    paymentId: number;
-    payment: IPayment;
+    createdById: number;
+    createdBy: IUser;
     customerId: number;
     customer: ICustomer;
-    isMissingInfo: boolean;
-    licenseTypeId: number;
-    licenseType: ILicenseType;
+    instructorId?: number;
+    instructor?: IUser;
+    licenseTypeId?: number;
+    licenseType?: ILicenseType;
+    locationId: number;
+    location: ILocation;
+    paymentId: number;
+    payment: IPayment;
+    date?: Date;
+    typeId: number;
+    type: IEventType;
 }
 
 export interface ICustomer {
@@ -95,7 +95,8 @@ export interface ICustomer {
     testPassed?: boolean;
     createdAt: Date;
     updatedAt: Date;
-    event?: IEvent;
+    event: IEvent[];
+    schedule: ISchedule[];
 }
 
 export interface ISchedule {
@@ -104,19 +105,20 @@ export interface ISchedule {
     endDate: Date;
     createdAt: Date;
     updatedAt: Date;
-    event?: IEvent;
     assetId?: number;
     asset?: IAsset;
     userId?: number;
     user?: IUser;
+    customerId?: number;
+    customer?: ICustomer;
 }
 
 export interface IPayment {
     id: number;
     price?: number;
     cashAdvance?: number;
-    paid: boolean;
-    paidDate: Date;
+    paid?: boolean;
+    paidDate?: Date;
     createdAt: Date;
     updatedAt: Date;
     event?: IEvent;
@@ -137,32 +139,30 @@ export interface ILog {
     modelId: number;
     action: string;
     changes: string;
+    createdAt: Date;
     changedById: number;
     changedBy: IUser;
-    createdAt: Date;
 }
 
 export interface IEventForm {
     typeId: number;
-    customer: {
-        name: string;
-        identification: string;
-        phone: string;
+    customer?: {
+        name?: string; identification?: string; phone?: string;
+        schedule?: {
+            startTime?: string;
+        }
     };
-    payment: {
-        price: number;
-        cashAdvance?: number;
-        paid: boolean;
-    }
-    schedule: {
-        startDate: Date;
-        endDate: Date;
-    }
-    locationId: number;
-    assetId?: number;
-    licenseTypeId: number;
+    locationId?: number;
+    licenseTypeId?: number;
+    date?: string | Date | Dayjs;
+    startTime?: string;
+    endTime?: string;
     instructorId?: number;
+    assetId?: number;
     createdById?: number;
+    payment?: {
+        price?: number; cashAdvance?: number; paid?: boolean;
+    }
 }
 
 export interface IEventFilter {

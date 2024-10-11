@@ -141,3 +141,23 @@ export const useGetAssetsByList = (data: AssetsByProps) => {
         retry: 2,
     });
 };
+
+const getInstructorList = async (): Promise<IUser[]> => {
+    const userList = await clientApi.get('/user/list', {
+        params: {
+            isInstructor: true,
+        }
+    });
+    return userList.data;
+};
+
+export const useGetInstructorList = () => {
+    return useQuery({
+        enabled: true,
+        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false,
+        queryKey: ["instructor-list"],
+        queryFn: getInstructorList,
+        retry: 2,
+    });
+};

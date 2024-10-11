@@ -9,7 +9,7 @@ const createPeople = async (data: PeopleForm): Promise<IUser> => {
 };
 
 const updatePeople = async (data: PeopleForm): Promise<IUser> => {
-    const user = await clientApi.patch('/user', data);
+    const user = await clientApi.patch(`/user/${data.id}`, data);
     return user.data;
 };
 
@@ -36,8 +36,6 @@ export const useUpdateMutation = () => {
 
 export const useGetPeopleById = (id: number) => {
     return useQuery({
-        enabled: !!id,
-        staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
         queryKey: ["user-by-id", id],
         queryFn: () => getPeopleById(id),

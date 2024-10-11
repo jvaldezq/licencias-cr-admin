@@ -34,9 +34,8 @@ const columns: ColumnDef<IEvent>[] = [{
             <ArrowUpDown className="ml-2 h-4 w-4"/>
         </Button>)
     }, cell: ({row}) => {
-        const schedule = row?.original?.schedule;
         return <div className="capitalize">
-            {dayjs(schedule?.startDate).format('h:mm A')}
+            {dayjs(row?.original?.date).format('h:mm A')}
         </div>
     },
 }, {
@@ -50,9 +49,8 @@ const columns: ColumnDef<IEvent>[] = [{
             <ArrowUpDown className="ml-2 h-4 w-4"/>
         </Button>)
     }, cell: ({row}) => {
-        const schedule = row?.original?.schedule;
         return <div className="capitalize">
-            {dayjs(schedule?.endDate).format('h:mm A')}
+            {dayjs(row?.original?.date).format('h:mm A')}
         </div>
     },
 }, {
@@ -167,10 +165,12 @@ export const EventsTableWrapper = (props: Props) => {
             {(formProps) => <FiltersForm {...formProps} user={user}/>}
         </Form>
 
-        <DataTable
-            data={data}
-            columns={columns}
-        />
+        {
+            data ? <DataTable
+                data={data}
+                columns={columns}
+            /> : <div className="flex justify-center items-center">No hay datos</div>
+        }
     </QueryClientProvider>
 }
 

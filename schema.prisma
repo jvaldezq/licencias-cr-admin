@@ -48,14 +48,13 @@ model User {
   id                 BigInt      @id @default(autoincrement())
   authId             String      @unique
   name               String
-  color              String      @unique
   locationId         BigInt
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
   eventsAsCreator    Event[]     @relation("CreatorRelation")
   eventsAsInstructor Event[]     @relation("InstructorRelation")
   logs               Log[]
-  location           Location    @relation(fields: [locationId], references: [id])
+  location           Location?    @relation(fields: [locationId], references: [id])
   access             UserAccess?
   schedule           Schedule[]
 }
@@ -74,7 +73,6 @@ model UserAccess {
 model Event {
   id            BigInt       @id @default(autoincrement())
   status        String
-  isMissingInfo Boolean      @default(true)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   assetId       BigInt?
@@ -91,12 +89,11 @@ model Event {
   location      Location     @relation(fields: [locationId], references: [id])
   paymentId     BigInt       @unique
   payment       Payment      @relation(fields: [paymentId], references: [id])
-  scheduleId    BigInt       @unique
-  schedule      Schedule     @relation(fields: [scheduleId], references: [id])
+  date          DateTime?
   typeId        BigInt
   type          EventType    @relation(fields: [typeId], references: [id])
 
-  @@index([instructorId, createdById, scheduleId, paymentId, customerId, locationId, licenseTypeId])
+  @@index([instructorId, createdById, date, paymentId, customerId, locationId, licenseTypeId])
 }
 
 model Customer {
@@ -108,19 +105,21 @@ model Customer {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   event          Event[]
+  schedule       Schedule[]
 }
 
 model Schedule {
   id                  BigInt   @id @default(autoincrement())
-  startDate           DateTime
-  endDate             DateTime
+  startDate           DateTime?
+  endDate             DateTime?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
-  event               Event?
   assetId             BigInt?
   asset               Asset?       @relation(fields: [assetId], references: [id])
   userId              BigInt?
   user                User?     @relation(fields: [userId], references: [id])
+  customerId          BigInt?
+  customer            Customer?     @relation(fields: [customerId], references: [id])
 }
 
 model Payment {

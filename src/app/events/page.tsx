@@ -15,6 +15,7 @@ export default async function Events({
     const session = await getSession();
     const user = await fetchUserInfo({userId: session?.user?.sub?.split('|')[1]});
     const data = await fetchEvents(searchParams, user);
+    console.log(data);
 
     return (<main className="max-w-screen-2xl mx-auto px-6 pt-24">
         <Suspense fallback={<PageSkeleton/>}>

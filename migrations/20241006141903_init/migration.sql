@@ -67,15 +67,15 @@ CREATE TABLE "Event" (
     "isMissingInfo" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "instructorId" BIGINT,
-    "createdById" BIGINT NOT NULL,
-    "locationId" BIGINT NOT NULL,
-    "typeId" BIGINT NOT NULL,
     "assetId" BIGINT,
-    "scheduleId" BIGINT NOT NULL,
-    "paymentId" BIGINT NOT NULL,
-    "customerId" BIGINT,
+    "createdById" BIGINT NOT NULL,
+    "customerId" BIGINT NOT NULL,
+    "instructorId" BIGINT,
     "licenseTypeId" BIGINT,
+    "locationId" BIGINT NOT NULL,
+    "paymentId" BIGINT NOT NULL,
+    "date" TIMESTAMP(3),
+    "typeId" BIGINT NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
 );
@@ -96,14 +96,13 @@ CREATE TABLE "Customer" (
 -- CreateTable
 CREATE TABLE "Schedule" (
     "id" BIGSERIAL NOT NULL,
-    "eventStartDate" TIMESTAMP(3) NOT NULL,
-    "eventEndDate" TIMESTAMP(3) NOT NULL,
-    "instructorStartDate" TIMESTAMP(3) NOT NULL,
-    "instructorEndDate" TIMESTAMP(3) NOT NULL,
-    "assetStartDate" TIMESTAMP(3) NOT NULL,
-    "assetEndDate" TIMESTAMP(3) NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "assetId" BIGINT,
+    "userId" BIGINT,
+    "customerId" BIGINT,
 
     CONSTRAINT "Schedule_pkey" PRIMARY KEY ("id")
 );
@@ -139,8 +138,8 @@ CREATE TABLE "Log" (
     "modelId" BIGINT NOT NULL,
     "action" TEXT NOT NULL,
     "changes" TEXT NOT NULL,
-    "changedById" BIGINT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "changedById" BIGINT NOT NULL,
 
     CONSTRAINT "Log_pkey" PRIMARY KEY ("id")
 );
@@ -170,13 +169,10 @@ CREATE UNIQUE INDEX "User_color_key" ON "User"("color");
 CREATE UNIQUE INDEX "UserAccess_userId_key" ON "UserAccess"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Event_scheduleId_key" ON "Event"("scheduleId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Event_paymentId_key" ON "Event"("paymentId");
 
 -- CreateIndex
-CREATE INDEX "Event_instructorId_createdById_scheduleId_paymentId_custome_idx" ON "Event"("instructorId", "createdById", "scheduleId", "paymentId", "customerId", "locationId", "licenseTypeId");
+CREATE INDEX "Event_instructorId_createdById_date_paymentId_customerId_lo_idx" ON "Event"("instructorId", "createdById", "date", "paymentId", "customerId", "locationId", "licenseTypeId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "EventType_name_key" ON "EventType"("name");
@@ -203,7 +199,7 @@ ALTER TABLE "Event" ADD CONSTRAINT "Event_assetId_fkey" FOREIGN KEY ("assetId") 
 ALTER TABLE "Event" ADD CONSTRAINT "Event_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD CONSTRAINT "Event_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD CONSTRAINT "Event_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD CONSTRAINT "Event_instructorId_fkey" FOREIGN KEY ("instructorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -218,10 +214,16 @@ ALTER TABLE "Event" ADD CONSTRAINT "Event_locationId_fkey" FOREIGN KEY ("locatio
 ALTER TABLE "Event" ADD CONSTRAINT "Event_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "Payment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD CONSTRAINT "Event_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES "Schedule"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD CONSTRAINT "Event_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "EventType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD CONSTRAINT "Event_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "EventType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Log" ADD CONSTRAINT "Log_changedById_fkey" FOREIGN KEY ("changedById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,8 +1,9 @@
 import prisma from '@/lib/prisma';
 import {NextResponse} from 'next/server';
 import {revalidatePath} from 'next/cache'
-import {IEvent} from "@/lib/definitions";
 import dayjs from "dayjs";
+import {createClass} from "@/services/events/createClass";
+import {createTest} from "@/services/events/createTest";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -51,7 +52,7 @@ export async function GET(request: Request) {
 
         const event = await prisma.event.findMany({
             select: {
-                id: true, status: true, isMissingInfo: true, asset: {
+                id: true, status: true, isMissingInfo: true, date: true, asset: {
                     select: {
                         name: true,
                     }
@@ -63,19 +64,13 @@ export async function GET(request: Request) {
                     select: {
                         name: true, color: true,
                     }
-                }, schedule: {
-                    select: {
-                        startDate: true, endDate: true,
-                    }
                 }, type: {
                     select: {
                         name: true, color: true,
                     }
                 },
             }, orderBy: {
-                schedule: {
-                    startDate: 'desc'
-                }
+                // date: 'desc'
             }, where: {
                 ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId
             }
@@ -91,97 +86,13 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        if (!body || !body.schedule || !body.customer || !body.payment || !body.createdById) {
-            return NextResponse.json({error: 'Invalid input'}, {status: 400});
+
+        if (!body || !body.customer || !body.payment || !body.createdById || !body.date  || !body.locationId) {
+            return NextResponse.json({error: 'Invalid inputs'}, {status: 400});
         }
 
-        const selectedDate = dayjs(body?.schedule.startDate);
-        let endDate = '';
-        if (body?.schedule.endDate) {
-            const [hours, minutes] = body?.schedule?.endDate?.split(':');
-            endDate = selectedDate.set('hour', hours).set('minute', minutes).format('YYYY-MM-DDTHH:mm:ss');
-        } else {
-            endDate = dayjs(selectedDate).subtract(1, 'hour').format('YYYY-MM-DDTHH:mm:ss');
-        }
+        const event = body?.endDate ? await createClass(body) : await createTest(body);
 
-        const customerPromise = prisma.customer.create({
-            data: body?.customer
-        })
-
-        let eventSchedulePromise;
-        if (body?.schedule.endDate) {
-            eventSchedulePromise = prisma.schedule.create({
-                data: {
-                    startDate: dayjs(selectedDate).toISOString(),
-                    endDate: dayjs(endDate).toISOString(),
-                    userId: +body?.instructorId
-                }
-            })
-        } else {
-            eventSchedulePromise = prisma.schedule.create({
-                data: {
-                    startDate: dayjs(endDate).toISOString(),
-                    endDate: dayjs(selectedDate).toISOString(),
-                    userId: +body?.instructorId
-                }
-            })
-        }
-
-        const paymentPromise = prisma.payment.create({
-            data: {
-                price: +body?.payment?.price, cashAdvance: +body?.payment?.cashAdvance, paid: body?.payment?.paid,
-            }
-        })
-
-        const [customer, eventSchedule, payment] = await Promise.all([customerPromise, eventSchedulePromise, paymentPromise]);
-
-        if (body?.assetId) {
-            prisma.schedule.create({
-                data: {
-                    startDate: dayjs(selectedDate).toISOString(),
-                    endDate: dayjs(endDate).toISOString(),
-                    assetId: +body?.assetId
-                }
-            })
-        }
-
-        if (body?.instructorId) {
-            if (body?.schedule.endDate) {
-                prisma.schedule.create({
-                    data: {
-                        startDate: dayjs(selectedDate).toISOString(),
-                        endDate: dayjs(endDate).toISOString(),
-                        userId: +body?.instructorId
-                    }
-                })
-            } else {
-                prisma.schedule.create({
-                    data: {
-                        startDate: dayjs(endDate).toISOString(),
-                        endDate: dayjs(selectedDate).toISOString(),
-                        userId: +body?.instructorId
-                    }
-                })
-            }
-
-        }
-
-        const eventBody = {
-            status: 'CREATED',
-            assetId: +body?.assetId || null,
-            createdById: +body?.createdById,
-            customerId: customer.id,
-            instructorId: +body?.instructorId || null,
-            licenseTypeId: +body?.licenseTypeId || null,
-            locationId: +body?.locationId,
-            paymentId: payment.id,
-            scheduleId: eventSchedule.id,
-            typeId: +body?.typeId,
-        }
-
-        const event = await prisma.event.create({
-            data: eventBody
-        });
 
         revalidatePath('/events', 'page')
         return NextResponse.json(event, {status: 200});
