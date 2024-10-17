@@ -1,6 +1,6 @@
 'use client';
 
-import {useCallback, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
 import {FormInput} from "@/components/Forms/Input/FormInput";
 import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
@@ -11,10 +11,12 @@ import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
 import {
     useCreateMutation,
     useGetAssetsByList,
+    useGetEventById,
     useGetEventTypesList,
     useGetInstructorList,
     useGetLicenseList,
     useGetLocationList,
+    useUpdateMutation,
 } from "@/app/events/services/client";
 import {useRouter} from "next/navigation";
 import {Loader} from "@/components/Loader";
@@ -22,6 +24,7 @@ import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {IEventForm, IUser} from "@/lib/definitions";
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import dayjs from "dayjs";
+import {EditIcon} from "@/assets/icons/EditIcon";
 
 export interface FormProps extends FormRenderProps<IEventForm> {
 }
@@ -38,7 +41,7 @@ const MainForm = (props: FormProps) => {
         data: instructors, isLoading: isInstructorsLoading
     } = useGetInstructorList();
 
-    const isClassType = eventTypes?.find(t => t.id === values?.typeId)?.name.includes('Clase');
+    const isClassType = values.typeId === 1;
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
@@ -204,10 +207,7 @@ export function CreateEvent({user}: { user: IUser }) {
     const initialValues = {
         typeId: undefined,
         customer: {
-            name: undefined,
-            identification: undefined,
-            phone: undefined,
-            schedule: {
+            name: undefined, identification: undefined, phone: undefined, schedule: {
                 startTime: undefined,
             }
         },
@@ -220,9 +220,7 @@ export function CreateEvent({user}: { user: IUser }) {
         assetId: undefined,
         createdById: user.id,
         payment: {
-            price: undefined,
-            cashAdvance: undefined,
-            paid: false,
+            price: undefined, cashAdvance: undefined, paid: false,
         }
     }
 
@@ -245,6 +243,94 @@ export function CreateEvent({user}: { user: IUser }) {
             {(formProps) => <MainForm {...formProps} />}
         </Form>}
     </Dialog>)
+}
+
+export function EditEvent({id, user}: { id: number, user: IUser }) {
+    const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    return (<Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Edición de Cita"
+        footer={isLoading ? null : <Button
+            type="submit" form="event-form"
+            className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Editar</Button>}
+        trigger={<Button variant="outline"><EditIcon/></Button>}>
+        <EventForm user={user} id={id} setIsLoading={setIsLoading} setOpen={setOpen}/>
+    </Dialog>)
+}
+
+interface EventFormProps {
+    user: IUser;
+    id: number;
+    setIsLoading: (value: boolean) => void;
+    setOpen: (value: boolean) => void;
+}
+
+const EventForm = ({user, id, setIsLoading, setOpen}: EventFormProps) => {
+    const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
+    const {data, isLoading} = useGetEventById(id);
+    const router = useRouter();
+
+    const onSubmit = useCallback((updatedData: IEventForm) => {
+        setIsLoading(true);
+        mutateAsync(updatedData).then(() => {
+            router.refresh();
+            setOpen(false);
+            setIsLoading(false);
+        });
+    }, []);
+
+    const [startTime, endTime] = useMemo(() => {
+        if (data?.typeId === 1) {
+            const dataStartDate = data?.customer?.schedule.startDate;
+            const dataEndDate = data?.customer?.schedule.endDate;
+            return [dayjs(dataStartDate).format('HH:mm'), dayjs(dataEndDate).format('HH:mm')];
+        } else {
+            const dataStartDate = data?.date;
+            return [dayjs(dataStartDate).format('HH:mm')];
+        }
+    }, [data]);
+
+    const initialValues = {
+        id: data?.id,
+        typeId: data?.typeId,
+        customer: {
+            name: data?.customer?.name,
+            identification: data?.customer?.identification,
+            phone: data?.customer?.phone,
+            schedule: {
+                startTime: dayjs(data?.customer?.schedule.startDate).format('HH:mm'),
+            }
+        },
+        locationId: data?.locationId,
+        licenseTypeId: data?.licenseTypeId,
+        date: data?.date || dayjs(),
+        startTime: startTime,
+        endTime: endTime,
+        instructorId: data?.instructorId,
+        assetId: data?.assetId,
+        createdById: user.id,
+        payment: {
+            price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance, paid: data?.payment?.paid,
+        },
+    }
+
+    return <>
+        {isLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
+            <Loader/>
+            <p className="text-sm">Cargando cita</p>
+        </div> : isUpdateLoading ? <div className="flex flex-col gap-4 justify-center items-center py-4">
+            <Loader/>
+            <p className="text-sm">Actualizando cita</p>
+        </div> : <Form
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+        >
+            {(formProps) => <MainForm {...formProps} />}
+        </Form>}
+    </>
 }
 
 export function CreateEventWrapper({user}: { user: IUser }) {

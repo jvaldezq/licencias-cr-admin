@@ -12,6 +12,7 @@ import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/services/client";
 import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
 import {usePathname, useRouter} from "next/navigation";
+import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 
 dayjs.extend(advancedFormat);
 
@@ -21,7 +22,7 @@ interface Props {
 }
 
 interface FilterUpdateProps {
-    [key: string]: string | Date | Dayjs | number;
+    [key: string]: string | Date | Dayjs | number | undefined;
 }
 
 
@@ -95,14 +96,7 @@ const FiltersForm = (props: FiltersFormProps) => {
 
     return <form
         id="event-filter-form"
-        className="py-3 my-6 border-y border-solid border-primary/[0.2] grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        <div className="col-span-full flex gap-4">
-            <Button
-                variant="outline"
-                className="text-secondary rounded-3xl border-secondary border border-solid"
-                onClick={handleReset}
-            >Limpiar filtros</Button>
-        </div>
+        className="py-3 my-6 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         <Field
             name="date"
             component={FormCalendar as unknown as SupportedInputs}
@@ -134,6 +128,10 @@ const FiltersForm = (props: FiltersFormProps) => {
                 handleFilterUpdate({instructorId: value})
             }}
             isLoading={isInstructorsLoading}
+            secondaryAction={values.instructorId ? <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
+                event.preventDefault();
+                handleFilterUpdate({instructorId: undefined})
+            }} /> : undefined}
         />
         <Field
             name="licenseTypeId"
@@ -145,6 +143,10 @@ const FiltersForm = (props: FiltersFormProps) => {
                 handleFilterUpdate({licenseTypeId: value})
             }}
             isLoading={isLicensesLoading}
+            secondaryAction={values.licenseTypeId ? <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
+                event.preventDefault();
+                handleFilterUpdate({licenseTypeId: undefined})
+            }} /> : undefined}
         />
     </form>
 }

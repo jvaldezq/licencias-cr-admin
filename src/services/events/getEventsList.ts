@@ -44,6 +44,7 @@ export const getEventsList = async (filters: IEventFilter) => {
                 }, customer: {
                     select: {
                         name: true,
+                        schedule: true
                     }
                 }, instructor: true, licenseType: {
                     select: {
@@ -55,7 +56,7 @@ export const getEventsList = async (filters: IEventFilter) => {
                     }
                 },
             }, orderBy: {
-                date: 'desc'
+                date: 'asc'
             }, where: {
                 ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId
             }

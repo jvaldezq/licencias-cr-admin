@@ -2,6 +2,7 @@ import {IAsset, IEvent, IEventForm, IEventType, ILocation, IUser} from "@/lib/de
 import {clientApi} from "@/lib/clientApi";
 import {useMutation, useQuery} from "react-query";
 import {AssetsByProps} from "@/app/events/types";
+import {LocationForm} from "@/app/locations/LocationsForm";
 
 const createEvent = async (data: IEventForm): Promise<IEvent> => {
     const newListing = await clientApi.post('/event', data);
@@ -17,8 +18,8 @@ export const useCreateMutation = () => {
 };
 
 const updateEvent = async (data: IEventForm): Promise<IEvent> => {
-    const newListing = await clientApi.patch('/event', data);
-    return newListing.data;
+    const newEvent = await clientApi.patch(`/event/${data.id}`, data);
+    return newEvent.data;
 };
 
 export const useUpdateMutation = () => {

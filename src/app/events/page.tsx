@@ -21,7 +21,9 @@ export default async function Events(props: Props) {
     return (<main className="max-w-screen-2xl mx-auto px-6 pt-24">
         <div className="flex justify-between items-center my-4">
             <h1 className="font-semibold text-3xl text-secondary animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Citas</h1>
-            <CreateEventWrapper user={user}/>
+            {
+                user?.access?.receptionist || user?.access?.admin && <CreateEventWrapper user={user}/>
+            }
         </div>
         <EventsFilters filters={searchParams?.filters} user={user} />
         <Suspense fallback={<TableSkeleton/>}>

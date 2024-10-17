@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button";
 import {useMediaQuery} from "@/hooks/use-media-query";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import {InputLoader} from "@/components/InputLoader";
+import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 
 interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
     options: {
@@ -15,6 +16,7 @@ interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'ch
     isLoading?: boolean;
     disabled?: boolean;
     onFilter?: (value: string, key: string) => void;
+    secondaryAction?: React.ReactNode;
 }
 
 export const FormDropdown = (props: IProps) => {
@@ -34,6 +36,7 @@ export const FormDropdown = (props: IProps) => {
         isLoading,
         disabled,
         onFilter,
+        secondaryAction,
         ...rest
     } = props;
     const [open, setOpen] = useState(false)
@@ -53,8 +56,9 @@ export const FormDropdown = (props: IProps) => {
         {isDesktop ? <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 {isLoading ? <InputLoader/> : <Button disabled={disabled} variant="outline"
-                                                      className="w-full justify-start text-tertiary text-xs overflow-hidden">
+                                                      className="w-full justify-between text-tertiary text-xs overflow-hidden">
                     {valueLabel ? valueLabel : placeholder}
+                    {secondaryAction}
                 </Button>}
 
             </PopoverTrigger>

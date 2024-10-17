@@ -96,7 +96,8 @@ export interface ICustomer {
     createdAt: Date;
     updatedAt: Date;
     event: IEvent[];
-    schedule: ISchedule[];
+    scheduleId: number;
+    schedule: ISchedule
 }
 
 export interface ISchedule {
@@ -109,7 +110,6 @@ export interface ISchedule {
     asset?: IAsset;
     userId?: number;
     user?: IUser;
-    customerId?: number;
     customer?: ICustomer;
 }
 
@@ -145,6 +145,7 @@ export interface ILog {
 }
 
 export interface IEventForm {
+    id?: number;
     typeId: number;
     customer?: {
         name?: string; identification?: string; phone?: string;
@@ -153,7 +154,7 @@ export interface IEventForm {
         }
     };
     locationId?: number;
-    licenseTypeId?: number;
+    licenseTypeId: number;
     date?: string | Date | Dayjs;
     startTime?: string;
     endTime?: string;

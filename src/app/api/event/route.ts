@@ -1,9 +1,7 @@
-import prisma from '@/lib/prisma';
 import {NextResponse} from 'next/server';
 import {revalidatePath} from 'next/cache'
-import dayjs from "dayjs";
-import {createClass} from "@/services/events/createClass";
-import {createTest} from "@/services/events/createTest";
+import {createClass, updateClass} from "@/services/events/eventClass";
+import {createTest, updateTest} from "@/services/events/eventTest";
 import {IEventFilter} from "@/lib/definitions";
 import {getEventsList} from "@/services/events/getEventsList";
 
@@ -46,22 +44,6 @@ export async function POST(request: Request) {
         return NextResponse.json(res, {status: 200});
     } catch (error) {
         console.error('Creating event', error);
-        return NextResponse.json({error}, {status: 500});
-    }
-}
-
-export async function PATCH(request: Request) {
-    try {
-        const body = await request.json();
-        const event = await prisma.event.update({
-            where: {
-                id: body.id
-            }, data: body
-        });
-        revalidatePath('/locations', 'page')
-        return NextResponse.json(event, {status: 200});
-    } catch (error) {
-        console.error('Updating event', error);
         return NextResponse.json({error}, {status: 500});
     }
 }

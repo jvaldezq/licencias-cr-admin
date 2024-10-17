@@ -1,10 +1,10 @@
 import prisma from '@/lib/prisma';
 import {NextResponse} from 'next/server';
 
-// Fix BigInt serialization issue
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
-    return this.toString();
+    const int = Number.parseInt(this.toString());
+    return int ?? this.toString();
 };
 
 export async function GET(request: Request) {

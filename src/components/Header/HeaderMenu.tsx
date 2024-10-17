@@ -71,7 +71,7 @@ export const HeaderMenu = (props: Props) => {
             <SheetFooter>
                 <a className="font-light text-sm text-primary/[0.8] hover:text-primary" key="logout"
                       href="/api/auth/logout">
-                    Logout
+                    Cerrar sesión
                 </a>
             </SheetFooter>
         </SheetContent>

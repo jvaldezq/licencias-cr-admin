@@ -83,8 +83,8 @@ model Event {
   customer      Customer    @relation(fields: [customerId], references: [id])
   instructorId  BigInt?
   instructor    User?        @relation("InstructorRelation", fields: [instructorId], references: [id])
-  licenseTypeId BigInt?
-  licenseType   LicenseType? @relation(fields: [licenseTypeId], references: [id])
+  licenseTypeId BigInt
+  licenseType   LicenseType @relation(fields: [licenseTypeId], references: [id])
   locationId    BigInt
   location      Location     @relation(fields: [locationId], references: [id])
   paymentId     BigInt       @unique
@@ -105,7 +105,8 @@ model Customer {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   event          Event[]
-  schedule       Schedule[]
+  scheduleId     BigInt? @unique
+  schedule       Schedule?    @relation(fields: [scheduleId], references: [id])
 }
 
 model Schedule {
@@ -118,8 +119,7 @@ model Schedule {
   asset               Asset?       @relation(fields: [assetId], references: [id])
   userId              BigInt?
   user                User?     @relation(fields: [userId], references: [id])
-  customerId          BigInt?
-  customer            Customer?     @relation(fields: [customerId], references: [id])
+  customer            Customer?
 }
 
 model Payment {
