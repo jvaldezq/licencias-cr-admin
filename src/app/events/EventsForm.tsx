@@ -43,7 +43,7 @@ const MainForm = (props: FormProps) => {
 
     const isClassType = values.typeId === 1;
 
-    return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
+    return <form id="event-form" onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
         <Field
             name="typeId"
             component={FormDropdown as unknown as SupportedInputs}
