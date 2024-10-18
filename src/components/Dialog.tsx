@@ -33,7 +33,7 @@ export const Dialog = (props: Props) => {
         <DialogTrigger asChild is="div">
             {trigger}
         </DialogTrigger>
-        <DialogContent className="w-full h-fit md:h-fit max-h-full overflow-y-scroll">
+        <DialogContent className="overflow-y-scroll">
             <DialogHeader>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogDescription>
