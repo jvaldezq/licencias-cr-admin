@@ -1,14 +1,14 @@
 import {IAsset, IEventType, ILocation} from "@/lib/definitions";
 import {clientApi} from "@/lib/clientApi";
 import {useMutation, useQuery} from "react-query";
-import {AssetForm} from "@/app/assets/AssetForm";
+import {AssetFormProps} from "@/app/assets/forms/AssetForm";
 
-const createAsset = async (data: AssetForm): Promise<IAsset> => {
+const createAsset = async (data: AssetFormProps): Promise<IAsset> => {
     const asset = await clientApi.post('/asset', data);
     return asset.data;
 };
 
-const updateAsset = async (data: AssetForm): Promise<IAsset> => {
+const updateAsset = async (data: AssetFormProps): Promise<IAsset> => {
     const asset = await clientApi.patch('/asset', data);
     return asset.data;
 };
@@ -25,6 +25,12 @@ const getLocationList = async (): Promise<ILocation[]> => {
 const getAssetById = async (id: number): Promise<ILocation> => {
     const location = await clientApi.get(`/asset/${id}`);
     return location.data;
+};
+
+
+const deleteAsset = async (id: number): Promise<IAsset> => {
+    const asset = await clientApi.delete(`/asset/${id}`);
+    return asset.data;
 };
 
 const getLicenseList = async (): Promise<IEventType[]> => {
@@ -48,7 +54,7 @@ export const useGetLocationList = () => {
 
 export const useCreateMutation = () => {
     return useMutation({
-        mutationFn: (data: AssetForm) => {
+        mutationFn: (data: AssetFormProps) => {
             return createAsset(data);
         }, mutationKey: ['asset-create'],
     });
@@ -56,7 +62,7 @@ export const useCreateMutation = () => {
 
 export const useUpdateMutation = () => {
     return useMutation({
-        mutationFn: (data: AssetForm) => {
+        mutationFn: (data: AssetFormProps) => {
             return updateAsset(data);
         }, mutationKey: ['asset-update'],
     });
@@ -83,3 +89,12 @@ export const useGetLicenseList = () => {
     });
 };
 
+
+export const useDeleteMutation = () => {
+    return useMutation({
+        mutationFn: (id: number) => {
+            return deleteAsset(id);
+        },
+        mutationKey: ['asset-delete'],
+    });
+};

@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 
-export default async function Home() {
+const Home = async () => {
     redirect('/events');
 }
+
+export default Home;

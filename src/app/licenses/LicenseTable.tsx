@@ -3,14 +3,11 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {ILicenseType} from "@/lib/definitions";
 import {Button} from "@/components/ui/button";
-import {ArrowUpDown, MoreHorizontal} from "lucide-react";
+import {ArrowUpDown} from "lucide-react";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
-import {
-    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {EditAssetWrapper} from "@/app/assets/AssetForm";
-import {EditLicenseWrapper} from "@/app/licenses/LicenseForm";
+import {EditLicense} from "@/app/licenses/forms/EditLicense";
+import {DeleteLicense} from "@/app/licenses/forms/DeleteLicense";
 
 interface Props {
     data: ILicenseType[]
@@ -36,7 +33,7 @@ const columns: ColumnDef<ILicenseType>[] = [{
             Color
         </Button>)
     }, cell: ({row}) => <div>
-        <div className='rounded-full h-4 w-4' style={{ background: row.getValue('color') }}/>
+        <div className='rounded-full h-4 w-4' style={{background: row.getValue('color')}}/>
     </div>,
 }, {
     id: "actions", header: () => {
@@ -44,14 +41,17 @@ const columns: ColumnDef<ILicenseType>[] = [{
             className="px-0 font-bold text-base"
             variant="ghost"
         >
-        Acciones
+            Acciones
         </Button>)
     }, enableHiding: false, cell: ({row}) => {
-        return <EditLicenseWrapper id={row.original.id} />
+        return <div className="flex gap-4">
+            <EditLicense id={row.original.id}/>
+            <DeleteLicense id={row.original.id}/>
+        </div>
     },
 },]
 
-export const LicenseTableWrapper = (props: Props) => {
+export const LicenseTable = (props: Props) => {
     const {data} = props
     return <DataTable
         data={data}

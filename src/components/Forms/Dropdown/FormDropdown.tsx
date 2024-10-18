@@ -1,4 +1,4 @@
-import {InputHTMLAttributes, useState} from "react";
+import {ForwardedRef, forwardRef, InputHTMLAttributes, useState} from "react";
 import {InputWrapper, InputWrapperProps} from "@/components/Forms/InputWrapper";
 import {CombinedInputProps} from "@/components/Forms/types";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "@/components/ui/command"
@@ -7,7 +7,6 @@ import {Button} from "@/components/ui/button";
 import {useMediaQuery} from "@/hooks/use-media-query";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import {InputLoader} from "@/components/InputLoader";
-import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 
 interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
     options: {
@@ -19,9 +18,8 @@ interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'ch
     secondaryAction?: React.ReactNode;
 }
 
-export const FormDropdown = (props: IProps) => {
+export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInputElement>) => {
     const {
-        className,
         label,
         labelClassName,
         labelPosition,
@@ -37,7 +35,6 @@ export const FormDropdown = (props: IProps) => {
         disabled,
         onFilter,
         secondaryAction,
-        ...rest
     } = props;
     const [open, setOpen] = useState(false)
     const {onChange, value} = input;
@@ -64,10 +61,11 @@ export const FormDropdown = (props: IProps) => {
             </PopoverTrigger>
             <PopoverContent className="w-fit p-0" align="start">
                 <Command>
-                    <CommandInput placeholder="Estado del filtro..."/>
+                    <CommandInput placeholder="Estado del filtro..." ref={ref}/>
                     <CommandList>
                         <CommandEmpty
-                            className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>Sin resultados</CommandEmpty>
+                            className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>Sin
+                            resultados</CommandEmpty>
                         <CommandGroup>
                             {options?.map((option) => (<CommandItem
                                 className="cursor-pointer"
@@ -95,10 +93,11 @@ export const FormDropdown = (props: IProps) => {
             <DrawerContent>
                 <div className="mt-4 border-t">
                     <Command>
-                        <CommandInput placeholder="Estado del filtro..." />
+                        <CommandInput placeholder="Estado del filtro..." ref={ref}/>
                         <CommandList>
                             <CommandEmpty
-                                className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>Sin resultados</CommandEmpty>
+                                className='flex justify-center items-center gap-2 py-2 text-sm text-tertiary'>Sin
+                                resultados</CommandEmpty>
                             <CommandGroup>
                                 {options?.map((option) => (<CommandItem
                                     key={option.id}
@@ -118,4 +117,6 @@ export const FormDropdown = (props: IProps) => {
             </DrawerContent>
         </Drawer>}
     </InputWrapper>
-}
+});
+
+FormDropdown.displayName = 'FormDropdown';

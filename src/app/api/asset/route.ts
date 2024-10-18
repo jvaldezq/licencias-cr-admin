@@ -35,6 +35,9 @@ export async function GET(request: Request) {
                     status: {
                         equals: true
                     }, ...licenseType, ...location
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             });
 
@@ -44,6 +47,9 @@ export async function GET(request: Request) {
                 select: {
                     id: true, name: true, plate: true, status: true, location: true, licenseType: true
                 },
+                orderBy: {
+                    name: 'asc'
+                }
             });
 
             return NextResponse.json(asset, {status: 200});

@@ -17,6 +17,9 @@ export async function GET(request: Request) {
             const location = await prisma.licenseType.findMany({
                 select: {
                     id: true, name: true,
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             });
 
@@ -26,6 +29,9 @@ export async function GET(request: Request) {
                 select: {
                     id: true, name: true, color: true,
                 },
+                orderBy: {
+                    name: 'asc'
+                }
             });
 
             return NextResponse.json(user, {status: 200});

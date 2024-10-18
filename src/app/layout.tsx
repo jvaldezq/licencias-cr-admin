@@ -14,11 +14,11 @@ export const viewport: Viewport = {
 }
 
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+const RootLayout = ({
+                        children,
+                    }: Readonly<{
     children: React.ReactNode;
-}>) {
+}>) => {
     return (<html lang="en">
     <body
         className="h-dvh bg-white"
@@ -32,3 +32,5 @@ export default function RootLayout({
     </body>
     </html>);
 }
+
+export default RootLayout;

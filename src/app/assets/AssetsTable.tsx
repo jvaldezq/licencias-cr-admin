@@ -6,7 +6,8 @@ import {ArrowUpDown} from "lucide-react";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
 import {IAsset, ILicenseType, ILocation} from "@/lib/definitions";
-import {EditAssetWrapper} from "@/app/assets/AssetForm";
+import {DeleteAsset} from "@/app/assets/forms/DeleteAsset";
+import {EditAsset} from "@/app/assets/forms/EditAsset";
 
 interface Props {
     data: IAsset[]
@@ -82,11 +83,14 @@ const columns: ColumnDef<IAsset>[] = [{
         Acciones
         </Button>)
     }, enableHiding: false, cell: ({row}) => {
-        return <EditAssetWrapper id={row.original.id} />
+        return <div className="flex gap-4">
+            <EditAsset id={row.original.id} />
+            <DeleteAsset id={row.original.id} />
+        </div>
     },
 },]
 
-export const AssetsTableWrapper = (props: Props) => {
+export const AssetsTable = (props: Props) => {
     const {data} = props
     return <DataTable
         data={data}

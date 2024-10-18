@@ -21,6 +21,9 @@ export async function GET(request: Request) {
                     status: {
                         equals: true
                     }
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             });
 
@@ -30,6 +33,9 @@ export async function GET(request: Request) {
                 select: {
                     id: true, name: true, status: true,
                 },
+                orderBy: {
+                    name: 'asc'
+                }
             });
 
             return NextResponse.json(location, {status: 200});

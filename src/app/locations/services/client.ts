@@ -1,14 +1,14 @@
 import {ILocation} from "@/lib/definitions";
 import {clientApi} from "@/lib/clientApi";
 import {useMutation, useQuery} from "react-query";
-import {LocationForm} from "@/app/locations/LocationsForm";
+import {LocationFormProps} from "@/app/locations/forms/LocationForm";
 
-const createLocation = async (data: LocationForm): Promise<ILocation> => {
+const createLocation = async (data: LocationFormProps): Promise<ILocation> => {
     const newListing = await clientApi.post('/location', data);
     return newListing.data;
 };
 
-const updateLocation = async (data: LocationForm): Promise<ILocation> => {
+const updateLocation = async (data: LocationFormProps): Promise<ILocation> => {
     const newListing = await clientApi.patch('/location', data);
     return newListing.data;
 };
@@ -18,9 +18,14 @@ const getLocationById = async (id: number): Promise<ILocation> => {
     return location.data;
 };
 
+const deleteLocation = async (id: number): Promise<ILocation> => {
+    const location = await clientApi.delete(`/location/${id}`);
+    return location.data;
+};
+
 export const useCreateMutation = () => {
     return useMutation({
-        mutationFn: (data: LocationForm) => {
+        mutationFn: (data: LocationFormProps) => {
             return createLocation(data);
         },
         mutationKey: ['location-create'],
@@ -29,7 +34,7 @@ export const useCreateMutation = () => {
 
 export const useUpdateMutation = () => {
     return useMutation({
-        mutationFn: (data: LocationForm) => {
+        mutationFn: (data: LocationFormProps) => {
             return updateLocation(data);
         },
         mutationKey: ['location-update'],
@@ -39,9 +44,19 @@ export const useUpdateMutation = () => {
 export const useGetLocationById = (id: number) => {
     return useQuery({
         enabled: !!id,
+        cacheTime: 0,
         refetchOnWindowFocus: false,
         queryKey: ["location-by-id", id],
         queryFn: () => getLocationById(id),
         retry: 2,
+    });
+};
+
+export const useDeleteMutation = () => {
+    return useMutation({
+        mutationFn: (id: number) => {
+            return deleteLocation(id);
+        },
+        mutationKey: ['location-delete'],
     });
 };

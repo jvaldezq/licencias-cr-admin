@@ -6,7 +6,8 @@ import {Button} from "@/components/ui/button";
 import {ArrowUpDown} from "lucide-react";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
-import {EditLocationWrapper} from "@/app/locations/LocationsForm";
+import {EditLocation} from "@/app/locations/forms/EditLocation";
+import {DeleteLocation} from "@/app/locations/forms/DeleteLocation";
 
 interface Props {
     data: ILocation[]
@@ -43,11 +44,14 @@ const columns: ColumnDef<ILocation>[] = [{
             Acciones
         </Button>)
     }, enableHiding: false, cell: ({row}) => {
-        return <EditLocationWrapper id={row.original.id}/>
+        return <div className="flex gap-4">
+            <EditLocation id={row.original.id}/>
+            <DeleteLocation id={row.original.id}/>
+        </div>
     },
 },]
 
-export const LocationsTableWrapper = (props: Props) => {
+export const LocationsTable = (props: Props) => {
     const {data} = props
     return <DataTable
         data={data}

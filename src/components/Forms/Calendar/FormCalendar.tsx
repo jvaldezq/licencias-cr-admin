@@ -1,16 +1,11 @@
 'use client';
 
 import {
-    ChangeEvent,
     ForwardedRef,
     forwardRef,
     InputHTMLAttributes,
-    useCallback,
-    useEffect,
-    useRef,
     useState
 } from 'react';
-import IMask from 'imask';
 import {CombinedInputProps} from '../types';
 import {InputWrapper, InputWrapperProps} from '../InputWrapper';
 import {cn} from "@/lib/utils";

@@ -23,14 +23,14 @@ export const HeaderMenu = (props: Props) => {
     const path = usePathname()
     const isSelected = 'bg-secondary text-white font-bold [&>svg>path]:fill-white';
 
-    return <Sheet>
-        <SheetTrigger className="rounded p-2 hover:bg-primary/[0.1]">{trigger}</SheetTrigger>
-        <SheetContent side="left" className="flex flex-col">
+    return <Sheet aria-describedby="Header menu">
+        <SheetTrigger className="rounded p-2 hover:bg-primary/[0.1]" aria-describedby="trigger">{trigger}</SheetTrigger>
+        <SheetContent side="left" className="flex flex-col" aria-describedby="Main Menu">
             <SheetHeader>
-                <SheetTitle className="font-semibold text-base">Licencia Costa Rica</SheetTitle>
+                <SheetTitle className="font-semibold text-base" aria-describedby="Licencia Costa Rica">Licencia Costa Rica</SheetTitle>
             </SheetHeader>
             <div className="grow flex flex-col gap-4">
-                <SheetClose asChild>
+                <SheetClose asChild aria-describedby="Citas">
                     <Link className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/events' && isSelected}`}
                           key="calendar" href="/events">
                         <CalendarIcon/> Citas
@@ -38,28 +38,28 @@ export const HeaderMenu = (props: Props) => {
                 </SheetClose>
                 {user?.access?.admin && <>
                     <p className="font-light text-xs pb-1 border-b border-primary/[0.2] text-primary/[0.7] border-solid">Administrador</p>
-                    <SheetClose asChild>
+                    <SheetClose asChild aria-describedby="Sedes">
                         <Link
                             className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/locations' && isSelected}`}
                             key="assets" href="/locations">
                             <LocationsIcon/> Sedes
                         </Link>
                     </SheetClose>
-                    <SheetClose asChild>
+                    <SheetClose asChild aria-describedby="Vehículos">
                         <Link
                             className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/assets' && isSelected}`}
                             key="assets" href="/assets">
                             <CarIcon/> Vehículos
                         </Link>
                     </SheetClose>
-                    <SheetClose asChild>
+                    <SheetClose asChild aria-describedby="Licencias (Tipos)">
                         <Link
                             className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/licenses' && isSelected}`}
                             key="licenses" href="/licenses">
                             <LicenseIcon/> Licencias (Tipos)
                         </Link>
                     </SheetClose>
-                    <SheetClose asChild>
+                    <SheetClose asChild aria-describedby="Planilla">
                         <Link
                             className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/people' && isSelected}`}
                             key="people" href="/people">
@@ -68,7 +68,7 @@ export const HeaderMenu = (props: Props) => {
                     </SheetClose>
                 </>}
             </div>
-            <SheetFooter>
+            <SheetFooter aria-describedby="footer">
                 <a className="font-light text-sm text-primary/[0.8] hover:text-primary" key="logout"
                       href="/api/auth/logout">
                     Cerrar sesión
