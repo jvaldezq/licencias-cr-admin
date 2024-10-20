@@ -9,6 +9,8 @@ import {useCreateMutation} from "@/app/locations/services/client";
 import {useRouter} from "next/navigation";
 import {LocationForm, LocationFormProps} from "@/app/locations/forms/LocationForm";
 import {FormSavingLoader} from "@/components/FormLoader";
+import {formValidator} from "@/lib/formValidator";
+import * as yup from "yup";
 
 export const CreateLocation = () => {
     const [open, setOpen] = useState(false);
@@ -29,6 +31,10 @@ export const CreateLocation = () => {
         <LocationFormWrapper setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
+
+const schema = yup.object({
+    name: yup.string().required('El nombre es requerido'),
+}).required();
 
 interface LocationFormWrapperProps {
     setOpen: (open: boolean) => void;
@@ -67,6 +73,8 @@ const LocationFormWrapper = (props: LocationFormWrapperProps) => {
     return <Form
         initialValues={initialValues}
         onSubmit={onSubmit}
+        validateOnBlur={true}
+        validate={formValidator(schema)}
     >
         {(formProps) => <LocationForm {...formProps} />}
     </Form>

@@ -9,6 +9,8 @@ import {useCreateMutation} from "@/app/licenses/services/client";
 import {useRouter} from "next/navigation";
 import {LicenseForm, LicenseFormProps} from "@/app/licenses/forms/LicenseForm";
 import {FormSavingLoader} from "@/components/FormLoader";
+import * as yup from "yup";
+import {formValidator} from "@/lib/formValidator";
 
 export const CreateLicense = () => {
     const [open, setOpen] = useState(false);
@@ -29,6 +31,12 @@ export const CreateLicense = () => {
         <LicenseFormWrapper setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
+
+const schema = yup.object({
+    name: yup.string().required('El nombre es requerido'),
+    color: yup.string().required('El color es requerido'),
+}).required();
+
 
 interface LicenseFormWrapperProps {
     setOpen: (open: boolean) => void;
@@ -67,6 +75,8 @@ const LicenseFormWrapper = (props: LicenseFormWrapperProps) => {
     return <Form
         initialValues={initialValues}
         onSubmit={onSubmit}
+        validateOnBlur={true}
+        validate={formValidator(schema)}
     >
         {(formProps) => <LicenseForm {...formProps} />}
     </Form>

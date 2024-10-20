@@ -1,6 +1,6 @@
 'use client';
 
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Form} from "react-final-form";
 import {Button} from "@/components/ui/button";
 import {Dialog} from "@/components/Dialog";
@@ -10,6 +10,8 @@ import {useRouter} from "next/navigation";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {FormSavingLoader} from "@/components/FormLoader";
 import {PeopleForm, PeopleFormProps} from "@/app/people/forms/PeopleForm";
+import * as yup from "yup";
+import {formValidator} from "@/lib/formValidator";
 
 interface EditPeopleProps {
     id: number;
@@ -42,6 +44,14 @@ export const EditPeople = (props: EditPeopleProps) => {
         <PeopleFormWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
+
+const schema = yup.object({
+    name: yup.string().required('El nombre es requerido'),
+    location: yup.object({
+        id: yup.string().required('La sede es requerida'),
+    }).required(),
+}).required();
+
 
 interface PeopleFormWrapperProps {
     id: number;
@@ -78,6 +88,8 @@ const PeopleFormWrapper = (props: PeopleFormWrapperProps) => {
     return <Form
         initialValues={data}
         onSubmit={onSubmit}
+        validateOnBlur={true}
+        validate={formValidator(schema)}
     >
         {(formProps) => <PeopleForm {...formProps} />}
     </Form>

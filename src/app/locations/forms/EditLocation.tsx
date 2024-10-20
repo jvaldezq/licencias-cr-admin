@@ -10,6 +10,8 @@ import {useRouter} from "next/navigation";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {LocationForm, LocationFormProps} from "@/app/locations/forms/LocationForm";
 import {FormSavingLoader} from "@/components/FormLoader";
+import * as yup from "yup";
+import {formValidator} from "@/lib/formValidator";
 
 export const EditLocation = ({id}: { id: number }) => {
     const [open, setOpen] = useState(false);
@@ -36,6 +38,10 @@ export const EditLocation = ({id}: { id: number }) => {
         <LocationWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
+
+const schema = yup.object({
+    name: yup.string().required('El nombre es requerido'),
+}).required();
 
 interface LocationWrapperProps {
     id: number;
@@ -72,6 +78,8 @@ const LocationWrapper = (props: LocationWrapperProps) => {
     return <Form
         initialValues={data}
         onSubmit={onSubmit}
+        validateOnBlur={true}
+        validate={formValidator(schema)}
     >
         {(formProps) => <LocationForm {...formProps} />}
     </Form>

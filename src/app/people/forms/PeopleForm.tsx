@@ -31,7 +31,6 @@ export const PeopleForm = (props: FormProps) => {
             component={FormInput as unknown as SupportedInputs}
             placeholder='Nombre'
             label='Nombre'
-            validate={value => (value ? undefined : 'Requerido')}
             disabled={true}
         />
         <Field
@@ -42,7 +41,6 @@ export const PeopleForm = (props: FormProps) => {
             options={locations || []}
             isLoading={isLocationsLoading}
             autoFocus={true}
-            validate={value => (value ? undefined : 'Requerido')}
         />
         <Field
             name="access.instructor"

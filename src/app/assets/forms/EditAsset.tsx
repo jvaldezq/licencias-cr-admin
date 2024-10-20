@@ -10,6 +10,8 @@ import {useRouter} from "next/navigation";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {AssetForm, AssetFormProps} from "@/app/assets/forms/AssetForm";
 import {FormSavingLoader} from "@/components/FormLoader";
+import * as yup from "yup";
+import {formValidator} from "@/lib/formValidator";
 
 export const EditAsset = ({id}: { id: number }) => {
     const [open, setOpen] = useState(false);
@@ -36,6 +38,13 @@ export const EditAsset = ({id}: { id: number }) => {
         <AssetWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
+
+const schema = yup.object({
+    name: yup.string().required('El nombre es requerido'),
+    plate: yup.string().required('La placa es requerida'),
+    locationId: yup.number().required('La sede es requerida'),
+    licenseTypeId: yup.number().required('El tipo de licencia es requerido'),
+}).required();
 
 interface AssetWrapperProps {
     id: number;
@@ -72,6 +81,8 @@ const AssetWrapper = (props: AssetWrapperProps) => {
     return <Form
         initialValues={data}
         onSubmit={onSubmit}
+        validateOnBlur={true}
+        validate={formValidator(schema)}
     >
         {(formProps) => <AssetForm {...formProps} />}
     </Form>
