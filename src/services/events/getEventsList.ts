@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 
 export const getEventsList = async (filters: IEventFilter) => {
     try {
+        console.info('Fetching events list', filters);
         const date = dayjs(filters?.date).toISOString();
 
-        console.info('Fetching events list', filters);
         let dateFilter = {};
         if (date) {
             const startOfDay = dayjs(date).startOf('day').toISOString();
