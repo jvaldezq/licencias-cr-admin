@@ -11,7 +11,9 @@ export default async function EventsTableWrapper(props: Props) {
     const { user, filters } = props;
     let data = [] as IEvent[];
     if (filters) {
+        console.log('EVENTS filters', filters);
         const filtersJson = JSON.parse(filters) as IEventFilter;
+        console.log('EVENTS filtersJson', filtersJson);
         data = await getEventsList(filtersJson);
     }
 

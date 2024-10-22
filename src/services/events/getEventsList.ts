@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 export const getEventsList = async (filters: IEventFilter) => {
     try {
+        console.log('JORDAN - filters', filters);
         let date = dayjs().toISOString();
         if (filters?.date) {
             date = dayjs(filters?.date).toISOString();
