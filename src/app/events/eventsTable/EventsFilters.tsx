@@ -28,7 +28,7 @@ export const EventsFilters = (props: Props) => {
     const {user, filters} = props
     const pathname = usePathname();
     const {replace} = useRouter();
-    const currentFilters = JSON.parse(filters) as IEventFilter;
+    const currentFilters = JSON.parse(filters || '{}') as IEventFilter;
 
     const handleReset = useCallback(() => {
         const params = new URLSearchParams();
