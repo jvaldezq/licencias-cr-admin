@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     try {
         const {searchParams} = new URL(request.url);
         const filtersText = searchParams.get('filters') ?? '';
-        const filters = JSON.parse(atob(filtersText)) as IEventFilter;
+        const filters = JSON.parse(filtersText) as IEventFilter;
         const events = await getEventsList(filters);
 
         return NextResponse.json(events, {status: 200});

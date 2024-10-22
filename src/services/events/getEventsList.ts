@@ -4,8 +4,10 @@ import dayjs from 'dayjs';
 
 export const getEventsList = async (filters: IEventFilter) => {
     try {
-        console.info('Fetching events list', filters);
-        const date = dayjs(filters?.date).toISOString();
+        let date = dayjs().toISOString();
+        if (filters?.date) {
+            date = dayjs(filters?.date).toISOString();
+        }
 
         let dateFilter = {};
         if (date) {
@@ -52,8 +54,7 @@ export const getEventsList = async (filters: IEventFilter) => {
                     }
                 }, customer: {
                     select: {
-                        name: true,
-                        schedule: true
+                        name: true, schedule: true
                     }
                 }, instructor: true, licenseType: {
                     select: {
