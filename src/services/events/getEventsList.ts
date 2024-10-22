@@ -6,10 +6,19 @@ export const getEventsList = async (filters: IEventFilter) => {
     try {
         const date = dayjs(filters?.date).toISOString();
 
+        console.info('Fetching events list', filters);
         let dateFilter = {};
         if (date) {
             const startOfDay = dayjs(date).startOf('day').toISOString();
             const endOfDay = dayjs(date).endOf('day').toISOString();
+            dateFilter = {
+                date: {
+                    gte: startOfDay, lte: endOfDay,
+                },
+            };
+        } else {
+            const startOfDay = dayjs().startOf('day').toISOString();
+            const endOfDay = dayjs().endOf('day').toISOString();
             dateFilter = {
                 date: {
                     gte: startOfDay, lte: endOfDay,
