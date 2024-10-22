@@ -7,12 +7,10 @@ import {InputWrapper, InputWrapperProps} from '../InputWrapper';
 import {cn} from "@/lib/utils";
 import {Input} from "@/components/ui/input";
 
-export interface FormInputProps
-    extends CombinedInputProps<string>,
-        Omit<InputWrapperProps, 'children'>,
-        Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
+export interface FormInputProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
     icon?: JSX.Element;
     mask?: string | object;
+    hidden?: boolean;
 }
 
 export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HTMLInputElement>) => {
@@ -30,9 +28,9 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
         childrenClassName,
         icon,
         mask,
+        hidden = false,
         ...rest
     } = props;
-    const {touched, error} = meta || {};
     const {onChange, ...inputRest} = input;
     const myRef = useRef<HTMLInputElement | null>(null);
 
@@ -44,15 +42,13 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
         }
     }, [mask]);
 
-    const myOnChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => {
-            onChange(e.target.value);
-        },
-        [onChange],
-    );
+    const myOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        onChange(e.target.value);
+    }, [onChange],);
 
-    return (
-        <InputWrapper
+    if (hidden) return null;
+
+    return (<InputWrapper
             name={name}
             label={label}
             labelClassName={labelClassName}
@@ -79,8 +75,7 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
                 {...rest}
             />
             {icon}
-        </InputWrapper>
-    );
+        </InputWrapper>);
 });
 
 FormInput.displayName = 'FormInput';

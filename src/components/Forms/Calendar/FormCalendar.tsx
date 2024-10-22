@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 
 export interface FormCalendarProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLButtonElement>, 'label' | 'name' | 'onChange'> {
     onFilter?: (value: string, key: string) => void;
+    hidden?: boolean;
 }
 
 export const FormCalendar = forwardRef((props: FormCalendarProps, ref: ForwardedRef<HTMLButtonElement>) => {
@@ -36,11 +37,14 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
         meta,
         wrapperClassName,
         childrenClassName,
-        onFilter
+        onFilter,
+        hidden = false,
     } = props;
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [open, setOpen] = useState(false)
     const {onChange} = input;
+
+    if (hidden) return null;
 
     return <InputWrapper
             name={name}

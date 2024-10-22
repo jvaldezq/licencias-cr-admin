@@ -1,6 +1,6 @@
 import {IEvent, IEventFilter, IUser} from "@/lib/definitions";
-import {EventsTable} from "@/app/events/EventsTable/EventsTable";
 import {getEventsList} from "@/services/events/getEventsList";
+import {EventsTable} from "@/app/events/eventsTable/EventsTable";
 
 interface Props {
     filters: string;

@@ -12,6 +12,7 @@ import {Switch} from "@/components/ui/switch"
 export interface FormSwitchProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLButtonElement>, 'label' | 'name' | 'onChange'> {
     icon?: JSX.Element;
     mask?: string | object;
+    hidden?: boolean;
 }
 
 export const FormSwitch = forwardRef((props: FormSwitchProps, ref: ForwardedRef<HTMLButtonElement>) => {
@@ -29,6 +30,7 @@ export const FormSwitch = forwardRef((props: FormSwitchProps, ref: ForwardedRef<
         childrenClassName,
         icon,
         mask,
+        hidden = false,
         ...rest
     } = props;
     const {onChange, ...inputRest} = input;
@@ -45,6 +47,8 @@ export const FormSwitch = forwardRef((props: FormSwitchProps, ref: ForwardedRef<
     const myOnChange = useCallback((e: ChangeEvent<HTMLButtonElement>) => {
         onChange(e.target.value);
     }, [onChange],);
+
+    if (hidden) return null;
 
     return <InputWrapper
             name={name}

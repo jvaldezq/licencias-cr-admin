@@ -7,9 +7,8 @@ import * as React from "react";
 import {DataTable} from "@/components/Table";
 import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
 import {useMemo} from "react";
-import {EditEvent} from "@/app/events/EventsForm";
+import {EditEvent} from "@/app/events/forms/EditEvent";
 
 dayjs.extend(advancedFormat);
 
@@ -22,13 +21,6 @@ interface Props {
 export const EventsTable = (props: Props) => {
     const {data, user} = props
 
-    const queryClient = new QueryClient({
-        queryCache: new QueryCache({
-            onError: error => {
-                console.error('Error:', error)
-            }
-        })
-    });
     const [practicalData, clasesData] = useMemo(() => {
         const practicalData = data.filter((event) => event.type.name.includes('Prueba'));
         const clasesData = data.filter((event) => event.type.name.includes('Clase'));
@@ -209,7 +201,7 @@ export const EventsTable = (props: Props) => {
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');
 
-    return <QueryClientProvider client={queryClient}>
+    return <>
         <h1 className="my-6 text-center py-2 text-lg font-semibold text-primary rounded-2xl bg-secondary/[0.2]">Pruebas
             de
             manejo</h1>
@@ -225,5 +217,5 @@ export const EventsTable = (props: Props) => {
             data={clasesData}
             columns={clasescolumns}
         /> : <div className="flex justify-center items-center">No hay datos</div>}
-    </QueryClientProvider>
+    </>
 }

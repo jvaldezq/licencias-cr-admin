@@ -1,4 +1,4 @@
-import {ForwardedRef, forwardRef, InputHTMLAttributes, useState} from "react";
+import {ForwardedRef, forwardRef, InputHTMLAttributes, ReactNode, useState} from "react";
 import {InputWrapper, InputWrapperProps} from "@/components/Forms/InputWrapper";
 import {CombinedInputProps} from "@/components/Forms/types";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "@/components/ui/command"
@@ -15,7 +15,8 @@ interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'ch
     isLoading?: boolean;
     disabled?: boolean;
     onFilter?: (value: string, key: string) => void;
-    secondaryAction?: React.ReactNode;
+    secondaryAction?: ReactNode;
+    hidden?: boolean;
 }
 
 export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInputElement>) => {
@@ -35,11 +36,15 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
         disabled,
         onFilter,
         secondaryAction,
+        hidden = false,
     } = props;
     const [open, setOpen] = useState(false)
     const {onChange, value} = input;
     const isDesktop = useMediaQuery("(min-width: 768px)")
     const valueLabel = options?.find(option => option?.id == value)?.name
+
+    if (hidden) return null;
+    if (isLoading) return <InputLoader />;
 
     return <InputWrapper
         name={name}
@@ -52,12 +57,11 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
         meta={meta}>
         {isDesktop ? <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                {isLoading ? <InputLoader/> : <Button disabled={disabled} variant="outline"
-                                                      className="w-full justify-between text-tertiary text-xs overflow-hidden">
+                <Button disabled={disabled} variant="outline"
+                        className="w-full justify-between text-tertiary text-xs">
                     {valueLabel ? valueLabel : placeholder}
                     {secondaryAction}
-                </Button>}
-
+                </Button>
             </PopoverTrigger>
             <PopoverContent className="w-fit p-0" align="start">
                 <Command>
@@ -85,10 +89,11 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
             </PopoverContent>
         </Popover> : <Drawer open={open} onOpenChange={setOpen} fadeFromIndex={undefined} snapPoints={undefined}>
             <DrawerTrigger asChild>
-                {isLoading ? <InputLoader/> : <Button disabled={disabled} variant="outline"
-                                                      className="justify-start w-full text-tertiary text-xs">
+                <Button disabled={disabled} variant="outline"
+                        className="w-full justify-between text-tertiary text-xs">
                     {valueLabel ? valueLabel : placeholder}
-                </Button>}
+                    {secondaryAction}
+                </Button>
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mt-4 border-t">
