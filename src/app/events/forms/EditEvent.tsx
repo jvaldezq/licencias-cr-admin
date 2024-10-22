@@ -8,8 +8,6 @@ import * as React from "react";
 import {useRouter} from "next/navigation";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {FormSavingLoader} from "@/components/FormLoader";
-import * as yup from "yup";
-import {formValidator} from "@/lib/formValidator";
 import {EventForm} from "@/app/events/forms/EventsForm";
 import {IEventForm, IUser} from "@/lib/definitions";
 import {
@@ -61,7 +59,7 @@ interface EventWrapperProps {
 const EventWrapper = (props: EventWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading, user} = props;
     const {data, isLoading} = useGetEventById(id);
-    const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
+    const {mutateAsync} = useUpdateMutation();
     const router = useRouter();
 
     const onSubmit = useCallback((data: IEventForm) => {
@@ -112,10 +110,6 @@ const EventWrapper = (props: EventWrapperProps) => {
         payment: {
             price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance, paid: data?.payment?.paid,
         },
-    }
-
-    if (isLoading || isUpdateLoading) {
-        return null;
     }
 
     return <Form

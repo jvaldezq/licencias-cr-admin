@@ -28,7 +28,7 @@ export const EventsFilters = (props: Props) => {
     const {user, filters} = props
     const pathname = usePathname();
     const {replace} = useRouter();
-    const currentFilters = JSON.parse(filters || '{}') as IEventFilter;
+    const currentFilters = filters ? JSON.parse(atob(filters)) as IEventFilter : {};
 
     const handleReset = useCallback(() => {
         const params = new URLSearchParams();
@@ -37,7 +37,7 @@ export const EventsFilters = (props: Props) => {
             locationId: props.user?.location?.id,
             instructorId: props.user?.access?.instructor ? props.user?.id : undefined
         })
-        params.set('filters', newFilters);
+        params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
     }, [props, replace, pathname]);
 
@@ -46,7 +46,7 @@ export const EventsFilters = (props: Props) => {
         const newFilters = JSON.stringify({
             ...currentFilters, ...data
         })
-        params.set('filters', newFilters);
+        params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
     }, [filters, replace, pathname, currentFilters]);
 
