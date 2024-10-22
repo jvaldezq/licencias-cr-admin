@@ -20,7 +20,7 @@ interface Props {
 }
 
 interface FilterUpdateProps {
-    [key: string]: string | Date | Dayjs | number | undefined;
+    [key: string]: string | number | undefined;
 }
 
 
@@ -46,6 +46,7 @@ export const EventsFilters = (props: Props) => {
         const newFilters = JSON.stringify({
             ...currentFilters, ...data
         })
+        console.log('EVENT FILTERS', newFilters);
         params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
     }, [filters, replace, currentFilters, pathname]);
@@ -59,13 +60,13 @@ export const EventsFilters = (props: Props) => {
     }, []);
 
     return <Form
-            onSubmit={onSubmit}
-            initialValues={currentFilters}
-            validateOnBlur={false}
-        >
-            {(formProps) => <FiltersForm {...formProps} user={user} handleReset={handleReset}
-                                         handleFilterUpdate={handleFilterUpdate}/>}
-        </Form>
+        onSubmit={onSubmit}
+        initialValues={currentFilters}
+        validateOnBlur={false}
+    >
+        {(formProps) => <FiltersForm {...formProps} user={user} handleReset={handleReset}
+                                     handleFilterUpdate={handleFilterUpdate}/>}
+    </Form>
 }
 
 export interface FiltersFormProps extends FormRenderProps<IEventFilter> {
@@ -90,7 +91,7 @@ const FiltersForm = (props: FiltersFormProps) => {
             component={FormCalendar as unknown as SupportedInputs}
             placeholder={dayjs().format('YYYY MMM DD')}
             onFilter={(date: Dayjs) => {
-                handleFilterUpdate({date: date})
+                handleFilterUpdate({date: date.toString()})
             }}
             label="Fecha"
         />
@@ -116,10 +117,11 @@ const FiltersForm = (props: FiltersFormProps) => {
                 handleFilterUpdate({instructorId: value})
             }}
             isLoading={isInstructorsLoading}
-            secondaryAction={values.instructorId ? <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
-                event.preventDefault();
-                handleFilterUpdate({instructorId: undefined})
-            }} /> : undefined}
+            secondaryAction={values.instructorId ?
+                <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
+                    event.preventDefault();
+                    handleFilterUpdate({instructorId: undefined})
+                }}/> : undefined}
         />
         <Field
             name="licenseTypeId"
@@ -131,10 +133,11 @@ const FiltersForm = (props: FiltersFormProps) => {
                 handleFilterUpdate({licenseTypeId: value})
             }}
             isLoading={isLicensesLoading}
-            secondaryAction={values.licenseTypeId ? <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
-                event.preventDefault();
-                handleFilterUpdate({licenseTypeId: undefined})
-            }} /> : undefined}
+            secondaryAction={values.licenseTypeId ?
+                <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
+                    event.preventDefault();
+                    handleFilterUpdate({licenseTypeId: undefined})
+                }}/> : undefined}
         />
     </form>
 }
