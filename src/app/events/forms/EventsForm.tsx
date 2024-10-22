@@ -43,15 +43,6 @@ export const EventForm = (props: EventFormProps) => {
             isLoading={isEventTypesLoading}
         />
 
-        <Field
-            component={FormCalendar as unknown as SupportedInputs}
-            placeholder={dayjs().format('YYYY MMM DD')}
-            label="Fecha"
-            name="date"
-            wrapperClassName="md:col-span-2"
-            // hidden={!showTypeInfo}
-        />
-
         {values?.typeId &&
             <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion del
                 cliente</p>}
