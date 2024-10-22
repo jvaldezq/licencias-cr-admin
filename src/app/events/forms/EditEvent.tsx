@@ -43,8 +43,8 @@ export const EditEvent = (props: EditEventProps) => {
             type="submit" form="event-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
         trigger={<Button variant="outline"><EditIcon/></Button>}>
-        <EventWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}
-                      user={user}/>
+        {/*<EventWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}*/}
+        {/*              user={user}/>*/}
     </Dialog>)
 }
 
