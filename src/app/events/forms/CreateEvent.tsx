@@ -8,8 +8,6 @@ import * as React from "react";
 import {useCreateMutation} from "@/app/events/services/client";
 import {useRouter} from "next/navigation";
 import {FormSavingLoader} from "@/components/FormLoader";
-import {formValidator} from "@/lib/formValidator";
-import * as yup from "yup";
 import {EventForm} from "@/app/events/forms/EventsForm";
 import {IEventForm, IUser} from "@/lib/definitions";
 import dayjs from "dayjs";

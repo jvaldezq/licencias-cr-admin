@@ -18,7 +18,7 @@ export interface EventFormProps extends FormRenderProps<IEventForm> {
 }
 
 export const EventForm = (props: EventFormProps) => {
-    const {values, handleSubmit, form, errors} = props;
+    const {values, handleSubmit, form} = props;
     const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
     const {data: eventTypes, isLoading: isEventTypesLoading} = useGetEventTypesList();
     const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();

@@ -43,8 +43,8 @@ export const EditEvent = (props: EditEventProps) => {
             type="submit" form="event-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
         trigger={<Button variant="outline"><EditIcon/></Button>}>
-        {/*<EventWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}*/}
-        {/*              user={user}/>*/}
+        <EventWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}
+                      user={user}/>
     </Dialog>)
 }
 
@@ -58,8 +58,10 @@ interface EventWrapperProps {
 
 const EventWrapper = (props: EventWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading, user} = props;
+    console.log('JORDAN', props);
     const {data, isLoading} = useGetEventById(id);
-    const {mutateAsync} = useUpdateMutation();
+    console.log('JORDAN 2', data);
+    const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
     const onSubmit = useCallback((data: IEventForm) => {
@@ -78,38 +80,68 @@ const EventWrapper = (props: EventWrapperProps) => {
     }, [isLoading]);
 
     const [startTime, endTime] = useMemo(() => {
-        if (data?.typeId === 1) {
-            const dataStartDate = data?.customer?.schedule.startDate;
-            const dataEndDate = data?.customer?.schedule.endDate;
-            return [dayjs(dataStartDate).format('HH:mm'), dayjs(dataEndDate).format('HH:mm')];
-        } else {
-            const dataStartDate = data?.date;
-            return [dayjs(dataStartDate).format('HH:mm')];
+        if (data) {
+            if (data?.typeId === 1) {
+                const dataStartDate = data?.customer?.schedule.startDate;
+                const dataEndDate = data?.customer?.schedule.endDate;
+                return [dayjs(dataStartDate).format('HH:mm'), dayjs(dataEndDate).format('HH:mm')];
+            } else {
+                const dataStartDate = data?.date;
+                return [dayjs(dataStartDate).format('HH:mm'), undefined];
+            }
         }
+        return [undefined, undefined];
     }, [data]);
 
-    const initialValues = {
-        id: data?.id,
-        typeId: data?.typeId,
-        customer: {
-            name: data?.customer?.name,
-            identification: data?.customer?.identification,
-            phone: data?.customer?.phone,
-            schedule: {
-                startTime: dayjs(data?.customer?.schedule.startDate).format('HH:mm'),
+    const initialValues = useMemo(() => {
+        if (data) {
+            return {
+                id: data?.id,
+                typeId: data?.typeId,
+                customer: {
+                    name: data?.customer?.name,
+                    identification: data?.customer?.identification,
+                    phone: data?.customer?.phone,
+                    schedule: {
+                        startTime: dayjs(data?.customer?.schedule?.startDate).format('HH:mm'),
+                    }
+                },
+                locationId: data?.locationId,
+                licenseTypeId: data?.licenseTypeId,
+                date: data?.date || dayjs(),
+                startTime: startTime,
+                endTime: endTime,
+                instructorId: data?.instructorId,
+                assetId: data?.assetId,
+                createdById: user.id,
+                payment: {
+                    price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance, paid: data?.payment?.paid,
+                },
             }
-        },
-        locationId: data?.locationId,
-        licenseTypeId: data?.licenseTypeId,
-        date: data?.date || dayjs(),
-        startTime: startTime,
-        endTime: endTime,
-        instructorId: data?.instructorId,
-        assetId: data?.assetId,
-        createdById: user.id,
-        payment: {
-            price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance, paid: data?.payment?.paid,
-        },
+        }
+        return {
+            typeId: undefined,
+            customer: {
+                name: undefined, identification: undefined, phone: undefined, schedule: {
+                    startTime: undefined,
+                }
+            },
+            locationId: undefined,
+            licenseTypeId: undefined,
+            date: dayjs(),
+            startTime: undefined,
+            endTime: undefined,
+            instructorId: undefined,
+            assetId: undefined,
+            createdById: user.id,
+            payment: {
+                price: undefined, cashAdvance: undefined, paid: false,
+            }
+        }
+    }, [data, startTime, endTime])
+
+    if (isLoading || isUpdateLoading) {
+        return null;
     }
 
     return <Form
@@ -117,7 +149,7 @@ const EventWrapper = (props: EventWrapperProps) => {
         onSubmit={onSubmit}
         validateOnBlur={true}
         mutators={{
-            clearFieldValue: ([fieldName], state, { changeValue }) => {
+            clearFieldValue: ([fieldName], state, {changeValue}) => {
                 changeValue(state, fieldName, () => undefined);
             },
         }}
