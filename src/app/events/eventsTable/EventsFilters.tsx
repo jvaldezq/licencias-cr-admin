@@ -1,7 +1,6 @@
 'use client';
 
 import {IEventFilter, IUser} from "@/lib/definitions";
-import {Button} from "@/components/ui/button";
 import * as React from "react";
 import dayjs, {Dayjs} from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
@@ -10,7 +9,6 @@ import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
 import {useCallback} from "react";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/services/client";
-import {QueryCache, QueryClient, QueryClientProvider} from "react-query";
 import {usePathname, useRouter} from "next/navigation";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 
@@ -56,20 +54,11 @@ export const EventsFilters = (props: Props) => {
         handleReset();
     }
 
-    const queryClient = new QueryClient({
-        queryCache: new QueryCache({
-            onError: error => {
-                console.error('Error:', error)
-            }
-        })
-    });
-
     const onSubmit = useCallback((data: IEventFilter) => {
         return data;
     }, []);
 
-    return <QueryClientProvider client={queryClient}>
-        <Form
+    return <Form
             onSubmit={onSubmit}
             initialValues={currentFilters}
             validateOnBlur={false}
@@ -77,7 +66,6 @@ export const EventsFilters = (props: Props) => {
             {(formProps) => <FiltersForm {...formProps} user={user} handleReset={handleReset}
                                          handleFilterUpdate={handleFilterUpdate}/>}
         </Form>
-    </QueryClientProvider>
 }
 
 export interface FiltersFormProps extends FormRenderProps<IEventFilter> {
@@ -102,7 +90,7 @@ const FiltersForm = (props: FiltersFormProps) => {
             component={FormCalendar as unknown as SupportedInputs}
             placeholder={dayjs().format('YYYY MMM DD')}
             onFilter={(date: Dayjs) => {
-                handleFilterUpdate({date})
+                handleFilterUpdate({date: date})
             }}
             label="Fecha"
         />

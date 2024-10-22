@@ -167,7 +167,7 @@ export interface IEventForm {
 }
 
 export interface IEventFilter {
-    date: Date;
+    date: string;
     locationId: number;
     instructorId: number;
     licenseTypeId: number;
