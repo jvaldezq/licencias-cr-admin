@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { CalendarIcon } from "lucide-react"
 import dayjs from "dayjs";
+import {DateRange} from "react-day-picker";
 
 
 export interface FormCalendarProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLButtonElement>, 'label' | 'name' | 'onChange'> {
@@ -39,6 +40,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
         childrenClassName,
         onFilter,
         hidden = false,
+        disabled,
     } = props;
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [open, setOpen] = useState(false)
@@ -59,6 +61,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
+                    disabled={disabled}
                     variant={"outline"}
                     className={cn(
                         "w-full pl-3 text-left font-normal",
@@ -70,7 +73,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0" >
                 <Calendar
                     mode="single"
                     selected={date}
@@ -81,7 +84,6 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
                         setOpen(false);
                         onFilter && onFilter(newDate, name);
                     }}
-                    initialFocus
                 />
             </PopoverContent>
         </Popover>

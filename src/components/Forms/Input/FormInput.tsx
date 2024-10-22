@@ -1,6 +1,14 @@
 'use client';
 
-import {ChangeEvent, ForwardedRef, forwardRef, InputHTMLAttributes, useCallback, useEffect, useRef} from 'react';
+import {
+    ChangeEvent,
+    ForwardedRef,
+    forwardRef,
+    InputHTMLAttributes,
+    useCallback,
+    useEffect,
+    useRef,
+} from 'react';
 import IMask from 'imask';
 import {CombinedInputProps} from '../types';
 import {InputWrapper, InputWrapperProps} from '../InputWrapper';
@@ -40,7 +48,7 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
                 IMask(myRef.current, typeof mask === 'string' ? {mask: mask} : mask);
             }
         }
-    }, [mask]);
+    }, [mask, hidden]);
 
     const myOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
