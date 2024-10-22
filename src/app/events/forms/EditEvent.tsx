@@ -50,31 +50,6 @@ export const EditEvent = (props: EditEventProps) => {
     </Dialog>)
 }
 
-const schema = yup.object({
-    typeId: yup.string().required('El tipo de cita es requerido'),
-    customer: yup.object({
-        name: yup.string().required('El nombre es requerido'),
-        identification: yup.string().required('La cédula es requerida'),
-        phone: yup.string()
-            .matches(/^\d{4}-\d{4}$/, {
-                message: 'La placa debe tener el formato correcto',
-            }).required('El teléfono es requerido'),
-        schedule: yup.object({
-            startTime: yup.string().required('La hora de inicio es requerida'),
-        }).required(),
-    }).required(),
-    locationId: yup.string().required('La sede es requerida'),
-    licenseTypeId: yup.string().required('El tipo de licencia es requerido'),
-    date: yup.string().required('La fecha es requerida'),
-    startTime: yup.string().required('La hora de inicio es requerida'),
-    endTime: yup.string().required('La hora de finalización es requerida'),
-    instructorId: yup.string(),
-    assetId: yup.string(),
-    createdById: yup.string(),
-    payment: yup.object({
-        price: yup.string(), cashAdvance: yup.string(), paid: yup.string(),
-    }).required(),
-}).required();
 interface EventWrapperProps {
     id: number;
     setOpen: (open: boolean) => void;
@@ -103,10 +78,6 @@ const EventWrapper = (props: EventWrapperProps) => {
             setIsLoading(false);
         }
     }, [isLoading]);
-
-    if (isLoading || isUpdateLoading) {
-        return null;
-    }
 
     const [startTime, endTime] = useMemo(() => {
         if (data?.typeId === 1) {
@@ -143,11 +114,14 @@ const EventWrapper = (props: EventWrapperProps) => {
         },
     }
 
+    if (isLoading || isUpdateLoading) {
+        return null;
+    }
+
     return <Form
         initialValues={initialValues}
         onSubmit={onSubmit}
         validateOnBlur={true}
-        validate={formValidator(schema)}
         mutators={{
             clearFieldValue: ([fieldName], state, { changeValue }) => {
                 changeValue(state, fieldName, () => undefined);

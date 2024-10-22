@@ -33,7 +33,7 @@ export const EventForm = (props: EventFormProps) => {
     const showTypeInfo = values?.customer?.name && values?.customer?.identification && values?.customer?.phone;
     const showPriceInfo = showTypeInfo && values.locationId && values.licenseTypeId && values.date && values.startTime;
 
-    return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4" noValidate>
+    return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
             name="typeId"
             component={FormDropdown as unknown as SupportedInputs}
@@ -41,6 +41,7 @@ export const EventForm = (props: EventFormProps) => {
             label='Tipo de cita'
             options={eventTypes || []}
             isLoading={isEventTypesLoading}
+            validate={(value) => value !== undefined ? undefined : 'El tipo de cita es requerido'}
         />
 
         {values?.typeId &&
@@ -54,6 +55,7 @@ export const EventForm = (props: EventFormProps) => {
             label='Cliente nombre'
             autoFocus={true}
             hidden={!values?.typeId}
+            validate={(value) => value !== undefined ? undefined : 'El nombre es requerido'}
         />
 
         <Field
@@ -63,6 +65,7 @@ export const EventForm = (props: EventFormProps) => {
             label='Teléfono'
             mask='0000-0000'
             hidden={!values?.typeId}
+            validate={(value) => value !== undefined ? undefined : 'El teléfono es requerido'}
         />
 
         <Field
@@ -72,6 +75,7 @@ export const EventForm = (props: EventFormProps) => {
             label='Cliente cédula'
             mask='0-0000-0000'
             hidden={!values?.typeId}
+            validate={(value) => value !== undefined ? undefined : 'La cédula es requerida'}
         />
 
         {showTypeInfo &&
@@ -86,6 +90,7 @@ export const EventForm = (props: EventFormProps) => {
             options={locations || []}
             isLoading={isLocationsLoading}
             hidden={!showTypeInfo}
+            validate={(value) => value !== undefined ? undefined : 'La sede es requerida'}
         />
         <Field
             name="licenseTypeId"
@@ -95,6 +100,7 @@ export const EventForm = (props: EventFormProps) => {
             options={licenses || []}
             isLoading={isLicensesLoading}
             hidden={!showTypeInfo}
+            validate={(value) => value !== undefined ? undefined : 'El tipo de licencia es requerido'}
         />
         <Field
             component={FormCalendar as unknown as SupportedInputs}
@@ -103,6 +109,7 @@ export const EventForm = (props: EventFormProps) => {
             name="date"
             wrapperClassName="md:col-span-2"
             hidden={!showTypeInfo}
+            validate={(value) => value !== undefined ? undefined : 'La fecha es requerida'}
         />
         <Field
             name="startTime"
@@ -112,6 +119,7 @@ export const EventForm = (props: EventFormProps) => {
             label={isClassType ? 'Hora de inicio' : 'Hora de prueba'}
             wrapperClassName={isClassType ? '' : 'md:col-span-2'}
             hidden={!showTypeInfo}
+            validate={(value) => value !== undefined ? undefined : 'La hora de inicio es requerida'}
         />
 
         <Field
@@ -121,6 +129,7 @@ export const EventForm = (props: EventFormProps) => {
             placeholder='Hora de finalización'
             label='Hora de finalización'
             hidden={!isClassType || !showTypeInfo}
+            validate={(value) => value !== undefined ? undefined : !isClassType ? undefined : 'La hora de finalización es requerida'}
         />
 
         <Field
@@ -165,6 +174,7 @@ export const EventForm = (props: EventFormProps) => {
             placeholder="Hora de citar cliente"
             label="Hora de citar cliente"
             hidden={!(!isClassType && showTypeInfo)}
+            validate={(value) => value !== undefined ? undefined : isClassType ? undefined : 'La hora de inicio es requerida'}
         />
 
         {showPriceInfo &&
@@ -177,6 +187,7 @@ export const EventForm = (props: EventFormProps) => {
             placeholder='Precio'
             label='Precio'
             hidden={!showPriceInfo}
+            validate={(value) => value !== undefined ? undefined : 'El precio es requerido'}
         />
         <Field
             name="payment.cashAdvance"

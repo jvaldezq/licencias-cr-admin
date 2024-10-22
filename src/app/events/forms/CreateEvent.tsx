@@ -40,34 +40,6 @@ export const CreateEvent = (props: CreateEventProps) => {
     </Dialog>)
 }
 
-const schema = yup.object({
-    typeId: yup.string().required('El tipo de cita es requerido'),
-    customer: yup.object({
-        name: yup.string().required('El nombre es requerido'),
-        identification: yup.string().matches(/^\d-\d{4}-\d{4}$/, {
-            message: 'La cédula debe tener el formato correcto',
-        }).required('La cédula es requerida'),
-        phone: yup.string()
-            .matches(/^\d{4}-\d{4}$/, {
-                message: 'El teléfono debe tener el formato correcto',
-            }).required('El teléfono es requerido'),
-        schedule: yup.object({
-            startTime: yup.string().required('La hora de inicio es requerida'),
-        }).required('El horario es requerido'),
-    }).required(),
-    locationId: yup.string().required('La sede es requerida'),
-    licenseTypeId: yup.string().required('El tipo de licencia es requerido'),
-    date: yup.string().required('La fecha es requerida'),
-    startTime: yup.string().required('La hora de inicio es requerida'),
-    endTime: yup.string().required('La hora de finalización es requerida'),
-    payment: yup.object({
-        price: yup.number(),
-        cashAdvance: yup.number(),
-        paid: yup.string(),
-    }).required('El pago es requerido'),
-}).required();
-
-
 interface EventWrapperProps {
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
@@ -123,7 +95,6 @@ const EventWrapper = (props: EventWrapperProps) => {
         initialValues={initialValues}
         onSubmit={onSubmit}
         validateOnBlur={true}
-        validate={formValidator(schema)}
         mutators={{
             clearFieldValue: ([fieldName], state, { changeValue }) => {
                 changeValue(state, fieldName, () => undefined);
