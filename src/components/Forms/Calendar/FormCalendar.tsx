@@ -75,7 +75,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
                     mode="single"
                     selected={date}
                     onSelect={(date) => {
-                        const newDate = dayjs(date?.toLocaleDateString()).format('YYYY-MM-DDTHH:mm:ss');
+                        const newDate = dayjs(date).format('YYYY-MM-DDTHH:mm:ss');
                         setDate(date);
                         onChange(newDate);
                         setOpen(false);
