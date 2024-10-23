@@ -62,7 +62,7 @@ interface PeopleFormWrapperProps {
 
 const PeopleFormWrapper = (props: PeopleFormWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetPeopleById(id);
+    const {data, isLoading} = useGetPeopleById(Number(id));
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 

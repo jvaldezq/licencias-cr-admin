@@ -52,7 +52,7 @@ interface LocationWrapperProps {
 
 const LocationWrapper = (props: LocationWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetLocationById(id);
+    const {data, isLoading} = useGetLocationById(Number(id));
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 

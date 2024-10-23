@@ -55,7 +55,7 @@ interface AssetWrapperProps {
 
 const AssetWrapper = (props: AssetWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetAssetById(id);
+    const {data, isLoading} = useGetAssetById(Number(id));
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 

@@ -15,7 +15,7 @@ export const DeleteLicense = ({id}: { id: number }) => {
     const router = useRouter();
 
     const onDelete = useCallback(() => {
-        mutateAsync(id).then(() => {
+        mutateAsync(Number(id)).then(() => {
             setOpen(false);
             router.refresh();
         });

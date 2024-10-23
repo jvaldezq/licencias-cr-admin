@@ -54,7 +54,7 @@ interface LicenseWrapperProps {
 
 const LicenseWrapper = (props: LicenseWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetLicenseById(id);
+    const {data, isLoading} = useGetLicenseById(Number(id));
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 

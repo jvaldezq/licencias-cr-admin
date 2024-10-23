@@ -58,9 +58,7 @@ interface EventWrapperProps {
 
 const EventWrapper = (props: EventWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading, user} = props;
-    console.log('JORDAN', props);
     const {data, isLoading} = useGetEventById(Number(id));
-    console.log('JORDAN 2', Number(id));
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
