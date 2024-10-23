@@ -1,13 +1,7 @@
 'use client';
 
 import {
-    ChangeEvent,
-    ForwardedRef,
-    forwardRef,
-    InputHTMLAttributes,
-    useCallback,
-    useEffect,
-    useRef,
+    ChangeEvent, ForwardedRef, forwardRef, InputHTMLAttributes, useCallback, useEffect, useRef,
 } from 'react';
 import IMask from 'imask';
 import {CombinedInputProps} from '../types';
@@ -39,7 +33,7 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
         hidden = false,
         ...rest
     } = props;
-    const {onChange, ...inputRest} = input;
+    const {onChange, value, ...inputRest} = input;
     const myRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
@@ -57,33 +51,33 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
     if (hidden) return null;
 
     return (<InputWrapper
+        name={name}
+        label={label}
+        labelClassName={labelClassName}
+        labelPosition={labelPosition}
+        loading={loading}
+        wrapperClassName={wrapperClassName}
+        childrenClassName={childrenClassName}
+        meta={meta}
+    >
+        <Input
             name={name}
-            label={label}
-            labelClassName={labelClassName}
-            labelPosition={labelPosition}
-            loading={loading}
-            wrapperClassName={wrapperClassName}
-            childrenClassName={childrenClassName}
-            meta={meta}
-        >
-            <Input
-                name={name}
-                className={cn(className)}
-                ref={(node) => {
-                    myRef.current = node;
-                    if (typeof ref === 'function') {
-                        ref(node);
-                    } else if (ref) {
-                        ref.current = node;
-                    }
-                }}
-                placeholder={placeholder ?? (typeof label === 'string' ? label : '')}
-                onChange={myOnChange}
-                {...inputRest}
-                {...rest}
-            />
-            {icon}
-        </InputWrapper>);
+            className={cn(className, value ? 'bg-success/[0.1]' : undefined)}
+            ref={(node) => {
+                myRef.current = node;
+                if (typeof ref === 'function') {
+                    ref(node);
+                } else if (ref) {
+                    ref.current = node;
+                }
+            }}
+            placeholder={placeholder ?? (typeof label === 'string' ? label : '')}
+            onChange={myOnChange}
+            {...inputRest}
+            {...rest}
+        />
+        {icon}
+    </InputWrapper>);
 });
 
 FormInput.displayName = 'FormInput';

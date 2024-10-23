@@ -14,6 +14,7 @@ import {
     DrawerTrigger
 } from "@/components/ui/drawer";
 import {InputLoader} from "@/components/InputLoader";
+import {cn} from "@/lib/utils";
 
 interface IProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
     options: {
@@ -65,7 +66,14 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button disabled={disabled} variant="outline"
-                        className="w-full justify-between text-tertiary text-xs">
+                        className={
+                    cn('w-full',
+                        'justify-between',
+                        'text-tertiary',
+                        'text-xs',
+                            valueLabel ? 'bg-success/[0.1]' : undefined
+                    )
+                        }>
                     {valueLabel ? valueLabel : placeholder}
                     {secondaryAction}
                 </Button>

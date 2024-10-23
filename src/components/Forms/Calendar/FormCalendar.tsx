@@ -65,6 +65,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
                     variant={"outline"}
                     className={cn(
                         "w-full pl-3 text-left font-normal",
+                        date ? 'bg-success/[0.1]' : undefined
                     )}
                 >
                     {
