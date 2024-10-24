@@ -73,6 +73,7 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
             }}
             placeholder={placeholder ?? (typeof label === 'string' ? label : '')}
             onChange={myOnChange}
+            value={value}
             {...inputRest}
             {...rest}
         />
