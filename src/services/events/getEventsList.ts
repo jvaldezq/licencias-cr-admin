@@ -4,47 +4,37 @@ import dayjs from 'dayjs';
 
 export const getEventsList = async (filters: IEventFilter) => {
     try {
-        let date = dayjs().toISOString();
+        let date = dayjs(new Date()).toISOString();
         if (filters?.date) {
             date = dayjs(filters?.date).toISOString();
         }
 
         let dateFilter = {};
-        if (date) {
-            const startOfDay = dayjs(date).startOf('day').toISOString();
-            const endOfDay = dayjs(date).endOf('day').toISOString();
-            dateFilter = {
-                date: {
-                    gte: startOfDay, lte: endOfDay,
-                },
-            };
-        } else {
-            const startOfDay = dayjs().startOf('day').toISOString();
-            const endOfDay = dayjs().endOf('day').toISOString();
-            dateFilter = {
-                date: {
-                    gte: startOfDay, lte: endOfDay,
-                },
-            };
-        }
+        const startOfDay = dayjs(date).startOf('day').toISOString();
+        const endOfDay = dayjs(date).endOf('day').toISOString();
+        dateFilter = {
+            date: {
+                gte: startOfDay, lte: endOfDay,
+            },
+        };
 
         const locationId = filters?.locationId ? {
             locationId: {
-                equals: +filters.locationId
+                equals: BigInt(filters.locationId)
             }
-        } : {};
+        } : undefined;
 
         const instructorId = filters?.instructorId ? {
             instructorId: {
-                equals: +filters.instructorId
+                equals: BigInt(filters.instructorId),
             }
-        } : {};
+        } : undefined;
 
         const licenseTypeId = filters?.licenseTypeId ? {
             licenseTypeId: {
-                equals: +filters.licenseTypeId
+                equals: BigInt(filters.licenseTypeId),
             }
-        } : {};
+        } : undefined;
 
         const events = await prisma.event.findMany({
             select: {
@@ -65,10 +55,16 @@ export const getEventsList = async (filters: IEventFilter) => {
                         name: true, color: true,
                     }
                 },
-            }, orderBy: {
+            },
+            orderBy: {
                 date: 'asc'
-            }, where: {
-                ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId, status: {
+            },
+            where: {
+                ...dateFilter,
+                ...locationId,
+                ...instructorId,
+                ...licenseTypeId,
+                status: {
                     equals: EventStatus.IN_PROGRESS
                 }
             }
