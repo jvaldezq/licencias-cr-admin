@@ -92,6 +92,11 @@ const getEventTypesList = async (): Promise<IEventType[]> => {
     return locationList.data;
 };
 
+const deleteEvent = async (id: number): Promise<IAsset> => {
+    const event = await clientApi.delete(`/event/${id}`);
+    return event.data;
+};
+
 export const useGetEventTypesList = () => {
     return useQuery({
         staleTime: 1000 * 60 * 5,
@@ -159,5 +164,14 @@ export const useGetInstructorList = () => {
         queryKey: ["instructor-list"],
         queryFn: getInstructorList,
         retry: 2,
+    });
+};
+
+export const useDeleteMutation = () => {
+    return useMutation({
+        mutationFn: (id: number) => {
+            return deleteEvent(id);
+        },
+        mutationKey: ['event-delete'],
     });
 };
