@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import {IEvent, IEventFilter} from '@/lib/definitions';
+import {EventStatus, IEvent, IEventFilter} from '@/lib/definitions';
 import dayjs from 'dayjs';
 
 export const getEventsList = async (filters: IEventFilter) => {
@@ -68,11 +68,13 @@ export const getEventsList = async (filters: IEventFilter) => {
             }, orderBy: {
                 date: 'asc'
             }, where: {
-                ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId
+                ...dateFilter, ...locationId, ...instructorId, ...licenseTypeId, status: {
+                    equals: EventStatus.IN_PROGRESS
+                }
             }
         });
         return events as unknown as IEvent[]
     } catch (error) {
-        throw new Error(`Failed to create class: ${error}`);
+        throw new Error(`Failed to get events: ${error}`);
     }
 };

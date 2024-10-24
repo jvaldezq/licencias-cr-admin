@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import {IEventForm} from '@/lib/definitions';
+import {EventStatus, IEventForm} from '@/lib/definitions';
 import dayjs from 'dayjs';
 
 export const createClass = async (data: IEventForm) => {
@@ -40,7 +40,7 @@ export const createClass = async (data: IEventForm) => {
 
             await prisma.event.create({
                 data: {
-                    status: 'Pendiente',
+                    status:  EventStatus.IN_PROGRESS,
                     assetId: data.assetId,
                     createdById: data.createdById || 0,
                     customerId: customer.id,
@@ -105,7 +105,7 @@ export const updateClass = async (id: number, data: IEventForm): Promise<string>
             await prisma.event.update({
                 where: {id},
                 data: {
-                    status: 'Pendiente',
+                    status: EventStatus.IN_PROGRESS,
                     assetId: data.assetId,
                     createdById: data.createdById || 0,
                     customerId: customer.id,

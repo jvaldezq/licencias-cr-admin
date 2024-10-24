@@ -172,3 +172,9 @@ export interface IEventFilter {
     instructorId: number;
     licenseTypeId: number;
 }
+
+export enum EventStatus {
+    COMPLETED = 'COMPLETED',
+    DELETED = 'DELETED',
+    IN_PROGRESS = 'IN_PROGRESS'
+}

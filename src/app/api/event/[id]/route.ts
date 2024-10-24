@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import {revalidatePath} from "next/cache";
 import {updateClass} from "@/services/events/eventClass";
 import {updateTest} from "@/services/events/eventTest";
+import {eventComplete} from "@/services/events/eventComplete";
+import {eventDelete} from "@/services/events/eventDelete";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -60,6 +62,18 @@ export async function PATCH(request: Request, {params}: { params: { id: string }
         return NextResponse.json(res, {status: 200});
     } catch (error) {
         console.error('Updating event', error);
+        return NextResponse.json({error}, {status: 500});
+    }
+}
+
+export async function DELETE(_: Request, {params}: { params: { id: string } }) {
+    try {
+        const res = await eventDelete(+params.id);
+
+        revalidatePath('/events', 'page')
+        return NextResponse.json(res, {status: 200});
+    } catch (error) {
+        console.error('Completing event', error);
         return NextResponse.json({error}, {status: 500});
     }
 }

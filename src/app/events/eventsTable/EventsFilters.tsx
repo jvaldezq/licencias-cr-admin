@@ -29,13 +29,15 @@ export const EventsFilters = (props: Props) => {
     const pathname = usePathname();
     const {replace} = useRouter();
     const currentFilters = filters ? JSON.parse(atob(filters)) as IEventFilter : {};
+    const instructorId =
+        !props.user?.access?.receptionist && !props.user?.access?.admin && user?.access?.instructor ? user?.id : undefined;
 
     const handleReset = useCallback(() => {
         const params = new URLSearchParams();
         const newFilters = JSON.stringify({
-            date: dayjs(),
+            date: new Date(),
             locationId: props.user?.location?.id,
-            instructorId: props.user?.access?.instructor ? props.user?.id : undefined
+            instructorId: instructorId
         })
         params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
@@ -94,7 +96,8 @@ const FiltersForm = (props: FiltersFormProps) => {
             }}
             label="Fecha"
         />
-        {(user?.access?.receptionist || user?.access?.admin) && <Field
+
+        <Field
             name="locationId"
             component={FormDropdown as unknown as SupportedInputs}
             placeholder='Sede'
@@ -104,7 +107,8 @@ const FiltersForm = (props: FiltersFormProps) => {
                 handleFilterUpdate({locationId: value})
             }}
             isLoading={isLocationsLoading}
-        />}
+            hidden={!(user?.access?.receptionist || user?.access?.admin)}
+        />
 
         <Field
             name="instructorId"
