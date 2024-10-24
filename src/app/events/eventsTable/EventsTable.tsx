@@ -10,6 +10,7 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {useMemo} from "react";
 import {EditEvent} from "@/app/events/forms/EditEvent";
 import {DeleteEvent} from "@/app/events/forms/DeleteEvent";
+import {CompleteEvent} from "@/app/events/forms/CompleteEvent";
 
 dayjs.extend(advancedFormat);
 
@@ -115,6 +116,7 @@ export const EventsTable = (props: Props) => {
             return <div className="flex gap-4">
                 <EditEvent id={row.original.id} user={user}/>
                 <DeleteEvent id={row.original.id}/>
+                <CompleteEvent id={row.original.id}/>
             </div>
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');
@@ -204,6 +206,7 @@ export const EventsTable = (props: Props) => {
             return <div className="flex gap-4">
                 <EditEvent id={row.original.id} user={user}/>
                 <DeleteEvent id={row.original.id}/>
+                <CompleteEvent id={row.original.id}/>
             </div>
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');

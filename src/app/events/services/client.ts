@@ -92,8 +92,13 @@ const getEventTypesList = async (): Promise<IEventType[]> => {
     return locationList.data;
 };
 
-const deleteEvent = async (id: number): Promise<IAsset> => {
+const deleteEvent = async (id: number): Promise<IEvent> => {
     const event = await clientApi.delete(`/event/${id}`);
+    return event.data;
+};
+
+const completeEvent = async (id: number): Promise<IEvent> => {
+    const event = await clientApi.patch(`/event/${id}/complete`);
     return event.data;
 };
 
@@ -171,7 +176,14 @@ export const useDeleteMutation = () => {
     return useMutation({
         mutationFn: (id: number) => {
             return deleteEvent(id);
-        },
-        mutationKey: ['event-delete'],
+        }, mutationKey: ['event-delete'],
+    });
+};
+
+export const useCompleteMutation = () => {
+    return useMutation({
+        mutationFn: (id: number) => {
+            return completeEvent(id);
+        }, mutationKey: ['event-complete'],
     });
 };
