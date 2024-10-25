@@ -40,6 +40,7 @@ export const getEventsList = async (filters: IEventFilter) => {
             select: {
                 id: true, status: true, date: true, asset: {
                     select: {
+                        id: true,
                         name: true,
                     }
                 }, customer: {
@@ -65,7 +66,7 @@ export const getEventsList = async (filters: IEventFilter) => {
                 ...instructorId,
                 ...licenseTypeId,
                 status: {
-                    equals: EventStatus.IN_PROGRESS
+                    in: [EventStatus.IN_PROGRESS, EventStatus.COMPLETED]
                 }
             }
         });

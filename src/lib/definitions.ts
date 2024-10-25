@@ -178,3 +178,12 @@ export enum EventStatus {
     DELETED = 'DELETED',
     IN_PROGRESS = 'IN_PROGRESS'
 }
+
+export enum OWNCAR {
+    OWN = 9999,
+}
+
+export enum CLASS_TYPE {
+    CLASS = 1,
+    DRIVE_TEST = 2
+}

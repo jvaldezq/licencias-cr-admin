@@ -29,6 +29,7 @@ const config = {
 				verified: '#0284c7',
 				error: 'rgb(211, 47, 47)',
 				warning: 'rgb(245, 124, 0)',
+				['warning-yellow']: 'rgb(255, 244, 229)',
 				info: 'rgb(2, 136, 209)',
 				success: 'rgb(56, 142, 60)'
 			},

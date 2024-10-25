@@ -1,7 +1,7 @@
 'use client';
 
 import {ColumnDef, Row} from "@tanstack/react-table";
-import {IEvent, IUser} from "@/lib/definitions";
+import {EventStatus, IEvent, IUser} from "@/lib/definitions";
 import {Button} from "@/components/ui/button";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
@@ -113,6 +113,11 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
+            if (row.original.status === EventStatus.COMPLETED) {
+                return <p className="font-bold">
+                    Completado
+                </p>
+            }
             return <div className="flex gap-4">
                 <EditEvent id={row.original.id} user={user}/>
                 <DeleteEvent id={row.original.id}/>
@@ -203,6 +208,11 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
+            if (row.original.status === EventStatus.COMPLETED) {
+                return <p className="font-bold">
+                    Completado
+                </p>
+            }
             return <div className="flex gap-4">
                 <EditEvent id={row.original.id} user={user}/>
                 <DeleteEvent id={row.original.id}/>

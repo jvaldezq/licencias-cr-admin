@@ -57,6 +57,7 @@ const EventWrapper = (props: EventWrapperProps) => {
     }, [isLoading]);
 
     const onSubmit = useCallback(() => {
+        setIsLoading(true);
         setLoadingContent(<FormSavingLoader message="Completando Cita"/>)
         mutateAsync(Number(id)).then(() => {
             setOpen(false);

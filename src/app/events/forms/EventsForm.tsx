@@ -8,11 +8,10 @@ import {
     useGetAssetsByList, useGetEventTypesList, useGetInstructorList, useGetLicenseList, useGetLocationList,
 } from "@/app/events/services/client";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
-import {IEventForm} from "@/lib/definitions";
+import {CLASS_TYPE, IEventForm, OWNCAR} from "@/lib/definitions";
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import dayjs from "dayjs";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
-
 
 export interface EventFormProps extends FormRenderProps<IEventForm> {
 }
@@ -29,9 +28,10 @@ export const EventForm = (props: EventFormProps) => {
         data: instructors, isLoading: isInstructorsLoading
     } = useGetInstructorList();
 
-    const isClassType = values.typeId === 1;
+    const isClassType = values.typeId === CLASS_TYPE.CLASS;
     const showTypeInfo = values?.customer?.name && values?.customer?.identification && values?.customer?.phone;
     const showPriceInfo = showTypeInfo && values.locationId && values.licenseTypeId && values.date && values.startTime;
+    const assetsList = [{ id: OWNCAR.OWN, name: "Propio" }, ...assets || []];
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
@@ -73,7 +73,7 @@ export const EventForm = (props: EventFormProps) => {
             component={FormInput as unknown as SupportedInputs}
             placeholder='Cliente cédula'
             label='Cliente cédula'
-            mask='0-0000-0000'
+            mask={Number}
             hidden={!values?.typeId}
             validate={(value) => value !== undefined ? undefined : 'La cédula es requerida'}
         />
@@ -152,7 +152,7 @@ export const EventForm = (props: EventFormProps) => {
             component={FormDropdown as unknown as SupportedInputs}
             placeholder='Vehículo'
             label='Vehículo'
-            options={assets || []}
+            options={assetsList}
             isLoading={isAssetsLoading}
             disabled={!assets}
             hidden={!showTypeInfo}

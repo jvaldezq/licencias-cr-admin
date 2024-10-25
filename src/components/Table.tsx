@@ -17,6 +17,7 @@ import {
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
+import {EventStatus} from "@/lib/definitions";
 
 
 interface Props<T> {
@@ -58,14 +59,22 @@ export function DataTable<T>(props: Props<T>) {
             </TableRow>))}
         </TableHeader>
         <TableBody>
-            {table?.getRowModel().rows?.length ? (table?.getRowModel().rows.map((row) => (<TableRow
-                key={row?.id}
-                data-state={row?.getIsSelected() && "selected"}
-            >
-                {row?.getVisibleCells().map((cell) => (<TableCell key={cell?.id}>
-                    {flexRender(cell?.column?.columnDef?.cell, cell.getContext())}
-                </TableCell>))}
-            </TableRow>))) : (<TableRow>
+            {table?.getRowModel().rows?.length ? (table?.getRowModel().rows.map((row) => {
+                // @ts-ignore
+                const completedStyle = row?.original?.status === EventStatus.COMPLETED ?
+                    'bg-warning-yellow' : ''
+
+
+                return <TableRow
+                    key={row?.id}
+                    data-state={row?.getIsSelected() && "selected"}
+                    className={completedStyle}
+                >
+                    {row?.getVisibleCells().map((cell) => (<TableCell key={cell?.id}>
+                        {flexRender(cell?.column?.columnDef?.cell, cell.getContext())}
+                    </TableCell>))}
+                </TableRow>
+            })) : (<TableRow>
                 <TableCell
                     colSpan={columns?.length}
                     className="h-24 text-center"

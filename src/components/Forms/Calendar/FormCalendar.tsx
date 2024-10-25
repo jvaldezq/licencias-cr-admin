@@ -3,7 +3,7 @@
 import {
     ForwardedRef,
     forwardRef,
-    InputHTMLAttributes,
+    InputHTMLAttributes, useEffect,
     useState
 } from 'react';
 import {CombinedInputProps} from '../types';
@@ -45,6 +45,12 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [open, setOpen] = useState(false)
     const {onChange} = input;
+
+    useEffect(() => {
+        if(input?.value) {
+            setDate(new Date(input?.value))
+        }
+    }, [input])
 
     if (hidden) return null;
 
