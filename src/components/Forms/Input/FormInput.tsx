@@ -45,6 +45,9 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
     }, [mask, hidden]);
 
     const myOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        if (input.type === 'time') {
+            alert(e.target.value);
+        }
         onChange(e.target.value);
     }, [onChange],);
 
