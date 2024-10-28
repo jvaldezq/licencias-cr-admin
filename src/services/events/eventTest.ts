@@ -20,6 +20,11 @@ export const createTest = async (data: IEventForm) => {
     const customerStartDate = selectedDate.set('hour', +customerStartTimeHours).set('minute', +customerStartTimeMinutes).toISOString();
     const customerEndDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).add(1, 'hour').toISOString();
 
+    console.info('JORDAN TEST data', data);
+    console.info('JORDAN TEST eventDate', eventDate);
+    console.info('JORDAN TEST customerStartDate', customerStartDate);
+    console.info('JORDAN TEST customerEndDate', customerEndDate);
+
     try {
         return await prisma.$transaction(async (prisma) => {
             const schedule = await prisma.schedule.create({
@@ -89,6 +94,11 @@ export const updateTest = async (id: number, data: IEventForm): Promise<string> 
         .set('minute', +startTimeMinutes)
         .add(1, 'hour')
         .toISOString();
+
+    console.info('JORDAN TEST data', data);
+    console.info('JORDAN TEST eventDate', eventDate);
+    console.info('JORDAN TEST customerStartDate', customerStartDate);
+    console.info('JORDAN TEST customerEndDate', customerEndDate);
 
     try {
         return await prisma.$transaction(async (prisma) => {
