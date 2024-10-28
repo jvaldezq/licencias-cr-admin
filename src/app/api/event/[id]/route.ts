@@ -1,11 +1,10 @@
 import prisma from '@/lib/prisma';
 import {NextRequest, NextResponse} from "next/server";
-import dayjs from "dayjs";
 import {revalidatePath} from "next/cache";
 import {updateClass} from "@/services/events/eventClass";
 import {updateTest} from "@/services/events/eventTest";
-import {eventComplete} from "@/services/events/eventComplete";
 import {eventDelete} from "@/services/events/eventDelete";
+import {CLASS_TYPE} from "@/lib/definitions";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -52,7 +51,7 @@ export async function PATCH(request: Request, {params}: { params: { id: string }
 
 
         let res;
-        if (body?.typeId === 1) {
+        if (body?.typeId === CLASS_TYPE.CLASS) {
             res = await updateClass(+params.id, body);
         } else {
             res = await updateTest(+params.id, body);

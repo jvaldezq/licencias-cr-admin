@@ -9,7 +9,7 @@ import {useRouter} from "next/navigation";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {FormSavingLoader} from "@/components/FormLoader";
 import {EventForm} from "@/app/events/forms/EventsForm";
-import {IEventForm, IUser} from "@/lib/definitions";
+import {CLASS_TYPE, IEventForm, IUser} from "@/lib/definitions";
 import {
     useGetEventById, useUpdateMutation,
 } from "@/app/events/services/client";
@@ -79,7 +79,7 @@ const EventWrapper = (props: EventWrapperProps) => {
 
     const [startTime, endTime] = useMemo(() => {
         if (data) {
-            if (data?.typeId === 1) {
+            if (data?.typeId === CLASS_TYPE.CLASS) {
                 const dataStartDate = data?.customer?.schedule.startDate;
                 const dataEndDate = data?.customer?.schedule.endDate;
                 return [dayjs(dataStartDate).format('HH:mm'), dayjs(dataEndDate).format('HH:mm')];

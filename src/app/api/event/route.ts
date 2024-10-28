@@ -1,8 +1,8 @@
 import {NextResponse} from 'next/server';
 import {revalidatePath} from 'next/cache'
-import {createClass, updateClass} from "@/services/events/eventClass";
-import {createTest, updateTest} from "@/services/events/eventTest";
-import {IEventFilter} from "@/lib/definitions";
+import {createClass} from "@/services/events/eventClass";
+import {createTest} from "@/services/events/eventTest";
+import {CLASS_TYPE, IEventFilter} from "@/lib/definitions";
 import {getEventsList} from "@/services/events/getEventsList";
 
 // @ts-ignore
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         }
 
         let res;
-        if (body?.typeId === 1) {
+        if (body?.typeId === CLASS_TYPE.CLASS) {
             res = await createClass(body);
         } else {
             res = await createTest(body);

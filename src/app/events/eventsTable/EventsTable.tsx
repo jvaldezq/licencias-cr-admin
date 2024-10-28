@@ -41,7 +41,7 @@ export const EventsTable = (props: Props) => {
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
             return <div className="capitalize">
-                {dayjs(row?.original?.customer?.schedule?.startDate).format('h:mm A')}
+                {dayjs(row?.original?.customer?.schedule?.startDate).format('hh:mm A')}
             </div>
         },
     }, {
@@ -54,7 +54,7 @@ export const EventsTable = (props: Props) => {
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
             return <div className="capitalize">
-                {dayjs(row?.original?.date).format('h:mm A')}
+                {dayjs(row?.original?.date).format('hh:mm A')}
             </div>
         },
     }, {
@@ -136,7 +136,7 @@ export const EventsTable = (props: Props) => {
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
             return <div className="capitalize">
-                {dayjs(row?.original?.customer?.schedule?.startDate).format('h:mm A')}
+                {dayjs(row?.original?.customer?.schedule?.startDate).format('hh:mm A')}
             </div>
         },
     }, {
@@ -149,7 +149,7 @@ export const EventsTable = (props: Props) => {
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
             return <div className="capitalize">
-                {dayjs(row?.original?.customer?.schedule?.endDate).format('h:mm A')}
+                {dayjs(row?.original?.customer?.schedule?.endDate).format('hh:mm A')}
             </div>
         },
     }, {
