@@ -26,6 +26,7 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
                 locationId: true,
                 licenseTypeId: true,
                 date: true,
+                time: true,
                 instructorId: true,
                 assetId: true,
                 createdById: true,

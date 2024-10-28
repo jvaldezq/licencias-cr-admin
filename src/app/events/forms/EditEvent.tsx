@@ -101,14 +101,14 @@ const EventWrapper = (props: EventWrapperProps) => {
                     identification: data?.customer?.identification,
                     phone: data?.customer?.phone,
                     schedule: {
-                        startTime: dayjs(data?.customer?.schedule?.startDate).format('HH:mm'),
+                        startTime: data?.customer?.schedule?.startTime,
                     }
                 },
                 locationId: data?.locationId,
                 licenseTypeId: data?.licenseTypeId,
                 date: data?.date || dayjs(),
-                startTime: startTime,
-                endTime: endTime,
+                startTime: data?.typeId === CLASS_TYPE.CLASS ? data?.customer?.schedule?.startTime : data?.time,
+                endTime: data?.customer?.schedule?.endTime || '',
                 instructorId: data?.instructorId,
                 assetId: data?.assetId,
                 createdById: user.id,
