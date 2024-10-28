@@ -83,6 +83,7 @@ export interface IEvent {
     paymentId: number;
     payment: IPayment;
     date?: Date;
+    time: string;
     typeId: number;
     type: IEventType;
 }
@@ -102,6 +103,8 @@ export interface ICustomer {
 
 export interface ISchedule {
     id: number;
+    startTime: string;
+    endTime: string;
     startDate: Date;
     endDate: Date;
     createdAt: Date;

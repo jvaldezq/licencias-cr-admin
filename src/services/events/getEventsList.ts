@@ -38,7 +38,7 @@ export const getEventsList = async (filters: IEventFilter) => {
 
         const events = await prisma.event.findMany({
             select: {
-                id: true, status: true, date: true, asset: {
+                id: true, status: true, date: true, time: true, asset: {
                     select: {
                         id: true,
                         name: true,

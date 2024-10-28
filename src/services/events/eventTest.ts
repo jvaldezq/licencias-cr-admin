@@ -17,19 +17,20 @@ export const createTest = async (data: IEventForm) => {
 
     // Compute event, start and end dates only once
     const eventDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).toISOString();
+
     const customerStartDate = selectedDate.set('hour', +customerStartTimeHours).set('minute', +customerStartTimeMinutes).toISOString();
+
     const customerEndDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).add(1, 'hour').toISOString();
 
-    console.info('JORDAN TEST data', data);
-    console.info('JORDAN TEST eventDate', eventDate);
-    console.info('JORDAN TEST customerStartDate', customerStartDate);
-    console.info('JORDAN TEST customerEndDate', customerEndDate);
+    const updatedTime = selectedDate.set('hour', +customerStartTimeHours).set('minute', +customerStartTimeMinutes).add(1, 'hour').format("HH:mm");
 
     try {
         return await prisma.$transaction(async (prisma) => {
             const schedule = await prisma.schedule.create({
                 data: {
                     startDate: customerStartDate, endDate: customerEndDate,
+                    startTime: data?.customer?.schedule?.startTime || '',
+                    endTime: updatedTime || '',
                 },
             });
 
@@ -63,6 +64,7 @@ export const createTest = async (data: IEventForm) => {
                     paymentId: payment.id,
                     typeId: data.typeId,
                     date: eventDate,
+                    time: data.startTime,
                 },
             });
 
@@ -95,10 +97,7 @@ export const updateTest = async (id: number, data: IEventForm): Promise<string> 
         .add(1, 'hour')
         .toISOString();
 
-    console.info('JORDAN TEST data', data);
-    console.info('JORDAN TEST eventDate', eventDate);
-    console.info('JORDAN TEST customerStartDate', customerStartDate);
-    console.info('JORDAN TEST customerEndDate', customerEndDate);
+    const updatedTime = selectedDate.set('hour', +customerStartTimeHours).set('minute', +customerStartTimeMinutes).add(1, 'hour').format("HH:mm");
 
     try {
         return await prisma.$transaction(async (prisma) => {
@@ -116,10 +115,12 @@ export const updateTest = async (id: number, data: IEventForm): Promise<string> 
             });
 
             if (customer?.scheduleId) {
-                const schedule = await prisma.schedule.update({
+                await prisma.schedule.update({
                     where: {id: customer?.scheduleId},
                     data: {
                         startDate: customerStartDate, endDate: customerEndDate,
+                        startTime: data?.customer?.schedule?.startTime || '',
+                        endTime: updatedTime || '',
                     },
                 });
             }
@@ -147,6 +148,7 @@ export const updateTest = async (id: number, data: IEventForm): Promise<string> 
                     paymentId: payment.id,
                     typeId: data.typeId,
                     date: eventDate,
+                    time: data.startTime,
                 },
             });
 

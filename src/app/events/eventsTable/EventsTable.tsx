@@ -40,8 +40,9 @@ export const EventsTable = (props: Props) => {
                 Hora cliente
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
+            const [startTime, endTime] = row?.original?.customer?.schedule?.startTime?.split(':') || [];
             return <div className="capitalize">
-                {dayjs(row?.original?.customer?.schedule?.startDate).format('hh:mm A')}
+                {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },
     }, {
@@ -53,8 +54,9 @@ export const EventsTable = (props: Props) => {
                 Hora prueba
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
+            const [startTime, endTime] = row?.original?.time?.split(':') || [];
             return <div className="capitalize">
-                {dayjs(row?.original?.date).format('hh:mm A')}
+                {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },
     }, {
@@ -135,8 +137,9 @@ export const EventsTable = (props: Props) => {
                 Inicio
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
+            const [startTime, endTime] = row?.original?.customer?.schedule?.startTime?.split(':') || [];
             return <div className="capitalize">
-                {dayjs(row?.original?.customer?.schedule?.startDate).format('hh:mm A')}
+                {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },
     }, {
@@ -148,8 +151,9 @@ export const EventsTable = (props: Props) => {
                 Fin
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
+            const [startTime, endTime] = row?.original?.customer?.schedule?.endTime?.split(':') || [];
             return <div className="capitalize">
-                {dayjs(row?.original?.customer?.schedule?.endDate).format('hh:mm A')}
+                {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },
     }, {

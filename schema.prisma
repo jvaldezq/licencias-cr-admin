@@ -90,6 +90,7 @@ model Event {
   paymentId     BigInt       @unique
   payment       Payment      @relation(fields: [paymentId], references: [id])
   date          DateTime?
+  time          String?
   typeId        BigInt
   type          EventType    @relation(fields: [typeId], references: [id])
 
@@ -111,6 +112,8 @@ model Customer {
 
 model Schedule {
   id                  BigInt   @id @default(autoincrement())
+  startTime           String?
+  endTime             String?
   startDate           DateTime?
   endDate             DateTime?
   createdAt           DateTime @default(now())
