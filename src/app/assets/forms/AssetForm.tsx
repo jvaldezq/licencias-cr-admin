@@ -32,12 +32,14 @@ export const AssetForm = (props: FormProps) => {
             placeholder='Nombre'
             label='Nombre'
             autoFocus={true}
+            validate={(value) => value !== undefined ? undefined : 'El nombre es requerido'}
         />
         <Field
             name="plate"
             component={FormInput as unknown as SupportedInputs}
             placeholder='Placa'
             label='Placa'
+            validate={(value) => value !== undefined ? undefined : 'La placa es requerida'}
         />
         <Field
             name="locationId"
@@ -46,6 +48,7 @@ export const AssetForm = (props: FormProps) => {
             label='Sede'
             options={data || []}
             isLoading={isLoading}
+            validate={(value) => value !== undefined ? undefined : 'La Sede es requerida'}
         />
         <Field
             name="licenseTypeId"
@@ -54,6 +57,7 @@ export const AssetForm = (props: FormProps) => {
             label='Tipo licencia'
             options={licenses || []}
             isLoading={isLicensesLoading}
+            validate={(value) => value !== undefined ? undefined : 'El tipo de licencia es requerido'}
         />
         <Field
             name="status"

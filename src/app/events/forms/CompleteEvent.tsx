@@ -76,7 +76,6 @@ const EventWrapper = (props: EventWrapperProps) => {
     return <Form
         initialValues={undefined}
         onSubmit={onSubmit}
-        validateOnBlur={true}
         mutators={{
             clearFieldValue: ([fieldName], state, {changeValue}) => {
                 changeValue(state, fieldName, () => undefined);

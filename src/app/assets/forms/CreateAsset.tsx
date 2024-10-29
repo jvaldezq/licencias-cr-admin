@@ -9,8 +9,6 @@ import {useCreateMutation} from "@/app/assets/services/client";
 import {useRouter} from "next/navigation";
 import {AssetForm, AssetFormProps} from "@/app/assets/forms/AssetForm";
 import {FormSavingLoader} from "@/components/FormLoader";
-import {formValidator} from "@/lib/formValidator";
-import * as yup from "yup";
 
 export const CreateAsset = () => {
     const [open, setOpen] = useState(false);
@@ -31,13 +29,6 @@ export const CreateAsset = () => {
         <AssetFormWrapper setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
-
-const schema = yup.object({
-    name: yup.string().required('El nombre es requerido'),
-    plate: yup.string().required('La placa es requerida'),
-    locationId: yup.string().required('La sede es requerida'),
-    licenseTypeId: yup.string().required('El tipo de licencia es requerido'),
-}).required();
 
 interface AssetFormWrapperProps {
     setOpen: (open: boolean) => void;
@@ -70,14 +61,13 @@ const AssetFormWrapper = (props: AssetFormWrapperProps) => {
     }
 
     const initialValues = {
-        name: undefined, status: true
+        name: undefined, status: true,
+        locationId: undefined, licenseTypeId: undefined,
     }
 
     return <Form
         initialValues={initialValues}
         onSubmit={onSubmit}
-        validateOnBlur={true}
-        validate={formValidator(schema)}
     >
         {(formProps) => <AssetForm {...formProps} />}
     </Form>

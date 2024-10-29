@@ -22,6 +22,7 @@ export const LocationForm = (props: FormProps) => {
             placeholder='Nombre'
             label='Nombre'
             autoFocus={true}
+            validate={(value) => value !== undefined ? undefined : 'El nombre es requerido'}
         />
         <Field
             name="status"

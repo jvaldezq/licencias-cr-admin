@@ -65,7 +65,6 @@ export const EventsFilters = (props: Props) => {
     return <Form
         onSubmit={onSubmit}
         initialValues={currentFilters}
-        validateOnBlur={false}
     >
         {(formProps) => <FiltersForm {...formProps} user={user} handleReset={handleReset}
                                      handleFilterUpdate={handleFilterUpdate}/>}

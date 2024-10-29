@@ -10,8 +10,6 @@ import {useRouter} from "next/navigation";
 import {EditIcon} from "@/assets/icons/EditIcon";
 import {FormSavingLoader} from "@/components/FormLoader";
 import {LicenseForm, LicenseFormProps} from "@/app/licenses/forms/LicenseForm";
-import {formValidator} from "@/lib/formValidator";
-import * as yup from "yup";
 
 export const EditLicense = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
@@ -38,12 +36,6 @@ export const EditLicense = ({id}: { id: string }) => {
         <LicenseWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
-
-const schema = yup.object({
-    name: yup.string().required('El nombre es requerido'),
-    color: yup.string().required('El color es requerido'),
-}).required();
-
 
 interface LicenseWrapperProps {
     id: string;
@@ -80,8 +72,6 @@ const LicenseWrapper = (props: LicenseWrapperProps) => {
     return <Form
         initialValues={data}
         onSubmit={onSubmit}
-        validateOnBlur={true}
-        validate={formValidator(schema)}
     >
         {(formProps) => <LicenseForm {...formProps} />}
     </Form>

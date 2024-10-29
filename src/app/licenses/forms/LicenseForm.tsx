@@ -21,7 +21,7 @@ export const LicenseForm = (props: FormProps) => {
             placeholder='Nombre'
             label='Nombre'
             autoFocus={true}
-            validate={value => (value ? undefined : 'Requerido')}
+            validate={value => (value ? undefined : 'El nombre es requerido')}
         />
         <Field
             name="color"
@@ -29,7 +29,7 @@ export const LicenseForm = (props: FormProps) => {
             placeholder='Color'
             label='Color'
             type="color"
-            validate={value => (value ? undefined : 'Requerido')}
+            validate={value => (value ? undefined : 'El color es requerido')}
         />
     </form>
 }

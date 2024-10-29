@@ -31,6 +31,7 @@ export const PeopleForm = (props: FormProps) => {
             placeholder='Nombre'
             label='Nombre'
             disabled={true}
+            validate={(value) => value !== undefined ? undefined : 'El nombre es requerido'}
         />
         <Field
             name="location.id"
@@ -40,6 +41,7 @@ export const PeopleForm = (props: FormProps) => {
             options={locations || []}
             isLoading={isLocationsLoading}
             autoFocus={true}
+            validate={(value) => value !== undefined ? undefined : 'La Sede es requerida'}
         />
         <Field
             name="access.instructor"
