@@ -11,7 +11,7 @@ BigInt.prototype.toJSON = function () {
 
 export async function PATCH(_: Request, {params}: { params: { id: string } }) {
     try {
-        const res = await eventComplete(+params.id);
+        const res = await eventComplete(params.id);
 
         revalidatePath('/events', 'page')
         return NextResponse.json(res, {status: 200});

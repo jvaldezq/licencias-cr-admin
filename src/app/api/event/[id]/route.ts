@@ -54,9 +54,9 @@ export async function PATCH(request: Request, {params}: { params: { id: string }
 
         let res;
         if (body?.typeId === CLASS_TYPE.CLASS) {
-            res = await updateClass(+params.id, body);
+            res = await updateClass(params.id, body);
         } else {
-            res = await updateTest(+params.id, body);
+            res = await updateTest(params.id, body);
         }
 
         revalidatePath('/events', 'page')
@@ -69,7 +69,7 @@ export async function PATCH(request: Request, {params}: { params: { id: string }
 
 export async function DELETE(_: Request, {params}: { params: { id: string } }) {
     try {
-        const res = await eventDelete(+params.id);
+        const res = await eventDelete(params.id);
 
         revalidatePath('/events', 'page')
         return NextResponse.json(res, {status: 200});

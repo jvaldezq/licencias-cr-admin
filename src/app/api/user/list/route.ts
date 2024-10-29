@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     const locationId = locationIdParam ? {
         location: {
             id: {
-                equals: parseInt(locationIdParam, 10),
+                equals: locationIdParam,
             }
         }
     } : {};

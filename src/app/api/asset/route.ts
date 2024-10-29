@@ -18,13 +18,13 @@ export async function GET(request: Request) {
 
         const licenseType = licenseTypeId ? {
             licenseTypeId: {
-                equals: +licenseTypeId
+                equals: licenseTypeId
             }
         } : {};
 
         const location = locationId ? {
             locationId: {
-                equals: +locationId
+                equals: locationId
             }
         } : {};
 
