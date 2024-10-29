@@ -42,8 +42,8 @@ export const EditAsset = ({id}: { id: string }) => {
 const schema = yup.object({
     name: yup.string().required('El nombre es requerido'),
     plate: yup.string().required('La placa es requerida'),
-    locationId: yup.number().required('La sede es requerida'),
-    licenseTypeId: yup.number().required('El tipo de licencia es requerido'),
+    locationId: yup.string().required('La sede es requerida'),
+    licenseTypeId: yup.string().required('El tipo de licencia es requerido'),
 }).required();
 
 interface AssetWrapperProps {

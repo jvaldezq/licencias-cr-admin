@@ -14,8 +14,8 @@ export interface AssetFormProps {
     name: string;
     plate: string;
     status: boolean;
-    locationId: number;
-    licenseTypeId: number;
+    locationId: string;
+    licenseTypeId: string;
 }
 
 export type FormProps = FormRenderProps<AssetFormProps>
