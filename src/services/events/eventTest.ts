@@ -75,7 +75,7 @@ export const createTest = async (data: IEventForm) => {
     }
 };
 
-export const updateTest = async (id: number, data: IEventForm): Promise<string> => {
+export const updateTest = async (id: string, data: IEventForm): Promise<string> => {
     const [startTimeHours, startTimeMinutes] = data?.startTime?.split(':') || [];
     const [customerStartTimeHours, customerStartTimeMinutes] = data?.customer?.schedule?.startTime?.split(':') || [];
     const selectedDate = dayjs(data.date);

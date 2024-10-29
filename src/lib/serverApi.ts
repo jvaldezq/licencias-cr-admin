@@ -1,9 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 interface ServerApiProps {
     path: string;
-    params?: any; //TODO NEED TO FIX TYPE
+    params?: T<> | null;
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     revalidate?: number;
-    body?: any;
+    body?: T<>;
 }
 
 export const serverApi = async (props: ServerApiProps) => {

@@ -8,8 +8,6 @@ import {
     VisibilityState,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
@@ -28,9 +26,9 @@ interface Props<T> {
 export function DataTable<T>(props: Props<T>) {
     const {data, columns} = props
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
+    const [columnFilters] = React.useState<ColumnFiltersState>([])
+    const [columnVisibility] = React.useState<VisibilityState>({})
+    const [rowSelection] = React.useState({})
 
     const table = useReactTable({
         data,
@@ -60,7 +58,8 @@ export function DataTable<T>(props: Props<T>) {
         </TableHeader>
         <TableBody>
             {table?.getRowModel().rows?.length ? (table?.getRowModel().rows.map((row) => {
-                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
                 const completedStyle = row?.original?.status === EventStatus.COMPLETED ?
                     'bg-warning-yellow' : ''
 

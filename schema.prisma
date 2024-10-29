@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Location {
-  id          BigInt   @id @default(autoincrement())
+  id          String   @id @default(uuid())
   name        String   @unique
   status      Boolean
   createdAt   DateTime @default(now())
@@ -20,7 +20,7 @@ model Location {
 }
 
 model LicenseType {
-  id                 BigInt               @id @default(autoincrement())
+  id                 String               @id @default(uuid())
   name               String               @unique
   color              String               @unique
   createdAt          DateTime             @default(now())
@@ -30,25 +30,25 @@ model LicenseType {
 }
 
 model Asset {
-  id                 BigInt              @id @default(autoincrement())
+  id                 String              @id @default(uuid())
   name               String              @unique
   plate              String              @unique
   status             Boolean
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
-  locationId         BigInt
+  locationId         String
   location           Location            @relation(fields: [locationId], references: [id])
   events             Event[]
-  licenseTypeId      BigInt
+  licenseTypeId      String
   licenseType        LicenseType            @relation(fields: [licenseTypeId], references: [id])
   schedule           Schedule[]
 }
 
 model User {
-  id                 BigInt      @id @default(autoincrement())
+  id                 String      @id @default(uuid())
   authId             String      @unique
   name               String
-  locationId         BigInt
+  locationId         String
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
   eventsAsCreator    Event[]     @relation("CreatorRelation")
@@ -60,45 +60,45 @@ model User {
 }
 
 model UserAccess {
-  id           BigInt   @id @default(autoincrement())
+  id           String   @id @default(uuid())
   admin        Boolean  @default(false)
   instructor   Boolean  @default(false)
   receptionist Boolean  @default(false)
-  userId       BigInt   @unique
+  userId       String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id])
 }
 
 model Event {
-  id            BigInt       @id @default(autoincrement())
+  id            String       @id @default(uuid())
   status        String
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  assetId       BigInt?
+  assetId       String?
   asset         Asset?       @relation(fields: [assetId], references: [id])
-  createdById   BigInt
+  createdById   String
   createdBy     User         @relation("CreatorRelation", fields: [createdById], references: [id])
-  customerId    BigInt
+  customerId    String
   customer      Customer    @relation(fields: [customerId], references: [id])
-  instructorId  BigInt?
+  instructorId  String?
   instructor    User?        @relation("InstructorRelation", fields: [instructorId], references: [id])
-  licenseTypeId BigInt
+  licenseTypeId String
   licenseType   LicenseType @relation(fields: [licenseTypeId], references: [id])
-  locationId    BigInt
+  locationId    String
   location      Location     @relation(fields: [locationId], references: [id])
-  paymentId     BigInt       @unique
+  paymentId     String       @unique
   payment       Payment      @relation(fields: [paymentId], references: [id])
   date          DateTime?
   time          String?
-  typeId        BigInt
+  typeId        String
   type          EventType    @relation(fields: [typeId], references: [id])
 
   @@index([instructorId, createdById, date, paymentId, customerId, locationId, licenseTypeId])
 }
 
 model Customer {
-  id             BigInt   @id @default(autoincrement())
+  id             String   @id @default(uuid())
   name           String
   identification String
   phone          String
@@ -106,27 +106,27 @@ model Customer {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   event          Event[]
-  scheduleId     BigInt? @unique
+  scheduleId     String? @unique
   schedule       Schedule?    @relation(fields: [scheduleId], references: [id])
 }
 
 model Schedule {
-  id                  BigInt   @id @default(autoincrement())
+  id                  String   @id @default(uuid())
   startTime           String?
   endTime             String?
   startDate           DateTime?
   endDate             DateTime?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
-  assetId             BigInt?
+  assetId             String?
   asset               Asset?       @relation(fields: [assetId], references: [id])
-  userId              BigInt?
+  userId              String?
   user                User?     @relation(fields: [userId], references: [id])
   customer            Customer?
 }
 
 model Payment {
-  id          BigInt    @id @default(autoincrement())
+  id          String   @id @default(uuid())
   price       Float?
   cashAdvance Float?
   paid        Boolean?  @default(false)
@@ -137,7 +137,7 @@ model Payment {
 }
 
 model EventType {
-  id        BigInt   @id @default(autoincrement())
+  id        String   @id @default(uuid())
   name      String   @unique
   color     String   @unique
   createdAt DateTime @default(now())
@@ -146,12 +146,11 @@ model EventType {
 }
 
 model Log {
-  id          BigInt   @id @default(autoincrement())
+  id          String   @id @default(uuid())
   modelName   String
-  modelId     BigInt
   action      String
   changes     String
   createdAt   DateTime @default(now())
-  changedById BigInt
+  changedById String
   changedBy   User     @relation(fields: [changedById], references: [id])
 }

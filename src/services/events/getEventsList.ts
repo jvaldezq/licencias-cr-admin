@@ -20,19 +20,19 @@ export const getEventsList = async (filters: IEventFilter) => {
 
         const locationId = filters?.locationId ? {
             locationId: {
-                equals: BigInt(filters.locationId)
+                equals: filters.locationId
             }
         } : undefined;
 
         const instructorId = filters?.instructorId ? {
             instructorId: {
-                equals: BigInt(filters.instructorId),
+                equals: filters.instructorId,
             }
         } : undefined;
 
         const licenseTypeId = filters?.licenseTypeId ? {
             licenseTypeId: {
-                equals: BigInt(filters.licenseTypeId),
+                equals: filters.licenseTypeId,
             }
         } : undefined;
 

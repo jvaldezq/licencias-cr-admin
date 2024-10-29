@@ -2,7 +2,8 @@ import prisma from '@/lib/prisma';
 import {NextRequest, NextResponse} from "next/server";
 import {revalidatePath} from "next/cache";
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 BigInt.prototype.toJSON = function () {
     const int = Number.parseInt(this.toString());
     return int ?? this.toString();
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
                     }
                 }
             }, where: {
-                id: Number(params.id)
+                id: params.id
             }
         });
         return NextResponse.json(user, {status: 200});
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
     }
 }
 
-export async function PATCH(request: Request, {params}: { params: { id: string } }) {
+export async function PATCH(request: Request) {
     try {
         const body = await request.json();
         await prisma.userAccess.update({

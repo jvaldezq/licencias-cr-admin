@@ -1,12 +1,9 @@
-import prisma from '@/lib/prisma';
-import {NextRequest, NextResponse} from "next/server";
-import dayjs from "dayjs";
+import {NextResponse} from "next/server";
 import {revalidatePath} from "next/cache";
-import {updateClass} from "@/services/events/eventClass";
-import {updateTest} from "@/services/events/eventTest";
 import {eventComplete} from "@/services/events/eventComplete";
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 BigInt.prototype.toJSON = function () {
     const int = Number.parseInt(this.toString());
     return int ?? this.toString();

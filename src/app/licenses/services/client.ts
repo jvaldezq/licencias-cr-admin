@@ -13,12 +13,12 @@ const updateLocation = async (data: LicenseFormProps): Promise<ILicenseType> => 
     return license.data;
 };
 
-const getLicenseById = async (id: number): Promise<ILicenseType> => {
+const getLicenseById = async (id: string): Promise<ILicenseType> => {
     const license = await clientApi.get(`/license/${id}`);
     return license.data;
 };
 
-const deleteLicense = async (id: number): Promise<ILicenseType> => {
+const deleteLicense = async (id: string): Promise<ILicenseType> => {
     const license = await clientApi.delete(`/license/${id}`);
     return license.data;
 };
@@ -39,7 +39,7 @@ export const useUpdateMutation = () => {
     });
 };
 
-export const useGetLicenseById = (id: number) => {
+export const useGetLicenseById = (id: string) => {
     return useQuery({
         enabled: !!id,
         cacheTime: 0,
@@ -52,7 +52,7 @@ export const useGetLicenseById = (id: number) => {
 
 export const useDeleteMutation = () => {
     return useMutation({
-        mutationFn: (id: number) => {
+        mutationFn: (id: string) => {
             return deleteLicense(id);
         },
         mutationKey: ['license-delete'],

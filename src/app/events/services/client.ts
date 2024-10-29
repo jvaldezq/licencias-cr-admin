@@ -29,12 +29,12 @@ export const useUpdateMutation = () => {
     });
 };
 
-const getEventById = async (id: number): Promise<IEvent> => {
+const getEventById = async (id: string): Promise<IEvent> => {
     const event = await clientApi.get(`/event/${id}`);
     return event.data;
 };
 
-export const useGetEventById = (id: number) => {
+export const useGetEventById = (id: string) => {
     return useQuery({
         enabled: !!id,
         refetchOnWindowFocus: false,
@@ -63,7 +63,7 @@ export const useGetLocationList = () => {
     });
 };
 
-const getInstructorListByLocationId = async (id: number): Promise<IUser[]> => {
+const getInstructorListByLocationId = async (id: string): Promise<IUser[]> => {
     const userList = await clientApi.get('/user/list', {
         params: {
             isInstructor: true, locationId: id
@@ -72,7 +72,7 @@ const getInstructorListByLocationId = async (id: number): Promise<IUser[]> => {
     return userList.data;
 };
 
-export const useGetInstructorListByLocationId = (id: number) => {
+export const useGetInstructorListByLocationId = (id: string) => {
     return useQuery({
         enabled: !!id,
         staleTime: 1000 * 60 * 5,
@@ -92,12 +92,12 @@ const getEventTypesList = async (): Promise<IEventType[]> => {
     return locationList.data;
 };
 
-const deleteEvent = async (id: number): Promise<IEvent> => {
+const deleteEvent = async (id: string): Promise<IEvent> => {
     const event = await clientApi.delete(`/event/${id}`);
     return event.data;
 };
 
-const completeEvent = async (id: number): Promise<IEvent> => {
+const completeEvent = async (id: string): Promise<IEvent> => {
     const event = await clientApi.patch(`/event/${id}/complete`);
     return event.data;
 };
@@ -174,7 +174,7 @@ export const useGetInstructorList = () => {
 
 export const useDeleteMutation = () => {
     return useMutation({
-        mutationFn: (id: number) => {
+        mutationFn: (id: string) => {
             return deleteEvent(id);
         }, mutationKey: ['event-delete'],
     });
@@ -182,7 +182,7 @@ export const useDeleteMutation = () => {
 
 export const useCompleteMutation = () => {
     return useMutation({
-        mutationFn: (id: number) => {
+        mutationFn: (id: string) => {
             return completeEvent(id);
         }, mutationKey: ['event-complete'],
     });

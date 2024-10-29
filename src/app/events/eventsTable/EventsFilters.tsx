@@ -6,7 +6,7 @@ import dayjs, {Dayjs} from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
-import {useCallback} from "react";
+import {useCallback, useMemo} from "react";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/services/client";
 import {usePathname, useRouter} from "next/navigation";
@@ -28,7 +28,9 @@ export const EventsFilters = (props: Props) => {
     const {user, filters} = props
     const pathname = usePathname();
     const {replace} = useRouter();
-    const currentFilters = filters ? JSON.parse(atob(filters)) as IEventFilter : {};
+    const currentFilters = useMemo(() => {
+        return filters ? JSON.parse(atob(filters)) as IEventFilter : {}
+    }, [filters]);
     const instructorId =
         !props.user?.access?.receptionist && !props.user?.access?.admin && user?.access?.instructor ? user?.id : undefined;
 
@@ -41,7 +43,7 @@ export const EventsFilters = (props: Props) => {
         })
         params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
-    }, [props, replace, pathname]);
+    }, [props.user?.location?.id, instructorId, replace, pathname]);
 
     const handleFilterUpdate = useCallback((data: FilterUpdateProps) => {
         const params = new URLSearchParams();
@@ -50,7 +52,7 @@ export const EventsFilters = (props: Props) => {
         })
         params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
-    }, [filters, replace, pathname, currentFilters]);
+    }, [replace, pathname, currentFilters]);
 
     if (!filters) {
         handleReset();
@@ -77,7 +79,7 @@ export interface FiltersFormProps extends FormRenderProps<IEventFilter> {
 }
 
 const FiltersForm = (props: FiltersFormProps) => {
-    const {values, user, handleReset, handleFilterUpdate} = props;
+    const {values, user, handleFilterUpdate} = props;
     const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
     const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
     const {

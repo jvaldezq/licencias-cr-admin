@@ -1,4 +1,4 @@
 export interface AssetsByProps {
-    licenseTypeId?: number;
-    locationId?: number;
+    licenseTypeId?: string;
+    locationId?: string;
 }

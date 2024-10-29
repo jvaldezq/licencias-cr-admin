@@ -8,18 +8,17 @@ import {useGetLocationList} from "@/app/events/services/client";
 import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
 
 export interface PeopleFormProps {
-    id: number;
+    id: string;
     name: string;
     location: {
-        id: number;
+        id: string;
     };
     access: {
         instructor: boolean; receptionist: boolean;
     };
 }
 
-interface FormProps extends FormRenderProps<PeopleFormProps> {
-}
+type FormProps = FormRenderProps<PeopleFormProps>
 
 export const PeopleForm = (props: FormProps) => {
     const {handleSubmit} = props;

@@ -11,7 +11,7 @@ import {MoneyIcon} from "@/assets/icons/MoneyIcon";
 import {CRCFormatter} from "@/lib/NumberFormats";
 import {Form} from "react-final-form";
 
-export const CompleteEvent = ({id}: { id: number }) => {
+export const CompleteEvent = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingContent, setLoadingContent] = useState<React.ReactNode>(<FormSavingLoader
@@ -38,7 +38,7 @@ export const CompleteEvent = ({id}: { id: number }) => {
 }
 
 interface EventWrapperProps {
-    id: number;
+    id: string;
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
@@ -46,7 +46,7 @@ interface EventWrapperProps {
 
 const EventWrapper = (props: EventWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetEventById(Number(id));
+    const {data, isLoading} = useGetEventById(id);
     const {mutateAsync, isLoading: isCompleteLoading} = useCompleteMutation();
     const router = useRouter();
 
@@ -54,16 +54,16 @@ const EventWrapper = (props: EventWrapperProps) => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, setIsLoading]);
 
     const onSubmit = useCallback(() => {
         setIsLoading(true);
         setLoadingContent(<FormSavingLoader message="Completando Cita"/>)
-        mutateAsync(Number(id)).then(() => {
+        mutateAsync(id).then(() => {
             setOpen(false);
             router.refresh();
         });
-    }, []);
+    }, [id, mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     if (isLoading || isCompleteLoading) {
         return null;

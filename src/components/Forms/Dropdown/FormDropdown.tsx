@@ -4,15 +4,15 @@ import {CombinedInputProps} from "@/components/Forms/types";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "@/components/ui/command"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 import {Button} from "@/components/ui/button";
-import {useMediaQuery} from "@/hooks/use-media-query";
-import {
-    Drawer,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger
-} from "@/components/ui/drawer";
+// import {useMediaQuery} from "@/hooks/use-media-query";
+// import {
+//     Drawer,
+//     DrawerContent,
+//     DrawerDescription,
+//     DrawerHeader,
+//     DrawerTitle,
+//     DrawerTrigger
+// } from "@/components/ui/drawer";
 import {InputLoader} from "@/components/InputLoader";
 import {cn} from "@/lib/utils";
 
@@ -48,7 +48,7 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
     } = props;
     const [open, setOpen] = useState(false)
     const {onChange, value} = input;
-    const isDesktop = useMediaQuery("(min-width: 768px)")
+    // const isDesktop = useMediaQuery("(min-width: 768px)")
     const valueLabel = options?.find(option => option?.id == value)?.name
 
     if (hidden) return null;
@@ -93,7 +93,7 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
                                 onSelect={() => {
                                     onChange(option.id);
                                     setOpen(false);
-                                    onFilter && onFilter(option.id, name);
+                                    onFilter?.(option.id, name);
                                 }}
                             >
                                 {option.name}

@@ -13,7 +13,7 @@ import {FormSavingLoader} from "@/components/FormLoader";
 import * as yup from "yup";
 import {formValidator} from "@/lib/formValidator";
 
-export const EditLocation = ({id}: { id: number }) => {
+export const EditLocation = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingContent, setLoadingContent] = useState<React.ReactNode>(<FormSavingLoader
@@ -44,7 +44,7 @@ const schema = yup.object({
 }).required();
 
 interface LocationWrapperProps {
-    id: number;
+    id: string;
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
@@ -52,7 +52,7 @@ interface LocationWrapperProps {
 
 const LocationWrapper = (props: LocationWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetLocationById(Number(id));
+    const {data, isLoading} = useGetLocationById(id);
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
@@ -63,13 +63,13 @@ const LocationWrapper = (props: LocationWrapperProps) => {
             setOpen(false);
             router.refresh();
         });
-    }, []);
+    }, [mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, setIsLoading]);
 
     if (isLoading || isUpdateLoading) {
         return null;

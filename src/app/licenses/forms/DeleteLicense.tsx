@@ -9,17 +9,17 @@ import {FormSavingLoader} from "@/components/FormLoader";
 import {DeleteIcon} from "@/assets/icons/DeleteIcon";
 import {useDeleteMutation} from "@/app/licenses/services/client";
 
-export const DeleteLicense = ({id}: { id: number }) => {
+export const DeleteLicense = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
     const {mutateAsync, isLoading} = useDeleteMutation();
     const router = useRouter();
 
     const onDelete = useCallback(() => {
-        mutateAsync(Number(id)).then(() => {
+        mutateAsync(id).then(() => {
             setOpen(false);
             router.refresh();
         });
-    }, [id]);
+    }, [id, mutateAsync, router]);
 
     return (<Dialog
         open={open}

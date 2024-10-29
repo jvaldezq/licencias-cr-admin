@@ -22,13 +22,13 @@ const getLocationList = async (): Promise<ILocation[]> => {
     return locationList.data;
 };
 
-const getAssetById = async (id: number): Promise<ILocation> => {
+const getAssetById = async (id: string): Promise<ILocation> => {
     const location = await clientApi.get(`/asset/${id}`);
     return location.data;
 };
 
 
-const deleteAsset = async (id: number): Promise<IAsset> => {
+const deleteAsset = async (id: string): Promise<IAsset> => {
     const asset = await clientApi.delete(`/asset/${id}`);
     return asset.data;
 };
@@ -68,7 +68,7 @@ export const useUpdateMutation = () => {
     });
 };
 
-export const useGetAssetById = (id: number) => {
+export const useGetAssetById = (id: string) => {
     return useQuery({
         enabled: !!id,
         staleTime: 1000 * 60 * 5,
@@ -92,7 +92,7 @@ export const useGetLicenseList = () => {
 
 export const useDeleteMutation = () => {
     return useMutation({
-        mutationFn: (id: number) => {
+        mutationFn: (id: string) => {
             return deleteAsset(id);
         },
         mutationKey: ['asset-delete'],

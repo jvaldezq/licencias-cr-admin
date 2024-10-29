@@ -13,7 +13,7 @@ import {FormSavingLoader} from "@/components/FormLoader";
 import * as yup from "yup";
 import {formValidator} from "@/lib/formValidator";
 
-export const EditAsset = ({id}: { id: number }) => {
+export const EditAsset = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingContent, setLoadingContent] = useState<React.ReactNode>(<FormSavingLoader
@@ -47,7 +47,7 @@ const schema = yup.object({
 }).required();
 
 interface AssetWrapperProps {
-    id: number;
+    id: string;
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
@@ -55,7 +55,7 @@ interface AssetWrapperProps {
 
 const AssetWrapper = (props: AssetWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetAssetById(Number(id));
+    const {data, isLoading} = useGetAssetById(id);
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
@@ -66,13 +66,13 @@ const AssetWrapper = (props: AssetWrapperProps) => {
             setOpen(false);
             router.refresh();
         });
-    }, []);
+    }, [mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, setIsLoading]);
 
     if (isLoading || isUpdateLoading) {
         return null;

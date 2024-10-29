@@ -64,7 +64,7 @@ export const createClass = async (data: IEventForm) => {
     }
 };
 
-export const updateClass = async (id: number, data: IEventForm): Promise<string> => {
+export const updateClass = async (id: string, data: IEventForm): Promise<string> => {
     const [startTimeHours, startTimeMinutes] = data?.startTime?.split(':') || [];
     const [endTimeHours, endTimeMinutes] = data?.endTime?.split(':') || [];
     const selectedDate = dayjs(data.date);

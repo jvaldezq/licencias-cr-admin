@@ -13,7 +13,7 @@ import {LicenseForm, LicenseFormProps} from "@/app/licenses/forms/LicenseForm";
 import {formValidator} from "@/lib/formValidator";
 import * as yup from "yup";
 
-export const EditLicense = ({id}: { id: number }) => {
+export const EditLicense = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingContent, setLoadingContent] = useState<React.ReactNode>(<FormSavingLoader
@@ -46,7 +46,7 @@ const schema = yup.object({
 
 
 interface LicenseWrapperProps {
-    id: number;
+    id: string;
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
@@ -54,7 +54,7 @@ interface LicenseWrapperProps {
 
 const LicenseWrapper = (props: LicenseWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetLicenseById(Number(id));
+    const {data, isLoading} = useGetLicenseById(id);
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
@@ -65,13 +65,13 @@ const LicenseWrapper = (props: LicenseWrapperProps) => {
             setOpen(false);
             router.refresh();
         });
-    }, []);
+    }, [mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, setIsLoading]);
 
     if (isLoading || isUpdateLoading) {
         return null;

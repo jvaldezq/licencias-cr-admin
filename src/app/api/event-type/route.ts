@@ -2,17 +2,15 @@ import prisma from '@/lib/prisma';
 import {NextResponse} from 'next/server';
 import {revalidatePath} from 'next/cache'
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 BigInt.prototype.toJSON = function () {
     const int = Number.parseInt(this.toString());
     return int ?? this.toString();
 };
 
-export async function GET(request: Request) {
+export async function GET() {
     try {
-        // const {searchParams} = new URL(request.url);
-        // const listParams = searchParams.get('list');
-
         const eventType = await prisma.eventType.findMany({
             select: {
                 id: true,

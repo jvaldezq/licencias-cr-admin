@@ -18,8 +18,7 @@ export interface AssetFormProps {
     licenseTypeId: number;
 }
 
-export interface FormProps extends FormRenderProps<AssetFormProps> {
-}
+export type FormProps = FormRenderProps<AssetFormProps>
 
 export const AssetForm = (props: FormProps) => {
     const {handleSubmit} = props;

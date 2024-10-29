@@ -9,8 +9,7 @@ export interface LicenseFormProps {
     color: string;
 }
 
-export interface FormProps extends FormRenderProps<LicenseFormProps> {
-}
+export type FormProps = FormRenderProps<LicenseFormProps>
 
 export const LicenseForm = (props: FormProps) => {
     const {handleSubmit} = props;

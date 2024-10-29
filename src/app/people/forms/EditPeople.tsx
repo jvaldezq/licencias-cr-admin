@@ -14,7 +14,7 @@ import * as yup from "yup";
 import {formValidator} from "@/lib/formValidator";
 
 interface EditPeopleProps {
-    id: number;
+    id: string;
 }
 
 export const EditPeople = (props: EditPeopleProps) => {
@@ -54,7 +54,7 @@ const schema = yup.object({
 
 
 interface PeopleFormWrapperProps {
-    id: number;
+    id: string;
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
@@ -62,7 +62,7 @@ interface PeopleFormWrapperProps {
 
 const PeopleFormWrapper = (props: PeopleFormWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading} = props;
-    const {data, isLoading} = useGetPeopleById(Number(id));
+    const {data, isLoading} = useGetPeopleById(id);
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
@@ -73,13 +73,13 @@ const PeopleFormWrapper = (props: PeopleFormWrapperProps) => {
             setOpen(false);
             router.refresh();
         });
-    }, []);
+    }, [mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, setIsLoading]);
 
     if (isLoading || isUpdateLoading) {
         return null;

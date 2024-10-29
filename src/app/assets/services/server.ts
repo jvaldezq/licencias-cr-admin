@@ -1,5 +1,5 @@
 import {serverApi} from "@/lib/serverApi";
-import {IAsset, ILicenseType, ILocation, IUser} from "@/lib/definitions";
+import {IAsset} from "@/lib/definitions";
 
 export const fetchAssets = async (): Promise<IAsset[]> => {
     try {

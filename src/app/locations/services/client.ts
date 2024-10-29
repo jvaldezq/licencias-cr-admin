@@ -13,12 +13,12 @@ const updateLocation = async (data: LocationFormProps): Promise<ILocation> => {
     return newListing.data;
 };
 
-const getLocationById = async (id: number): Promise<ILocation> => {
+const getLocationById = async (id: string): Promise<ILocation> => {
     const location = await clientApi.get(`/location/${id}`);
     return location.data;
 };
 
-const deleteLocation = async (id: number): Promise<ILocation> => {
+const deleteLocation = async (id: string): Promise<ILocation> => {
     const location = await clientApi.delete(`/location/${id}`);
     return location.data;
 };
@@ -41,7 +41,7 @@ export const useUpdateMutation = () => {
     });
 };
 
-export const useGetLocationById = (id: number) => {
+export const useGetLocationById = (id: string) => {
     return useQuery({
         enabled: !!id,
         cacheTime: 0,
@@ -54,7 +54,7 @@ export const useGetLocationById = (id: number) => {
 
 export const useDeleteMutation = () => {
     return useMutation({
-        mutationFn: (id: number) => {
+        mutationFn: (id: string) => {
             return deleteLocation(id);
         },
         mutationKey: ['location-delete'],

@@ -13,8 +13,7 @@ import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import dayjs from "dayjs";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 
-export interface EventFormProps extends FormRenderProps<IEventForm> {
-}
+export type EventFormProps = FormRenderProps<IEventForm>
 
 export const EventForm = (props: EventFormProps) => {
     const {values, handleSubmit, form} = props;

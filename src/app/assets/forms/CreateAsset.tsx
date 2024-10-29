@@ -57,13 +57,13 @@ const AssetFormWrapper = (props: AssetFormWrapperProps) => {
             router.refresh();
             setOpen(false);
         });
-    }, []);
+    }, [mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    }, [isLoading, setIsLoading]);
 
     if (isLoading) {
         return null;

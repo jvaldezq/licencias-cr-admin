@@ -18,7 +18,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { CalendarIcon } from "lucide-react"
 import dayjs from "dayjs";
-import {DateRange} from "react-day-picker";
 
 
 export interface FormCalendarProps extends CombinedInputProps<string>, Omit<InputWrapperProps, 'children'>, Omit<InputHTMLAttributes<HTMLButtonElement>, 'label' | 'name' | 'onChange'> {
@@ -73,6 +72,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
                         "w-full pl-3 text-left font-normal",
                         date ? 'bg-success/[0.1]' : undefined
                     )}
+                    ref={ref}
                 >
                     {
                         date ? dayjs(date).format('YYYY MMM DD'): placeholder
@@ -89,7 +89,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
                         setDate(date);
                         onChange(newDate);
                         setOpen(false);
-                        onFilter && onFilter(newDate, name);
+                        onFilter?.(newDate, name);
                     }}
                 />
             </PopoverContent>

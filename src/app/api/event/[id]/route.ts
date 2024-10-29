@@ -6,7 +6,8 @@ import {updateTest} from "@/services/events/eventTest";
 import {eventDelete} from "@/services/events/eventDelete";
 import {CLASS_TYPE} from "@/lib/definitions";
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 BigInt.prototype.toJSON = function () {
     const int = Number.parseInt(this.toString());
     return int ?? this.toString();
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
                 createdById: true,
                 payment: true
             }, where: {
-                id: Number(params.id)
+                id: params.id
             }
         });
         return NextResponse.json(event, {status: 200});

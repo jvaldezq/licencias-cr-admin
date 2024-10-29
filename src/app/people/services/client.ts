@@ -8,7 +8,7 @@ const updatePeople = async (data: PeopleFormProps): Promise<IUser> => {
     return user.data;
 };
 
-const getPeopleById = async (id: number): Promise<IUser> => {
+const getPeopleById = async (id: string): Promise<IUser> => {
     const people = await clientApi.get(`/user/${id}`);
     return people.data;
 };
@@ -21,7 +21,7 @@ export const useUpdateMutation = () => {
     });
 };
 
-export const useGetPeopleById = (id: number) => {
+export const useGetPeopleById = (id: string) => {
     return useQuery({
         enabled: !!id,
         cacheTime: 0,

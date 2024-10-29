@@ -10,8 +10,7 @@ export interface LocationFormProps {
     status: boolean;
 }
 
-export interface FormProps extends FormRenderProps<LocationFormProps> {
-}
+export type FormProps = FormRenderProps<LocationFormProps>
 
 export const LocationForm = (props: FormProps) => {
     const {handleSubmit} = props;

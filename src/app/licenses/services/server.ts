@@ -1,5 +1,5 @@
 import {serverApi} from "@/lib/serverApi";
-import {ILicenseType, ILocation, IUser} from "@/lib/definitions";
+import {ILicenseType} from "@/lib/definitions";
 
 export const fetchLicenses = async (): Promise<ILicenseType[]> => {
     try {

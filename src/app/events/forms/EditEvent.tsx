@@ -16,7 +16,7 @@ import {
 import dayjs from "dayjs";
 
 interface EditEventProps {
-    id: number;
+    id: string;
     user: IUser;
 }
 
@@ -49,7 +49,7 @@ export const EditEvent = (props: EditEventProps) => {
 }
 
 interface EventWrapperProps {
-    id: number;
+    id: string;
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
@@ -58,7 +58,7 @@ interface EventWrapperProps {
 
 const EventWrapper = (props: EventWrapperProps) => {
     const {id, setOpen, setLoadingContent, setIsLoading, user} = props;
-    const {data, isLoading} = useGetEventById(Number(id));
+    const {data, isLoading} = useGetEventById(id);
     const {mutateAsync, isLoading: isUpdateLoading} = useUpdateMutation();
     const router = useRouter();
 
@@ -69,27 +69,13 @@ const EventWrapper = (props: EventWrapperProps) => {
             setOpen(false);
             router.refresh();
         });
-    }, []);
+    }, [mutateAsync, router, setIsLoading, setLoadingContent, setOpen]);
 
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(false);
         }
-    }, [isLoading]);
-
-    const [startTime, endTime] = useMemo(() => {
-        if (data) {
-            if (data?.typeId === CLASS_TYPE.CLASS) {
-                const dataStartDate = data?.customer?.schedule.startDate;
-                const dataEndDate = data?.customer?.schedule.endDate;
-                return [dayjs(dataStartDate).format('HH:mm'), dayjs(dataEndDate).format('HH:mm')];
-            } else {
-                const dataStartDate = data?.date;
-                return [dayjs(dataStartDate).format('HH:mm'), undefined];
-            }
-        }
-        return [undefined, undefined];
-    }, [data]);
+    }, [isLoading, setIsLoading]);
 
     const initialValues = useMemo(() => {
         if (data) {
@@ -136,7 +122,7 @@ const EventWrapper = (props: EventWrapperProps) => {
                 price: undefined, cashAdvance: undefined, paid: false,
             }
         }
-    }, [data, startTime, endTime])
+    }, [data, user.id])
 
     if (isLoading || isUpdateLoading) {
         return null;

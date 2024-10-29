@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import {EventStatus} from "@/lib/definitions";
 
-export const eventComplete = async (id: number) => {
+export const eventComplete = async (id: string) => {
     try {
         await prisma.event.update({
             where: {id},

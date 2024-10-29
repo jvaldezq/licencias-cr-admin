@@ -5,7 +5,8 @@ import {createTest} from "@/services/events/eventTest";
 import {CLASS_TYPE, IEventFilter} from "@/lib/definitions";
 import {getEventsList} from "@/services/events/getEventsList";
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 BigInt.prototype.toJSON = function () {
     const int = Number.parseInt(this.toString());
     return int ?? this.toString();
