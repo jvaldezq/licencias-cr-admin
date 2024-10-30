@@ -208,7 +208,7 @@ export const EventForm = (props: EventFormProps) => {
             <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información extra</p>}
 
         <Field
-            name="payment.isReferred"
+            name="isReferred"
             component={FormSwitch as unknown as SupportedInputs}
             placeholder='Es referido'
             label='Es referido'
@@ -217,7 +217,7 @@ export const EventForm = (props: EventFormProps) => {
         />
 
         <Field
-            name="customer.notes"
+            name="notes"
             component={FormTextarea as unknown as SupportedInputs}
             type=""
             placeholder="Comentarios"
