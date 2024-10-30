@@ -86,7 +86,9 @@ const EventWrapper = (props: EventWrapperProps) => {
         createdById: user.id,
         payment: {
             price: undefined, cashAdvance: undefined, paid: false,
-        }
+        },
+        notes: undefined,
+        isReferred: false
     }
 
     return <Form

@@ -12,6 +12,7 @@ import {CLASS_TYPE, IEventForm, OWNCAR} from "@/lib/definitions";
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import dayjs from "dayjs";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
+import {FormTextarea} from "@/components/Forms/Textarea/FormTextarea";
 
 export type EventFormProps = FormRenderProps<IEventForm>
 
@@ -44,7 +45,7 @@ export const EventForm = (props: EventFormProps) => {
         />
 
         {values?.typeId &&
-            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion del
+            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información del
                 cliente</p>}
 
         <Field
@@ -78,7 +79,7 @@ export const EventForm = (props: EventFormProps) => {
         />
 
         {showTypeInfo &&
-            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de
+            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información de
                 {isClassType ? " clase" : " prueba"}</p>}
 
         <Field
@@ -177,7 +178,7 @@ export const EventForm = (props: EventFormProps) => {
         />
 
         {showPriceInfo &&
-            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Informacion de
+            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información de
                 precio</p>}
 
         <Field
@@ -201,6 +202,28 @@ export const EventForm = (props: EventFormProps) => {
             placeholder='Pagó total'
             label='Pagó total'
             hidden={!showPriceInfo}
+        />
+
+        {showPriceInfo &&
+            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información extra</p>}
+
+        <Field
+            name="payment.isReferred"
+            component={FormSwitch as unknown as SupportedInputs}
+            placeholder='Es referido'
+            label='Es referido'
+            hidden={!showPriceInfo}
+            wrapperClassName="md:col-span-2"
+        />
+
+        <Field
+            name="customer.notes"
+            component={FormTextarea as unknown as SupportedInputs}
+            type=""
+            placeholder="Comentarios"
+            label="Comentarios"
+            hidden={!showPriceInfo}
+            wrapperClassName="md:col-span-2"
         />
     </form>
 }

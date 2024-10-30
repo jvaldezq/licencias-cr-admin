@@ -65,6 +65,8 @@ export const createTest = async (data: IEventForm) => {
                     typeId: data.typeId,
                     date: eventDate,
                     time: data.startTime,
+                    notes: data.notes,
+                    isReferred: data.isReferred,
                 },
             });
 
@@ -149,6 +151,8 @@ export const updateTest = async (id: string, data: IEventForm): Promise<string> 
                     typeId: data.typeId,
                     date: eventDate,
                     time: data.startTime,
+                    notes: data.notes,
+                    isReferred: data.isReferred,
                 },
             });
 

@@ -86,6 +86,8 @@ export interface IEvent {
     time: string;
     typeId: string;
     type: IEventType;
+    notes?: string;
+    isReferred?: boolean;
 }
 
 export interface ICustomer {
@@ -167,6 +169,8 @@ export interface IEventForm {
     payment?: {
         price?: number; cashAdvance?: number; paid?: boolean;
     }
+    notes?: string;
+    isReferred?: boolean;
 }
 
 export interface IEventFilter {

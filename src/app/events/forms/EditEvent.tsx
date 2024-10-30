@@ -101,6 +101,8 @@ const EventWrapper = (props: EventWrapperProps) => {
                 payment: {
                     price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance, paid: data?.payment?.paid,
                 },
+                notes: data.notes,
+                isReferred: data.isReferred
             }
         }
         return {
@@ -120,7 +122,9 @@ const EventWrapper = (props: EventWrapperProps) => {
             createdById: user.id,
             payment: {
                 price: undefined, cashAdvance: undefined, paid: false,
-            }
+            },
+            notes: undefined,
+            isReferred: false
         }
     }, [data, user.id])
 

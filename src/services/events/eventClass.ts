@@ -54,6 +54,8 @@ export const createClass = async (data: IEventForm) => {
                     typeId: data.typeId,
                     date: eventDate,
                     time: selectedDate.format("HH:mm"),
+                    notes: data.notes,
+                    isReferred: data.isReferred,
                 },
             });
 
@@ -73,10 +75,6 @@ export const updateClass = async (id: string, data: IEventForm): Promise<string>
     const eventDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).toISOString();
     const customerStartDate = selectedDate.set('hour', +startTimeHours).set('minute', +startTimeMinutes).toISOString();
     const customerEndDate = selectedDate.set('hour', +endTimeHours).set('minute', +endTimeMinutes).toISOString();
-
-    console.info('JORDAN TEST data', data);
-    console.info('JORDAN TEST customerStartDate', customerStartDate);
-    console.info('JORDAN TEST customerEndDate', customerEndDate);
 
     try {
         return await prisma.$transaction(async (prisma) => {
@@ -127,6 +125,8 @@ export const updateClass = async (id: string, data: IEventForm): Promise<string>
                     typeId: data.typeId,
                     date: eventDate,
                     time: selectedDate.format("HH:mm"),
+                    notes: data.notes,
+                    isReferred: data.isReferred,
                 },
             });
 

@@ -38,20 +38,29 @@ export const getEventsList = async (filters: IEventFilter) => {
 
         const events = await prisma.event.findMany({
             select: {
-                id: true, status: true, date: true, time: true, asset: {
+                id: true,
+                status: true,
+                date: true,
+                time: true,
+                notes: true,
+                asset: {
                     select: {
                         id: true,
                         name: true,
                     }
-                }, customer: {
+                },
+                customer: {
                     select: {
                         name: true, schedule: true
                     }
-                }, instructor: true, licenseType: {
+                },
+                instructor: true,
+                licenseType: {
                     select: {
                         name: true, color: true,
                     }
-                }, type: {
+                },
+                type: {
                     select: {
                         name: true, color: true,
                     }
@@ -67,6 +76,74 @@ export const getEventsList = async (filters: IEventFilter) => {
                 ...licenseTypeId,
                 status: {
                     in: [EventStatus.IN_PROGRESS, EventStatus.COMPLETED]
+                },
+                isReferred: {
+                    equals: false
+                }
+            }
+        });
+        return events as unknown as IEvent[]
+    } catch (error) {
+        throw new Error(`Failed to get events: ${error}`);
+    }
+};
+
+export const getEventsReferredList = async (filters: IEventFilter) => {
+    try {
+        let date = dayjs(new Date()).toISOString();
+        if (filters?.date) {
+            date = dayjs(filters?.date).toISOString();
+        }
+
+        let dateFilter = {};
+        const startOfDay = dayjs(date).startOf('day').toISOString();
+        const endOfDay = dayjs(date).endOf('day').toISOString();
+        dateFilter = {
+            date: {
+                gte: startOfDay, lte: endOfDay,
+            },
+        };
+
+        const events = await prisma.event.findMany({
+            select: {
+                id: true,
+                status: true,
+                date: true,
+                time: true,
+                notes: true,
+                asset: {
+                    select: {
+                        id: true,
+                        name: true,
+                    }
+                },
+                customer: {
+                    select: {
+                        name: true, schedule: true
+                    }
+                },
+                instructor: true,
+                licenseType: {
+                    select: {
+                        name: true, color: true,
+                    }
+                },
+                type: {
+                    select: {
+                        name: true, color: true,
+                    }
+                },
+            },
+            orderBy: {
+                date: 'asc'
+            },
+            where: {
+                ...dateFilter,
+                status: {
+                    in: [EventStatus.IN_PROGRESS, EventStatus.COMPLETED]
+                },
+                isReferred: {
+                    equals: true
                 }
             }
         });
