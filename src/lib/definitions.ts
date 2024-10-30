@@ -187,7 +187,7 @@ export enum EventStatus {
 }
 
 export enum OWNCAR {
-    OWN = 9999,
+    OWN = '33e56cb5-6581-475e-8ef1-a82bb39ae185',
 }
 
 export enum CLASS_TYPE {
