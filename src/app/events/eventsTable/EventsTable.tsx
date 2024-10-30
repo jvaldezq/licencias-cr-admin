@@ -229,17 +229,18 @@ export const EventsTable = (props: Props) => {
         <h1 className="my-6 text-center py-2 text-lg font-semibold text-primary rounded-2xl bg-secondary/[0.2]">Pruebas
             de
             manejo</h1>
-        {practicalData ? <DataTable
+
+        <DataTable
             data={practicalData}
             columns={practicalcolumns}
-        /> : <div className="flex justify-center items-center">No hay datos</div>}
+        />
 
         <h1 className="my-6 text-center py-2 text-lg font-semibold text-primary rounded-2xl bg-secondary/[0.2]">Clases
             de
             manejo</h1>
-        {clasesData ? <DataTable
+        <DataTable
             data={clasesData}
             columns={clasescolumns}
-        /> : <div className="flex justify-center items-center">No hay datos</div>}
+        />
     </>
 }

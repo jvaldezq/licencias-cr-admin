@@ -111,6 +111,11 @@ export const getEventsReferredList = async (filters: IEventFilter) => {
                 date: true,
                 time: true,
                 notes: true,
+                location: {
+                    select: {
+                        name: true,
+                    }
+                },
                 asset: {
                     select: {
                         id: true,
@@ -149,6 +154,6 @@ export const getEventsReferredList = async (filters: IEventFilter) => {
         });
         return events as unknown as IEvent[]
     } catch (error) {
-        throw new Error(`Failed to get events: ${error}`);
+        throw new Error(`Failed to get referred events: ${error}`);
     }
 };
