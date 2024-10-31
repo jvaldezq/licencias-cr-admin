@@ -5,7 +5,11 @@ import {FormInput} from "@/components/Forms/Input/FormInput";
 import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
 import * as React from "react";
 import {
-    useGetAssetsByList, useGetEventTypesList, useGetInstructorList, useGetLicenseList, useGetLocationList,
+    useGetAssetsByList,
+    useGetEventTypesList,
+    useGetInstructorListByLocationId,
+    useGetLicenseList,
+    useGetLocationList,
 } from "@/app/events/services/client";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {CLASS_TYPE, IEventForm, OWNCAR} from "@/lib/definitions";
@@ -26,7 +30,7 @@ export const EventForm = (props: EventFormProps) => {
     })
     const {
         data: instructors, isLoading: isInstructorsLoading
-    } = useGetInstructorList();
+    } = useGetInstructorListByLocationId(values?.locationId || '');
 
     const isClassType = values.typeId === CLASS_TYPE.CLASS;
     const showTypeInfo = values?.customer?.name && values?.customer?.identification && values?.customer?.phone;
