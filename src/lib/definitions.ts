@@ -178,6 +178,7 @@ export interface IEventFilter {
     locationId: string;
     instructorId: string;
     licenseTypeId: string;
+    searchTerm: string;
 }
 
 export enum EventStatus {
@@ -193,4 +194,10 @@ export enum OWNCAR {
 export enum CLASS_TYPE {
     CLASS = 'a3c2df55-9f84-44c8-8b99-2ce17afb4d77',
     DRIVE_TEST = '4a008599-701e-471d-9ff2-1ad9ee8e1298'
+}
+
+export enum PAYMENT_TYPE {
+    CASH = 'CASH',
+    CREDIT = 'CREDIT',
+    SINPE = 'SINPE'
 }

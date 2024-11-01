@@ -55,7 +55,7 @@ export const EventsTable = (props: Props) => {
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
             const [startTime, endTime] = row?.original?.time?.split(':') || [];
-            return <div className="capitalize">
+            return <div className='capitalize font-bold border border-solid border-secondary rounded-2xl p-2 text-center text-secondary'>
                 {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },

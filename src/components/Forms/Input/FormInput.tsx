@@ -13,6 +13,7 @@ export interface FormInputProps extends CombinedInputProps<string>, Omit<InputWr
     icon?: JSX.Element;
     mask?: string | object;
     hidden?: boolean;
+    onFilter?: (value: string) => void;
 }
 
 export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HTMLInputElement>) => {
@@ -31,6 +32,7 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
         icon,
         mask,
         hidden = false,
+        onFilter,
         ...rest
     } = props;
     const {onChange, value, ...inputRest} = input;
@@ -46,7 +48,8 @@ export const FormInput = forwardRef((props: FormInputProps, ref: ForwardedRef<HT
 
     const myOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
-    }, [onChange],);
+        onFilter?.(e.target.value)
+    }, [onChange, onFilter]);
 
     if (hidden) return null;
 

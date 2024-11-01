@@ -79,6 +79,13 @@ export const getEventsList = async (filters: IEventFilter) => {
                 },
                 isReferred: {
                     equals: false
+                },
+                customer: {
+                    OR: [
+                        { name: { contains: filters?.searchTerm || '', mode: 'insensitive' } },
+                        { phone: { contains: filters?.searchTerm || '', mode: 'insensitive' } },
+                        { identification: { contains: filters?.searchTerm || '', mode: 'insensitive' } }
+                    ]
                 }
             }
         });

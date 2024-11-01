@@ -6,11 +6,13 @@ import dayjs, {Dayjs} from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
-import {useCallback, useMemo} from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/services/client";
 import {usePathname, useRouter} from "next/navigation";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
+import {FormInput} from "@/components/Forms/Input/FormInput";
+import {debounce} from "lodash";
 
 dayjs.extend(advancedFormat);
 
@@ -31,19 +33,15 @@ export const EventsFilters = (props: Props) => {
     const currentFilters = useMemo(() => {
         return filters ? JSON.parse(atob(filters)) as IEventFilter : {}
     }, [filters]);
-    const instructorId =
-        !props.user?.access?.receptionist && !props.user?.access?.admin && user?.access?.instructor ? user?.id : undefined;
 
     const handleReset = useCallback(() => {
         const params = new URLSearchParams();
         const newFilters = JSON.stringify({
-            date: new Date(),
-            locationId: props.user?.location?.id,
-            instructorId: instructorId
+            date: new Date(), locationId: props.user?.location?.id, instructorId: undefined, searchTerm: undefined,
         })
         params.set('filters', btoa(newFilters));
         replace(`${pathname}?${params.toString()}`);
-    }, [props.user?.location?.id, instructorId, replace, pathname]);
+    }, [props.user?.location?.id, replace, pathname]);
 
     const handleFilterUpdate = useCallback((data: FilterUpdateProps) => {
         const params = new URLSearchParams();
@@ -85,9 +83,30 @@ const FiltersForm = (props: FiltersFormProps) => {
         data: instructors, isLoading: isInstructorsLoading
     } = useGetInstructorListByLocationId(values?.locationId);
 
+    const debouncedOnFilter = useMemo(() => debounce((value: string) => {
+        handleFilterUpdate({searchTerm: value})
+    }, 300), [handleFilterUpdate]);
+
+    useEffect(() => {
+        return () => {
+            debouncedOnFilter.cancel();
+        };
+    }, [debouncedOnFilter]);
+
     return <form
         id="event-filter-form"
         className="py-3 my-6 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <Field
+            name="searchTerm"
+            component={FormInput as unknown as SupportedInputs}
+            placeholder='Cliente, Cédula, Teléfono'
+            label='Buscar'
+            wrapperClassName="md:col-span-full"
+            onFilter={(searchTerm: string) => {
+                debouncedOnFilter(searchTerm)
+            }}
+        />
+
         <Field
             name="date"
             component={FormCalendar as unknown as SupportedInputs}

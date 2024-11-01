@@ -76,11 +76,6 @@ const EventWrapper = (props: EventWrapperProps) => {
     return <Form
         initialValues={undefined}
         onSubmit={onSubmit}
-        mutators={{
-            clearFieldValue: ([fieldName], state, {changeValue}) => {
-                changeValue(state, fieldName, () => undefined);
-            },
-        }}
     >
         {(formProps) => <form id="event-form" onSubmit={formProps.handleSubmit}
                               className="flex flex-col gap-4 items-center w-full">

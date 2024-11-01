@@ -35,7 +35,7 @@ export default async function Events(props: Props) {
             }
         </div>
         <EventsFilters filters={searchParams?.filters} user={user}/>
-        <Suspense fallback={<TableSkeleton/>}>
+        <Suspense key={searchParams?.filters} fallback={<TableSkeleton/>}>
             <EventsTableWrapper filters={searchParams?.filters} user={user}/>
         </Suspense>
         <Suspense fallback={<TableSkeleton/>}>
