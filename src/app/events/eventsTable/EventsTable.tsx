@@ -115,11 +115,11 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
-            if (row.original.status === EventStatus.COMPLETED) {
-                return <p className="font-bold">
-                    Completado
-                </p>
-            }
+            // if (row.original.status === EventStatus.COMPLETED) {
+            //     return <p className="font-bold">
+            //         Completado
+            //     </p>
+            // }
             return <div className="flex gap-4">
                 <EditEvent id={row.original.id} user={user}/>
                 <DeleteEvent id={row.original.id}/>

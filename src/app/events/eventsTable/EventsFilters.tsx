@@ -1,12 +1,11 @@
 'use client';
 
 import {IEventFilter, IUser} from "@/lib/definitions";
-import * as React from "react";
 import dayjs, {Dayjs} from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import {Field, Form, FormRenderProps, SupportedInputs} from "react-final-form";
-import {useCallback, useEffect, useMemo} from "react";
+import {useCallback, useEffect, useMemo, FormEvent} from "react";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList} from "@/app/events/services/client";
 import {usePathname, useRouter} from "next/navigation";
@@ -95,7 +94,8 @@ const FiltersForm = (props: FiltersFormProps) => {
 
     return <form
         id="event-filter-form"
-        className="py-3 my-6 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+        className="py-3 my-6 grid gap-4 md:grid-cols-3 lg:grid-cols-4"
+        onSubmit={(e: FormEvent) => e.preventDefault()}>
         <Field
             name="searchTerm"
             component={FormInput as unknown as SupportedInputs}
