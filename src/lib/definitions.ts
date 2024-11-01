@@ -198,6 +198,6 @@ export enum CLASS_TYPE {
 
 export enum PAYMENT_TYPE {
     CASH = 'CASH',
-    CREDIT = 'CREDIT',
+    CARD = 'CARD',
     SINPE = 'SINPE'
 }

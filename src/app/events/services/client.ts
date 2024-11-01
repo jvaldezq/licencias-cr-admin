@@ -1,4 +1,4 @@
-import {IAsset, IEvent, IEventForm, IEventType, ILocation, IUser} from "@/lib/definitions";
+import {IAsset, IEvent, IEventForm, IEventType, ILocation, IUser, PAYMENT_TYPE} from "@/lib/definitions";
 import {clientApi} from "@/lib/clientApi";
 import {useMutation, useQuery} from "react-query";
 import {AssetsByProps} from "@/app/events/services/types";
@@ -97,8 +97,12 @@ const deleteEvent = async (id: string): Promise<IEvent> => {
     return event.data;
 };
 
-const completeEvent = async (id: string): Promise<IEvent> => {
-    const event = await clientApi.patch(`/event/${id}/complete`);
+const completeEvent = async (body: {
+    id: string, type: PAYMENT_TYPE,
+}): Promise<IEvent> => {
+    const event = await clientApi.patch(`/event/${body.id}/complete`, {
+        body: body.type
+    });
     return event.data;
 };
 
@@ -182,8 +186,10 @@ export const useDeleteMutation = () => {
 
 export const useCompleteMutation = () => {
     return useMutation({
-        mutationFn: (id: string) => {
-            return completeEvent(id);
+        mutationFn: (body: {
+            id: string, type: PAYMENT_TYPE,
+        }) => {
+            return completeEvent(body);
         }, mutationKey: ['event-complete'],
     });
 };

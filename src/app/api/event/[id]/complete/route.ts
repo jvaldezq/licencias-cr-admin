@@ -9,9 +9,10 @@ BigInt.prototype.toJSON = function () {
     return int ?? this.toString();
 };
 
-export async function PATCH(_: Request, {params}: { params: { id: string } }) {
+export async function PATCH(request: Request, {params}: { params: { id: string } }) {
     try {
-        const res = await eventComplete(params.id);
+        const body = await request.json();
+        const res = await eventComplete(params.id, body?.body);
 
         revalidatePath('/events', 'page')
         return NextResponse.json(res, {status: 200});

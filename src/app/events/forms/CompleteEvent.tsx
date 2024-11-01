@@ -9,7 +9,9 @@ import {FormSavingLoader} from "@/components/FormLoader";
 import {useCompleteMutation, useGetEventById} from "@/app/events/services/client";
 import {MoneyIcon} from "@/assets/icons/MoneyIcon";
 import {CRCFormatter} from "@/lib/NumberFormats";
-import {Form} from "react-final-form";
+import {Field, Form, SupportedInputs} from "react-final-form";
+import {PAYMENT_TYPE} from "@/lib/definitions";
+import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 
 export const CompleteEvent = ({id}: { id: string }) => {
     const [open, setOpen] = useState(false);
@@ -32,7 +34,8 @@ export const CompleteEvent = ({id}: { id: string }) => {
         footer={<Button
             type="submit" form="event-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Completar</Button>}
-        trigger={<Button variant="outline"><MoneyIcon/></Button>}>
+        trigger={<Button variant="outline"><MoneyIcon/></Button>}
+    >
         <EventWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }
@@ -42,6 +45,10 @@ interface EventWrapperProps {
     setOpen: (open: boolean) => void;
     setIsLoading: (loading: boolean) => void;
     setLoadingContent: (content: React.ReactNode) => void;
+}
+
+interface IFormProps {
+    type: PAYMENT_TYPE;
 }
 
 const EventWrapper = (props: EventWrapperProps) => {
@@ -56,10 +63,10 @@ const EventWrapper = (props: EventWrapperProps) => {
         }
     }, [isLoading, setIsLoading]);
 
-    const onSubmit = useCallback(() => {
+    const onSubmit = useCallback((data: IFormProps) => {
         setIsLoading(true);
         setLoadingContent(<FormSavingLoader message="Completando Cita"/>)
-        mutateAsync(id).then(() => {
+        mutateAsync({id, type: data.type}).then(() => {
             setOpen(false);
             router.refresh();
         });
@@ -73,8 +80,18 @@ const EventWrapper = (props: EventWrapperProps) => {
     const cashAdvance = data?.payment?.cashAdvance || 0;
     const amountToPay = price - cashAdvance;
 
+    const initialValues = {
+        type: PAYMENT_TYPE.CASH,
+    }
+
+    const options = [
+        {name: 'Efectivo', id: PAYMENT_TYPE.CASH},
+        {name: 'Tarjeta', id: PAYMENT_TYPE.CARD},
+        {name: 'Sinpe', id: PAYMENT_TYPE.SINPE},
+    ]
+
     return <Form
-        initialValues={undefined}
+        initialValues={initialValues}
         onSubmit={onSubmit}
     >
         {(formProps) => <form id="event-form" onSubmit={formProps.handleSubmit}
@@ -97,6 +114,18 @@ const EventWrapper = (props: EventWrapperProps) => {
             <div className="flex justify-between items-center gap-2 w-full bg-error/[0.2] p-4 rounded-2xl">
                 <p className="font-semibold text-primary/[0.9]">Pendiente</p>
                 <p className="font-bold text-error">{CRCFormatter(amountToPay)}</p>
+            </div>
+
+            <div className="border-t border-solid border-primary w-full py-2">
+                <Field
+                    name="type"
+                    component={FormDropdown as unknown as SupportedInputs}
+                    placeholder='Tipo de pago'
+                    label='Tipo de pago'
+                    options={options}
+                    wrapperClassName="w-full"
+                    validate={(value) => value !== undefined ? undefined : 'El tipo de licencia es requerido'}
+                />
             </div>
         </form>}
     </Form>
