@@ -15,30 +15,26 @@ import {
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
-import {EventStatus} from "@/lib/definitions";
+import {cn} from "@/lib/utils";
 
 
 interface Props<T> {
     data: T[]
     columns: ColumnDef<T>[]
+    className?: string
 }
 
 export function DataTable<T>(props: Props<T>) {
-    const {data, columns} = props
+    const {data, columns, className} = props
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection] = React.useState({})
 
     const table = useReactTable({
-        data,
-        columns,
-        onSortingChange: setSorting,
-        // onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        // getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        // getFilteredRowModel: getFilteredRowModel(),
+        data, columns, onSortingChange: setSorting, // onColumnFiltersChange: setColumnFilters,
+        getCoreRowModel: getCoreRowModel(), // getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(), // getFilteredRowModel: getFilteredRowModel(),
         // onColumnVisibilityChange: setColumnVisibility,
         // onRowSelectionChange: setRowSelection,
         state: {
@@ -46,7 +42,8 @@ export function DataTable<T>(props: Props<T>) {
         },
     })
 
-    return (<Table className="animate-fade-down animate-once animate-duration-500 animate-delay-0 animate-ease-in">
+    return (<Table
+        className={cn('animate-fade-down animate-once animate-duration-500 animate-delay-0 animate-ease-in', className)}>
         <TableHeader>
             {table?.getHeaderGroups().map((headerGroup) => (<TableRow key={headerGroup?.id}>
                 {headerGroup?.headers.map((header) => {
@@ -60,8 +57,7 @@ export function DataTable<T>(props: Props<T>) {
             {table?.getRowModel().rows?.length ? (table?.getRowModel().rows.map((row) => {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-expect-error
-                const completedStyle = row?.original?.status === EventStatus.COMPLETED ?
-                    'bg-warning-yellow' : ''
+                const completedStyle = row?.original?.type?.name?.includes('Clase') ? 'bg-[#8e24aa]/[0.3]' : ''
 
 
                 return <TableRow

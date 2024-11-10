@@ -6,7 +6,6 @@ import {Button} from "@/components/ui/button";
 import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {useRouter} from "next/navigation";
-import {EditIcon} from "@/assets/icons/EditIcon";
 import {FormSavingLoader} from "@/components/FormLoader";
 import {EventForm} from "@/app/events/forms/EventsForm";
 import {CLASS_TYPE, IEventForm, IUser} from "@/lib/definitions";
@@ -18,11 +17,12 @@ import dayjs from "dayjs";
 interface EditEventProps {
     id: string;
     user: IUser;
+    open: boolean;
+    setOpen: (open: boolean) => void;
 }
 
 export const EditEvent = (props: EditEventProps) => {
-    const {id, user} = props;
-    const [open, setOpen] = useState(false);
+    const {id, user, open, setOpen} = props;
     const [isLoading, setIsLoading] = useState(true);
     const [loadingContent, setLoadingContent] = useState<React.ReactNode>(<FormSavingLoader
         message="Cargando información de la Cita"/>);
@@ -42,7 +42,7 @@ export const EditEvent = (props: EditEventProps) => {
         footer={<Button
             type="submit" form="event-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
-        trigger={<Button variant="outline"><EditIcon/></Button>}>
+        trigger={null}>
         <EventWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}
                       user={user}/>
     </Dialog>)
@@ -124,7 +124,8 @@ const EventWrapper = (props: EventWrapperProps) => {
                 price: undefined, cashAdvance: undefined, paid: false,
             },
             notes: undefined,
-            isReferred: false
+            isReferred: false,
+            hasMedical: false,
         }
     }, [data, user.id])
 

@@ -94,6 +94,7 @@ model Event {
   typeId        String
   notes         String?
   isReferred    Boolean      @default(false)
+  hasMedical    Boolean      @default(false)
   type          EventType    @relation(fields: [typeId], references: [id])
 
   @@index([instructorId, createdById, date, paymentId, customerId, locationId, licenseTypeId])

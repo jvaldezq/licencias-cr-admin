@@ -1,16 +1,23 @@
 'use client';
 
 import {ColumnDef, Row} from "@tanstack/react-table";
-import {EventStatus, IEvent, IUser} from "@/lib/definitions";
+import {IEvent, IUser} from "@/lib/definitions";
 import {Button} from "@/components/ui/button";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
 import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import {useMemo} from "react";
+import {useCallback, useState} from "react";
 import {EditEvent} from "@/app/events/forms/EditEvent";
 import {DeleteEvent} from "@/app/events/forms/DeleteEvent";
 import {CompleteEvent} from "@/app/events/forms/CompleteEvent";
+import {Dropdown} from "@/components/Dropdown";
+import {SettingsIcon} from "@/assets/icons/SettingsIcon";
+import {ViewEvent} from "@/app/events/forms/ViewEvent";
+import {ViewIcon} from "@/assets/icons/ViewIcon";
+import {EditIcon} from "@/assets/icons/EditIcon";
+import {DeleteIcon} from "@/assets/icons/DeleteIcon";
+import {MoneyIcon} from "@/assets/icons/MoneyIcon";
 
 dayjs.extend(advancedFormat);
 
@@ -21,23 +28,40 @@ interface Props {
 }
 
 export const EventsTable = (props: Props) => {
-    const {data, user} = props
+    const [openView, setOpenView] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openPayment, setOpenPayment] = useState(false);
+    const [id, setId] = useState('')
 
-    const [practicalData, clasesData] = useMemo(() => {
-        const practicalData = data.filter((event) => event.type.name.includes('Prueba'));
-        const clasesData = data.filter((event) => event.type.name.includes('Clase'));
-        return [practicalData, clasesData]
-    }, [data])
+    const handleAction = useCallback((action: string, id: string) => {
+        if (action === 'view') {
+            setOpenView(true);
+        }
+        if (action === 'edit') {
+            setOpenEdit(true);
+        }
+        if (action === 'delete') {
+            setOpenDelete(true);
+        }
+        if (action === 'payment') {
+            setOpenPayment(true);
+        }
+
+        setId(id);
+    }, [])
+
+    const {data, user} = props
 
     const allowActions = user?.access?.receptionist || user?.access?.admin;
 
-    const practicalcolumns: ColumnDef<IEvent>[] = [{
+    const columns: ColumnDef<IEvent>[] = [{
         accessorKey: "customer.schedule.startDate", header: () => {
             return (<Button
                 className="px-0 font-bold text-base"
                 variant="ghost"
             >
-                Hora cliente
+                Hora cliente / Inicio
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
             const [startTime, endTime] = row?.original?.customer?.schedule?.startTime?.split(':') || [];
@@ -51,11 +75,18 @@ export const EventsTable = (props: Props) => {
                 className="px-0 font-bold text-base"
                 variant="ghost"
             >
-                Hora prueba
+                Hora prueba / Fin
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
+            if (row?.original?.type?.name?.includes('Clase')) {
+                const [startTime, endTime] = row?.original?.customer?.schedule?.endTime?.split(':') || [];
+                return <div className="capitalize">
+                    {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
+                </div>
+            }
             const [startTime, endTime] = row?.original?.time?.split(':') || [];
-            return <div className='capitalize font-bold border border-solid border-secondary rounded-2xl p-2 text-center text-secondary'>
+            return <div
+                className='capitalize font-bold border border-solid border-secondary rounded-2xl p-2 text-center text-secondary'>
                 {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },
@@ -115,92 +146,82 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
-            // if (row.original.status === EventStatus.COMPLETED) {
-            //     return <p className="font-bold">
-            //         Completado
-            //     </p>
-            // }
-            return <div className="flex gap-4">
-                <EditEvent id={row.original.id} user={user}/>
-                <DeleteEvent id={row.original.id}/>
-                <CompleteEvent id={row.original.id}/>
-            </div>
+            const options = [{
+                content: <Button onClick={() => handleAction('view', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-primary"
+                                 variant="outline"><ViewIcon/> Ver</Button>, key: `view ${row?.original?.id}`
+            }, {
+                content: <Button onClick={() => handleAction('edit', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-primary"
+                                 variant="outline"><EditIcon/> Editar</Button>, key: `edit ${row?.original?.id}`
+            }, {
+                content: <Button onClick={() => handleAction('delete', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-secondary"
+                                 variant="outline"><DeleteIcon/> Eliminar</Button>, key: `delete ${row?.original?.id}`
+            }, {
+                content: <Button onClick={() => handleAction('payment', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-success"
+                                 variant="outline"><MoneyIcon/> Abono/Pago</Button>,
+                key: `complete ${row?.original?.id}`
+            },]
+            return <Dropdown trigger={<Button variant="outline"><SettingsIcon/></Button>} options={options}/>
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');
 
-    const clasescolumns: ColumnDef<IEvent>[] = [{
+    const mobileColumns: ColumnDef<IEvent>[] = [{
         accessorKey: "customer.schedule.startDate", header: () => {
             return (<Button
                 className="px-0 font-bold text-base"
                 variant="ghost"
             >
-                Inicio
+                Información
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
-            const [startTime, endTime] = row?.original?.customer?.schedule?.startTime?.split(':') || [];
-            return <div className="capitalize">
-                {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
-            </div>
-        },
-    }, {
-        accessorKey: "customer.schedule.endDate", header: () => {
-            return (<Button
-                className="px-0 font-bold text-base"
-                variant="ghost"
-            >
-                Fin
-            </Button>)
-        }, cell: ({row}: { row: Row<IEvent> }) => {
-            const [startTime, endTime] = row?.original?.customer?.schedule?.endTime?.split(':') || [];
-            return <div className="capitalize">
-                {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
-            </div>
-        },
-    }, {
-        accessorKey: "instructor.name", header: () => {
-            return (<Button
-                className="px-0 font-bold text-base"
-                variant="ghost"
-            >
-                Instructor
-            </Button>)
-        }, cell: ({row}: { row: Row<IEvent> }) => {
-            const name = row?.original?.instructor?.name || 'Sin asignar';
-            return <div
-                className={`capitalize flex gap-2 items-center ${!row?.original?.instructor?.name ? 'text-error font-bold' : ''}`}>
-                {name}
-            </div>
-        },
-    }, {
-        accessorKey: "asset.name", header: () => {
-            return (<Button
-                className="px-0 font-bold text-base"
-                variant="ghost"
-            >
-                Vehículo
-            </Button>)
-        }, cell: ({row}: { row: Row<IEvent> }) => {
-            const name = row?.original?.asset?.name || 'Sin asignar';
-            const color = row?.original?.licenseType?.color || '#d3d3d3';
+            const clientName = row?.original?.customer?.name;
+            const instructorName = row?.original?.instructor?.name || 'Sin asignar';
+            const assetName = row?.original?.asset?.name || 'Sin asignar';
+            const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
             const licenseType = row?.original?.licenseType?.name ? `(${row?.original?.licenseType?.name})` : undefined;
-            return <div
-                className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                <div className="h-4 w-4 rounded-full" style={{backgroundColor: color}}/>
-                {`${licenseType} ${name}`}
-            </div>
-        },
-    }, {
-        accessorKey: "customer.name", header: () => {
-            return (<Button
-                className="px-0 font-bold text-base"
-                variant="ghost"
-            >
-                Cliente
-            </Button>)
-        }, cell: ({row}: { row: Row<IEvent> }) => {
-            const name = row?.original?.customer?.name;
-            return <div className="capitalize">
-                {name}
+            if (row?.original?.type?.name?.includes('Clase')) {
+                const [startTimeEnding, endTimeEnding] = row?.original?.customer?.schedule?.endTime?.split(':') || [];
+                const [startTime, endTime] = row?.original?.customer?.schedule?.startTime?.split(':') || [];
+
+                return <div className="flex flex-col gap-3">
+                    <p>
+                        <strong>Inicio: </strong>
+                        {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
+                    </p>
+                    <p>
+                        <strong>Fin: </strong>
+                        {dayjs().set('hour', +startTimeEnding).set('minute', +endTimeEnding).format('hh:mm A')}
+                    </p>
+                    <p><strong>Cliente:</strong> {clientName}</p>
+                    <p><strong>Instructor:</strong> {instructorName}</p>
+                    <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
+                        <div className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
+                        {`${licenseType} ${assetName}`}
+                    </p>
+                </div>
+            }
+            const [startTimeEnding, endTimeEnding] = row?.original?.time?.split(':') || [];
+            const [startTime, endTime] = row?.original?.customer?.schedule?.startTime?.split(':') || [];
+            return <div className="flex flex-col gap-3">
+                <p>
+                    <strong>Hora cliente: </strong>
+                    {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
+                </p>
+                <p>
+                    <strong>Hora prueba: </strong>
+                    <span className='text-secondary font-bold'>
+                        {dayjs().set('hour', +startTimeEnding).set('minute', +endTimeEnding).format('hh:mm A')}
+                    </span>
+                </p>
+                <p><strong>Cliente:</strong> {clientName}</p>
+                <p><strong>Instructor:</strong> {instructorName}</p>
+                <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
+                    <div className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
+                    {`${licenseType} ${assetName}`}
+                </p>
             </div>
         },
     }, {
@@ -212,35 +233,44 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
-            if (row.original.status === EventStatus.COMPLETED) {
-                return <p className="font-bold">
-                    Completado
-                </p>
-            }
-            return <div className="flex gap-4">
-                <EditEvent id={row.original.id} user={user}/>
-                <DeleteEvent id={row.original.id}/>
-                <CompleteEvent id={row.original.id}/>
-            </div>
+            const options = [{
+                content: <Button onClick={() => handleAction('view', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-primary"
+                                 variant="outline"><ViewIcon/> Ver</Button>, key: `view ${row?.original?.id}`
+            }, {
+                content: <Button onClick={() => handleAction('edit', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-primary"
+                                 variant="outline"><EditIcon/> Editar</Button>, key: `edit ${row?.original?.id}`
+            }, {
+                content: <Button onClick={() => handleAction('delete', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-secondary"
+                                 variant="outline"><DeleteIcon/> Eliminar</Button>, key: `delete ${row?.original?.id}`
+            }, {
+                content: <Button onClick={() => handleAction('payment', row?.original?.id)}
+                                 className="w-full flex justify-start items-center gap-2 text-success"
+                                 variant="outline"><MoneyIcon/> Abono/Pago</Button>,
+                key: `complete ${row?.original?.id}`
+            },]
+            return <Dropdown trigger={<Button variant="outline"><SettingsIcon/></Button>} options={options}/>
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');
 
     return <>
-        <h1 className="my-6 text-center py-2 text-lg font-semibold text-primary rounded-2xl bg-secondary/[0.2]">Pruebas
-            de
-            manejo</h1>
-
-        <DataTable
-            data={practicalData}
-            columns={practicalcolumns}
-        />
-
-        <h1 className="my-6 text-center py-2 text-lg font-semibold text-primary rounded-2xl bg-secondary/[0.2]">Clases
-            de
-            manejo</h1>
-        <DataTable
-            data={clasesData}
-            columns={clasescolumns}
-        />
+        <ViewEvent id={id} open={openView} setOpen={setOpenView}/>
+        <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit}/>
+        <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete}/>
+        <CompleteEvent id={id} open={openPayment} setOpen={setOpenPayment}/>
+        <div className="block md:hidden">
+            <DataTable
+                data={data}
+                columns={mobileColumns}
+            />
+        </div>
+        <div className="hidden md:block">
+            <DataTable
+                data={data}
+                columns={columns}
+            />
+        </div>
     </>
 }

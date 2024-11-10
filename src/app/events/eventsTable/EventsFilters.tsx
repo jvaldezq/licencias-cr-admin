@@ -84,7 +84,7 @@ const FiltersForm = (props: FiltersFormProps) => {
 
     const debouncedOnFilter = useMemo(() => debounce((value: string) => {
         handleFilterUpdate({searchTerm: value})
-    }, 300), [handleFilterUpdate]);
+    }, 1000), [handleFilterUpdate]);
 
     useEffect(() => {
         return () => {

@@ -1,16 +1,21 @@
 'use client';
 
-import {useCallback, useState} from "react";
+import {useCallback} from "react";
 import {Button} from "@/components/ui/button";
 import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {useRouter} from "next/navigation";
 import {FormSavingLoader} from "@/components/FormLoader";
-import {DeleteIcon} from "@/assets/icons/DeleteIcon";
 import {useDeleteMutation} from "@/app/events/services/client";
 
-export const DeleteEvent = ({id}: { id: string }) => {
-    const [open, setOpen] = useState(false);
+interface DeleteEventProps {
+    id: string;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+}
+
+export const DeleteEvent = (props: DeleteEventProps) => {
+    const {id, setOpen, open} = props;
     const {mutateAsync, isLoading} = useDeleteMutation();
     const router = useRouter();
 
@@ -19,7 +24,7 @@ export const DeleteEvent = ({id}: { id: string }) => {
             setOpen(false);
             router.refresh();
         });
-    }, [id, mutateAsync, router]);
+    }, [id, mutateAsync, router, setOpen]);
 
     return (<Dialog
         open={open}
@@ -30,7 +35,7 @@ export const DeleteEvent = ({id}: { id: string }) => {
         footer={<Button
             onClick={onDelete}
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Eliminar</Button>}
-        trigger={<Button variant="outline"><DeleteIcon/></Button>}>
+        trigger={null}>
         {isLoading ? null :
             <p className="text-primary text-base font-medium">Está seguro que desea eliminar la Cita</p>}
     </Dialog>)

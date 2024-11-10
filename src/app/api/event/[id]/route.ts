@@ -18,6 +18,7 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
         const event = await prisma.event.findUnique({
             select: {
                 id: true,
+                type: true,
                 typeId: true,
                 notes: true,
                 isReferred: true,
@@ -26,11 +27,15 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
                         id: true, name: true, identification: true, phone: true, schedule: true,
                     }
                 },
+                location: true,
                 locationId: true,
+                licenseType: true,
                 licenseTypeId: true,
                 date: true,
                 time: true,
+                instructor: true,
                 instructorId: true,
+                asset: true,
                 assetId: true,
                 createdById: true,
                 payment: true

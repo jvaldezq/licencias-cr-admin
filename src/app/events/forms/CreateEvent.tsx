@@ -10,7 +10,6 @@ import {useRouter} from "next/navigation";
 import {FormSavingLoader} from "@/components/FormLoader";
 import {EventForm} from "@/app/events/forms/EventsForm";
 import {IEventForm, IUser} from "@/lib/definitions";
-import dayjs from "dayjs";
 
 interface CreateEventProps {
     user: IUser;
@@ -78,7 +77,7 @@ const EventWrapper = (props: EventWrapperProps) => {
         },
         locationId: undefined,
         licenseTypeId: undefined,
-        date: dayjs(),
+        date: undefined,
         startTime: undefined,
         endTime: undefined,
         instructorId: undefined,
@@ -88,7 +87,8 @@ const EventWrapper = (props: EventWrapperProps) => {
             price: undefined, cashAdvance: undefined, paid: false,
         },
         notes: undefined,
-        isReferred: false
+        isReferred: false,
+        hasMedical: false
     }
 
     return <Form

@@ -14,7 +14,6 @@ import {
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {CLASS_TYPE, IEventForm, OWNCAR} from "@/lib/definitions";
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
-import dayjs from "dayjs";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 import {FormTextarea} from "@/components/Forms/Textarea/FormTextarea";
 
@@ -108,7 +107,7 @@ export const EventForm = (props: EventFormProps) => {
         />
         <Field
             component={FormCalendar as unknown as SupportedInputs}
-            placeholder={dayjs().format('YYYY MMM DD')}
+            placeholder='Fecha'
             label="Fecha"
             name="date"
             wrapperClassName="md:col-span-2"
@@ -217,7 +216,14 @@ export const EventForm = (props: EventFormProps) => {
             placeholder='Es referido'
             label='Es referido'
             hidden={!showPriceInfo}
-            wrapperClassName="md:col-span-2"
+        />
+
+        <Field
+            name="hasMedical"
+            component={FormSwitch as unknown as SupportedInputs}
+            placeholder='Con Dictamen Médico'
+            label='Con Dictamen Médico'
+            hidden={!showPriceInfo}
         />
 
         <Field

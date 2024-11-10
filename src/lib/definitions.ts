@@ -88,6 +88,7 @@ export interface IEvent {
     type: IEventType;
     notes?: string;
     isReferred?: boolean;
+    hasMedical?: boolean;
 }
 
 export interface ICustomer {
@@ -171,6 +172,7 @@ export interface IEventForm {
     }
     notes?: string;
     isReferred?: boolean;
+    hasMedical?: boolean;
 }
 
 export interface IEventFilter {
@@ -183,6 +185,7 @@ export interface IEventFilter {
 
 export enum EventStatus {
     COMPLETED = 'COMPLETED',
+    PAID = 'PAID',
     DELETED = 'DELETED',
     IN_PROGRESS = 'IN_PROGRESS'
 }

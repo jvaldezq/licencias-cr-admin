@@ -41,7 +41,7 @@ export const FormCalendar = forwardRef((props: FormCalendarProps, ref: Forwarded
         hidden = false,
         disabled,
     } = props;
-    const [date, setDate] = useState<Date | undefined>(new Date())
+    const [date, setDate] = useState<Date | undefined>(undefined)
     const [open, setOpen] = useState(false)
     const {onChange} = input;
 
