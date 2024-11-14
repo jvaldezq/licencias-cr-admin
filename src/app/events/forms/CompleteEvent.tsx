@@ -124,6 +124,12 @@ const EventWrapper = (props: EventWrapperProps) => {
                 <p className="font-semibold text-primary">{data?.notes ?? '-'}</p>
             </div>
 
+            <div className="w-full border-t border-solid border-primary py-2">
+                <p className="text-primary/[0.7] text-sm">Dictamen Médico</p>
+                <p className="font-semibold text-primary">{data?.hasMedical ? 'Si' : 'No'}</p>
+            </div>
+
+
             <div className="border-t border-solid border-primary w-full py-2">
                 <Field
                     name="type"

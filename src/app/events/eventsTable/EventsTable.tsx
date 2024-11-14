@@ -51,7 +51,7 @@ export const EventsTable = (props: Props) => {
         setId(id);
     }, [])
 
-    const {data, user} = props
+    const {data, user, filters} = props
 
     const allowActions = user?.access?.receptionist || user?.access?.admin;
 
@@ -91,17 +91,16 @@ export const EventsTable = (props: Props) => {
             </div>
         },
     }, {
-        accessorKey: "instructor.name", header: () => {
+        accessorKey: "customer.name", header: () => {
             return (<Button
                 className="px-0 font-bold text-base"
                 variant="ghost"
             >
-                Instructor
+                Cliente
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
-            const name = row?.original?.instructor?.name || 'Sin asignar';
-            return <div
-                className={`capitalize flex gap-2 items-center ${!row?.original?.instructor?.name ? 'text-error font-bold' : ''}`}>
+            const name = row?.original?.customer?.name;
+            return <div className="capitalize">
                 {name}
             </div>
         },
@@ -114,6 +113,8 @@ export const EventsTable = (props: Props) => {
                 Vehículo
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
+            console.log(row?.original?.asset)
+            console.log('filters', JSON.parse(atob(filters)))
             const name = row?.original?.asset?.name || 'Sin asignar';
             const color = row?.original?.licenseType?.color || '#d3d3d3';
             const licenseType = row?.original?.licenseType?.name ? `(${row?.original?.licenseType?.name})` : undefined;
@@ -124,16 +125,17 @@ export const EventsTable = (props: Props) => {
             </div>
         },
     }, {
-        accessorKey: "customer.name", header: () => {
+        accessorKey: "instructor.name", header: () => {
             return (<Button
                 className="px-0 font-bold text-base"
                 variant="ghost"
             >
-                Cliente
+                Instructor
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
-            const name = row?.original?.customer?.name;
-            return <div className="capitalize">
+            const name = row?.original?.instructor?.name || 'Sin asignar';
+            return <div
+                className={`capitalize flex gap-2 items-center ${!row?.original?.instructor?.name ? 'text-error font-bold' : ''}`}>
                 {name}
             </div>
         },

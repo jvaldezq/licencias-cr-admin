@@ -5,17 +5,14 @@ import {FormInput} from "@/components/Forms/Input/FormInput";
 import {FormSwitch} from "@/components/Forms/Switch/FormSwitch";
 import * as React from "react";
 import {
-    useGetAssetsByList,
-    useGetEventTypesList,
-    useGetInstructorListByLocationId,
-    useGetLicenseList,
-    useGetLocationList,
+    useGetAssetsByList, useGetEventTypesList, useGetInstructorListByLocationId, useGetLicenseList, useGetLocationList,
 } from "@/app/events/services/client";
 import {FormDropdown} from "@/components/Forms/Dropdown/FormDropdown";
 import {CLASS_TYPE, IEventForm, OWNCAR} from "@/lib/definitions";
 import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 import {FormTextarea} from "@/components/Forms/Textarea/FormTextarea";
+import {CRCFormatter} from "@/lib/NumberFormats";
 
 export type EventFormProps = FormRenderProps<IEventForm>
 
@@ -34,7 +31,11 @@ export const EventForm = (props: EventFormProps) => {
     const isClassType = values.typeId === CLASS_TYPE.CLASS;
     const showTypeInfo = values?.customer?.name && values?.customer?.identification && values?.customer?.phone;
     const showPriceInfo = showTypeInfo && values.locationId && values.licenseTypeId && values.date && values.startTime;
-    const assetsList = [{ id: OWNCAR.OWN, name: "Propio" }, ...assets || []];
+    const assetsList = [{id: OWNCAR.OWN, name: "Propio"}, ...assets || []];
+
+    const price = values?.payment?.price || 0;
+    const cashAdvance = values?.payment?.cashAdvance || 0;
+    const amountToPay = price - cashAdvance;
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
@@ -144,10 +145,11 @@ export const EventForm = (props: EventFormProps) => {
             isLoading={isInstructorsLoading}
             disabled={!instructors}
             hidden={!showTypeInfo}
-            secondaryAction={values.instructorId ? <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
-                event.preventDefault();
-                form.mutators.clearFieldValue('instructorId');
-            }} /> : undefined}
+            secondaryAction={values.instructorId ?
+                <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
+                    event.preventDefault();
+                    form.mutators.clearFieldValue('instructorId');
+                }}/> : undefined}
         />
 
         <Field
@@ -159,10 +161,11 @@ export const EventForm = (props: EventFormProps) => {
             isLoading={isAssetsLoading}
             disabled={!assets}
             hidden={!showTypeInfo}
-            secondaryAction={values.assetId ? <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
-                event.preventDefault();
-                form.mutators.clearFieldValue('assetId');
-            }} /> : undefined}
+            secondaryAction={values.assetId ?
+                <CloseCircleIcon className="hover:[&>path]:fill-secondary" onClick={(event) => {
+                    event.preventDefault();
+                    form.mutators.clearFieldValue('assetId');
+                }}/> : undefined}
         />
 
 
@@ -199,6 +202,12 @@ export const EventForm = (props: EventFormProps) => {
             label='Adelanto'
             hidden={values?.payment?.paid || !showPriceInfo}
         />
+
+        {!(values?.payment?.paid || !showPriceInfo) && (<div className="flex flex-col justify-start items-start gap-2 w-full">
+                <p className="font-semibold text-primary/[0.9]">Pendiente</p>
+                <p className="font-bold text-error">{CRCFormatter(amountToPay)}</p>
+            </div>)}
+
         <Field
             name="payment.paid"
             component={FormSwitch as unknown as SupportedInputs}
@@ -208,7 +217,8 @@ export const EventForm = (props: EventFormProps) => {
         />
 
         {showPriceInfo &&
-            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información extra</p>}
+            <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información
+                extra</p>}
 
         <Field
             name="isReferred"

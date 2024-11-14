@@ -153,6 +153,7 @@ export const updateTest = async (id: string, data: IEventForm): Promise<string> 
                     time: data.startTime,
                     notes: data.notes,
                     isReferred: data.isReferred,
+                    hasMedical: data.hasMedical,
                 },
             });
 

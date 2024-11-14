@@ -127,6 +127,7 @@ export const updateClass = async (id: string, data: IEventForm): Promise<string>
                     time: selectedDate.format("HH:mm"),
                     notes: data.notes,
                     isReferred: data.isReferred,
+                    hasMedical: data.hasMedical,
                 },
             });
 

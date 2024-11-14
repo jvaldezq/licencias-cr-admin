@@ -47,6 +47,7 @@ export const getEventsList = async (filters: IEventFilter) => {
                     select: {
                         id: true,
                         name: true,
+                        locationId: true,
                     }
                 },
                 customer: {
