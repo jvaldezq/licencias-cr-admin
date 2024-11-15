@@ -113,15 +113,19 @@ export const EventsTable = (props: Props) => {
                 Vehículo
             </Button>)
         }, cell: ({row}: { row: Row<IEvent> }) => {
-            console.log(row?.original?.asset)
-            console.log('filters', JSON.parse(atob(filters)))
             const name = row?.original?.asset?.name || 'Sin asignar';
             const color = row?.original?.licenseType?.color || '#d3d3d3';
             const licenseType = row?.original?.licenseType?.name ? `(${row?.original?.licenseType?.name})` : undefined;
             return <div
-                className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                <div className="h-4 w-4 rounded-full" style={{backgroundColor: color}}/>
-                {`${licenseType} ${name}`}
+                className={`flex flex-col gap-2 ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
+                <p className="flex gap-2">
+                    <span className="h-4 w-4 rounded-full" style={{backgroundColor: color}}/>
+                    {`${licenseType} ${name}`}
+                </p>
+                {(row?.original?.asset?.locationId !== JSON.parse(atob(filters)).locationId && row?.original?.asset?.name !== undefined) &&
+                    <p className="text-error font-bold text-xs">
+                        Vehículo fuera de sede
+                    </p>}
             </div>
         },
     }, {
@@ -200,7 +204,7 @@ export const EventsTable = (props: Props) => {
                     <p><strong>Cliente:</strong> {clientName}</p>
                     <p><strong>Instructor:</strong> {instructorName}</p>
                     <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                        <div className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
+                        <span className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
                         {`${licenseType} ${assetName}`}
                     </p>
                 </div>
@@ -221,7 +225,7 @@ export const EventsTable = (props: Props) => {
                 <p><strong>Cliente:</strong> {clientName}</p>
                 <p><strong>Instructor:</strong> {instructorName}</p>
                 <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                    <div className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
+                    <span className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
                     {`${licenseType} ${assetName}`}
                 </p>
             </div>

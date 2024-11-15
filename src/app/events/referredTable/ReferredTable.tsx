@@ -28,7 +28,7 @@ interface Props {
 }
 
 export const ReferredTable = (props: Props) => {
-    const {data, user} = props
+    const {data, user, filters} = props
     const [openView, setOpenView] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
@@ -95,9 +95,15 @@ export const ReferredTable = (props: Props) => {
             const color = row?.original?.licenseType?.color || '#d3d3d3';
             const licenseType = row?.original?.licenseType?.name ? `(${row?.original?.licenseType?.name})` : undefined;
             return <div
-                className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                <div className="h-4 w-4 rounded-full" style={{backgroundColor: color}}/>
-                {`${licenseType} ${name}`}
+                className={`flex flex-col gap-2 ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
+                <p className="flex gap-2">
+                    <span className="h-4 w-4 rounded-full" style={{backgroundColor: color}}/>
+                    {`${licenseType} ${name}`}
+                </p>
+                {(row?.original?.asset?.locationId !== JSON.parse(atob(filters)).locationId && row?.original?.asset?.name !== undefined) &&
+                    <p className="text-error font-bold text-xs">
+                        Vehículo fuera de sede
+                    </p>}
             </div>
         },
     }, {
@@ -189,7 +195,7 @@ export const ReferredTable = (props: Props) => {
                     <p><strong>Cliente:</strong> {clientName}</p>
                     <p><strong>Instructor:</strong> {instructorName}</p>
                     <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                        <div className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
+                        <span className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
                         {`${licenseType} ${assetName}`}
                     </p>
                 </div>
@@ -210,7 +216,7 @@ export const ReferredTable = (props: Props) => {
                 <p><strong>Cliente:</strong> {clientName}</p>
                 <p><strong>Instructor:</strong> {instructorName}</p>
                 <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
-                    <div className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
+                    <span className="h-4 w-4 rounded-full" style={{backgroundColor: assetColor}}/>
                     {`${licenseType} ${assetName}`}
                 </p>
             </div>
