@@ -9,6 +9,11 @@ import {
 } from "@/app/events/services/client";
 import {CRCFormatter} from "@/lib/NumberFormats";
 import dayjs from "dayjs";
+import {PAYMENT_TYPE} from "@/lib/definitions";
+
+export const PAYMENT_OPTIONS = [{name: 'Efectivo', id: PAYMENT_TYPE.CASH}, {
+    name: 'Tarjeta', id: PAYMENT_TYPE.CARD
+}, {name: 'Sinpe', id: PAYMENT_TYPE.SINPE},]
 
 interface ViewEventProps {
     id: string;
@@ -137,21 +142,29 @@ const ViewEventWrapper = (props: ViewEventWrapperProps) => {
 
         <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1 capitalize">PRECIOS</p>
 
-        <div className="w-full md:col-span-full">
-            <p className="text-primary/[0.7] text-sm">Monto Total</p>
-            <p className="font-semibold text-primary">{CRCFormatter(price)}</p>
+        <div className="w-full col-span-full">
+            <div className="flex justify-between items-center gap-2 w-full">
+                <p className="font-semibold text-primary/[0.9]">Monto Total</p>
+                <p className="font-semibold text-primary">{CRCFormatter(price)}</p>
+            </div>
+
+            {
+                data?.payment?.cashPaymentsAdvance?.map((payment, index) => <div key={`payment-${index}`}
+                                                                                 className="flex justify-between items-center gap-2 w-full">
+                    <p className="text-sm font-semibold text-primary/[0.9]">Adelanto
+                        #{index + 1} ({PAYMENT_OPTIONS.find(option => option?.id === payment.type as unknown)?.name})</p>
+                    <p className="text-sm font-semibold text-success">{CRCFormatter(payment?.amount || 0)}</p>
+                </div>)
+            }
+
+            <div className="flex py-4 justify-between items-center gap-2 w-full">
+                <p className="font-semibold text-primary/[0.9]">Pendiente</p>
+                <p className="font-semibold text-error">{amountToPay === 0 ? 'Pagado' : CRCFormatter(amountToPay)}</p>
+            </div>
+
         </div>
 
-        <div className="w-full">
-            <p className="text-primary/[0.7] text-sm">Adelanto</p>
-            <p className="font-semibold text-success">{CRCFormatter(cashAdvance)}</p>
-        </div>
-
-        <div className="w-full text-error">
-            <p className="text-primary/[0.7] text-sm">Pendiente</p>
-            <p className="font-bold text-error">{CRCFormatter(amountToPay)}</p>
-        </div>
-
+        <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1 capitalize">EXTRAS</p>
         <div className="w-full">
             <p className="text-primary/[0.7] text-sm">Notas</p>
             <p className="font-semibold text-primary">{data?.notes}</p>

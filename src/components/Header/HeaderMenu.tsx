@@ -11,6 +11,7 @@ import {CarIcon} from "@/assets/icons/CarIcon";
 import {LicenseIcon} from "@/assets/icons/LicenseIcon";
 import {CalendarIcon} from "@/assets/icons/CalendarIcon";
 import {PeopleIcon} from "@/assets/icons/PeopleIcon";
+import {SalesIcon} from "@/assets/icons/SalesIcon";
 
 
 interface Props {
@@ -21,7 +22,7 @@ interface Props {
 export const HeaderMenu = (props: Props) => {
     const {trigger, user} = props;
     const path = usePathname()
-    const isSelected = 'bg-secondary text-white font-bold [&>svg>path]:fill-white';
+    const isSelected = 'bg-secondary text-white font-bold [&>svg>path]:fill-white [&>svg>g]:stroke-white';
 
     return <Sheet aria-describedby="Header menu">
         <SheetTrigger className="rounded p-2 hover:bg-primary/[0.1]" aria-describedby="trigger">{trigger}</SheetTrigger>
@@ -36,6 +37,14 @@ export const HeaderMenu = (props: Props) => {
                         <CalendarIcon/> Citas
                     </Link>
                 </SheetClose>
+                {
+                    (user?.access?.admin || user?.access?.receptionist) && <SheetClose asChild aria-describedby="Citas">
+                        <Link className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/sales' && isSelected}`}
+                              key="calendar" href="/sales">
+                            <SalesIcon/> Ventas
+                        </Link>
+                    </SheetClose>
+                }
                 {user?.access?.admin && <>
                     <p className="font-light text-xs pb-1 border-b border-primary/[0.2] text-primary/[0.7] border-solid">Administrador</p>
                     <SheetClose asChild aria-describedby="Sedes">

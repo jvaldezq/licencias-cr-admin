@@ -62,7 +62,7 @@ export const FormTextarea = forwardRef((props: FormTextareaProps, ref: Forwarded
     >
         <Textarea
             name={name}
-            className={cn(className, value ? 'bg-success/[0.1]' : undefined)}
+            className={cn(className, value ? 'bg-success/[0.05]' : undefined)}
             ref={(node) => {
                 myRef.current = node;
                 if (typeof ref === 'function') {

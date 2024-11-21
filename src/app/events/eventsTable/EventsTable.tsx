@@ -1,7 +1,7 @@
 'use client';
 
 import {ColumnDef, Row} from "@tanstack/react-table";
-import {IEvent, IUser} from "@/lib/definitions";
+import {EventStatus, IEvent, IUser} from "@/lib/definitions";
 import {Button} from "@/components/ui/button";
 import * as React from "react";
 import {DataTable} from "@/components/Table";
@@ -10,7 +10,7 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {useCallback, useState} from "react";
 import {EditEvent} from "@/app/events/forms/EditEvent";
 import {DeleteEvent} from "@/app/events/forms/DeleteEvent";
-import {CompleteEvent} from "@/app/events/forms/CompleteEvent";
+import {PaymentEvent} from "@/app/events/forms/PaymentEvent";
 import {Dropdown} from "@/components/Dropdown";
 import {SettingsIcon} from "@/assets/icons/SettingsIcon";
 import {ViewEvent} from "@/app/events/forms/ViewEvent";
@@ -152,6 +152,7 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
+            const hasPaid = row?.original.status === EventStatus.PAID;
             const options = [{
                 content: <Button onClick={() => handleAction('view', row?.original?.id)}
                                  className="w-full flex justify-start items-center gap-2 text-primary"
@@ -164,12 +165,16 @@ export const EventsTable = (props: Props) => {
                 content: <Button onClick={() => handleAction('delete', row?.original?.id)}
                                  className="w-full flex justify-start items-center gap-2 text-secondary"
                                  variant="outline"><DeleteIcon/> Eliminar</Button>, key: `delete ${row?.original?.id}`
-            }, {
-                content: <Button onClick={() => handleAction('payment', row?.original?.id)}
-                                 className="w-full flex justify-start items-center gap-2 text-success"
-                                 variant="outline"><MoneyIcon/> Abono/Pago</Button>,
-                key: `complete ${row?.original?.id}`
-            },]
+            }]
+
+            if (!hasPaid) {
+                options.push({
+                    content: <Button onClick={() => handleAction('payment', row?.original?.id)}
+                                     className="w-full flex justify-start items-center gap-2 text-success"
+                                     variant="outline"><MoneyIcon/> Abono/Pago</Button>,
+                    key: `complete ${row?.original?.id}`
+                });
+            }
             return <Dropdown trigger={<Button variant="outline"><SettingsIcon/></Button>} options={options}/>
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');
@@ -239,6 +244,7 @@ export const EventsTable = (props: Props) => {
                 Acciones
             </Button>)
         }, enableHiding: false, cell: ({row}: { row: Row<IEvent> }) => {
+            const hasPaid = row?.original.status === EventStatus.PAID;
             const options = [{
                 content: <Button onClick={() => handleAction('view', row?.original?.id)}
                                  className="w-full flex justify-start items-center gap-2 text-primary"
@@ -251,12 +257,17 @@ export const EventsTable = (props: Props) => {
                 content: <Button onClick={() => handleAction('delete', row?.original?.id)}
                                  className="w-full flex justify-start items-center gap-2 text-secondary"
                                  variant="outline"><DeleteIcon/> Eliminar</Button>, key: `delete ${row?.original?.id}`
-            }, {
-                content: <Button onClick={() => handleAction('payment', row?.original?.id)}
-                                 className="w-full flex justify-start items-center gap-2 text-success"
-                                 variant="outline"><MoneyIcon/> Abono/Pago</Button>,
-                key: `complete ${row?.original?.id}`
-            },]
+            }];
+
+            if (!hasPaid) {
+                options.push({
+                    content: <Button onClick={() => handleAction('payment', row?.original?.id)}
+                                     className="w-full flex justify-start items-center gap-2 text-success"
+                                     variant="outline"><MoneyIcon/> Abono/Pago</Button>,
+                    key: `complete ${row?.original?.id}`
+                });
+            }
+
             return <Dropdown trigger={<Button variant="outline"><SettingsIcon/></Button>} options={options}/>
         },
     }].filter((column) => allowActions ? true : column.id !== 'actions');
@@ -265,7 +276,7 @@ export const EventsTable = (props: Props) => {
         <ViewEvent id={id} open={openView} setOpen={setOpenView}/>
         <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit}/>
         <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete}/>
-        <CompleteEvent id={id} open={openPayment} setOpen={setOpenPayment}/>
+        <PaymentEvent id={id} user={user} open={openPayment} setOpen={setOpenPayment}/>
         <div className="block md:hidden">
             <DataTable
                 data={data}

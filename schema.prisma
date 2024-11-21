@@ -57,6 +57,7 @@ model User {
   location           Location?    @relation(fields: [locationId], references: [id])
   access             UserAccess?
   schedule           Schedule[]
+  cashPaymentsAdvance     CashPaymentsAdvance[]
 }
 
 model UserAccess {
@@ -129,15 +130,27 @@ model Schedule {
 }
 
 model Payment {
+  id                      String   @id @default(uuid())
+  price                   Float?
+  cashAdvance             Float?
+  paid                    Boolean?  @default(false)
+  paidDate                DateTime?
+  cashPaymentsAdvance     CashPaymentsAdvance[]
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  event                   Event?
+}
+
+model CashPaymentsAdvance {
   id          String   @id @default(uuid())
-  price       Float?
-  cashAdvance Float?
-  paid        Boolean?  @default(false)
-  paidDate    DateTime?
-  type        String?
+  amount      Float
+  type        String
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  paymentId   String
+  payment     Payment    @relation(fields: [paymentId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  event       Event?
 }
 
 model EventType {

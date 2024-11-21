@@ -49,6 +49,7 @@ export interface IUser {
     location?: ILocation;
     access?: IUserAccess;
     schedule: ISchedule[];
+    cashPaymentsAdvance:  ICashPaymentsAdvance[];
 }
 
 export interface IUserAccess {
@@ -125,9 +126,22 @@ export interface IPayment {
     cashAdvance?: number;
     paid?: boolean;
     paidDate?: Date;
+    cashPaymentsAdvance?: ICashPaymentsAdvance[];
     createdAt: Date;
     updatedAt: Date;
     event?: IEvent;
+}
+
+export interface ICashPaymentsAdvance {
+    id: string;
+    amount?: number;
+    type?: number;
+    userId?: string;
+    user?: IUser;
+    paymentId?: string;
+    payment?: IPayment;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface IEventType {

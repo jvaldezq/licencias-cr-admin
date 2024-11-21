@@ -97,11 +97,11 @@ const deleteEvent = async (id: string): Promise<IEvent> => {
     return event.data;
 };
 
-const completeEvent = async (body: {
-    id: string, type: PAYMENT_TYPE,
+const handlePayment = async (body: {
+    id: string, type: PAYMENT_TYPE, amount: number, user: IUser
 }): Promise<IEvent> => {
-    const event = await clientApi.patch(`/event/${body.id}/complete`, {
-        body: body.type
+    const event = await clientApi.patch(`/event/${body.id}/payment`, {
+        body: body
     });
     return event.data;
 };
@@ -184,12 +184,12 @@ export const useDeleteMutation = () => {
     });
 };
 
-export const useCompleteMutation = () => {
+export const usePaymentMutation = () => {
     return useMutation({
         mutationFn: (body: {
-            id: string, type: PAYMENT_TYPE,
+            id: string, type: PAYMENT_TYPE, amount: number, user: IUser
         }) => {
-            return completeEvent(body);
-        }, mutationKey: ['event-complete'],
+            return handlePayment(body);
+        }, mutationKey: ['event-payment'],
     });
 };

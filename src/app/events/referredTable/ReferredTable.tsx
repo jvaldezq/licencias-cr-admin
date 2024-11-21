@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import {EditEvent} from "@/app/events/forms/EditEvent";
 import {DeleteEvent} from "@/app/events/forms/DeleteEvent";
-import {CompleteEvent} from "@/app/events/forms/CompleteEvent";
+import {PaymentEvent} from "@/app/events/forms/PaymentEvent";
 import {ViewEvent} from "@/app/events/forms/ViewEvent";
 import {useCallback, useState} from "react";
 import {ViewIcon} from "@/assets/icons/ViewIcon";
@@ -261,7 +261,7 @@ export const ReferredTable = (props: Props) => {
         <ViewEvent id={id} open={openView} setOpen={setOpenView}/>
         <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit}/>
         <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete}/>
-        <CompleteEvent id={id} open={openPayment} setOpen={setOpenPayment}/>
+        <PaymentEvent id={id} open={openPayment} setOpen={setOpenPayment}/>
         <div className="block md:hidden">
             <DataTable
                 data={data}

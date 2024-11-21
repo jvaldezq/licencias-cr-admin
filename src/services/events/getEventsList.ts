@@ -75,9 +75,6 @@ export const getEventsList = async (filters: IEventFilter) => {
                 ...locationId,
                 ...instructorId,
                 ...licenseTypeId,
-                status: {
-                    in: [EventStatus.IN_PROGRESS, EventStatus.COMPLETED]
-                },
                 isReferred: {
                     equals: false
                 },
