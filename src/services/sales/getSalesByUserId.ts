@@ -2,12 +2,16 @@ import prisma from '@/lib/prisma';
 import dayjs from "dayjs";
 import {ICashPaymentsAdvance} from "@/lib/definitions";
 
-export const getSalesByUserId = async (userId: string) => {
+export const getSalesByUserId = async (userId: string, date?: string) => {
     try {
+        let selectedDate = dayjs(new Date()).toISOString();
+        if (date) {
+            selectedDate = dayjs(date).toISOString();
+        }
 
         let dateFilter = {};
-        const startOfDay = dayjs().startOf('day').toISOString();
-        const endOfDay = dayjs().endOf('day').toISOString();
+        const startOfDay = dayjs(selectedDate).startOf('day').toISOString();
+        const endOfDay = dayjs(selectedDate).endOf('day').toISOString();
         dateFilter = {
             createdAt: {
                 gte: startOfDay, lte: endOfDay,

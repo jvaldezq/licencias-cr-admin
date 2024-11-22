@@ -8,10 +8,12 @@ import {DataTable} from "@/components/Table";
 import {CRCFormatter} from "@/lib/NumberFormats";
 import {PAYMENT_OPTIONS} from "@/app/events/forms/ViewEvent";
 import dayjs from "dayjs";
-import {FormInput} from "@/components/Forms/Input/FormInput";
 import {Field, Form, SupportedInputs} from "react-final-form";
 import {FormRadioBox} from "@/components/Forms/RadioBox.tsx/RadioBox";
 import {useMemo} from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import {ExportFileIcon} from "@/assets/icons/ExportFileIcon";
 
 interface Props {
     data: ICashPaymentsAdvance[];
@@ -67,25 +69,77 @@ export const SalesTable = (props: Props) => {
         return data.filter((item) => item.type === filter);
     }, [data, filter]);
 
-    return <div className="pt-8 mt-8 border-t border-solid border-primary/[0.5]">
-        <h1 className="font-semibold text-2xl text-secondary animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Filtros</h1>
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+
+        const tableData = filterData.map((row) => [
+            CRCFormatter(row.amount!),
+            PAYMENT_OPTIONS.find((option) => option?.id === row.type as unknown)?.name || "",
+            dayjs(row.createdAt).format("DD/M/YYYY hh:mm A"),
+            row.payment?.event?.customer?.name || "",
+        ]);
+
+        const totalAmount = filterData.reduce((sum, row) => sum + row.amount!, 0);
+
+        autoTable(doc, {
+            head: [["Monto", "Tipo de pago", "Fecha y hora", "Cliente"]],
+            body: tableData,
+            styles: {
+                fontSize: 10, // Set font size
+                textColor: [56, 56, 54], // Default text color (dark gray)
+            },
+            headStyles: {
+                fillColor: [202, 11, 16], // Header background color (blue)
+                textColor: [255, 255, 255], // Header text color (white)
+                fontStyle: "bold", // Header font style
+            },
+            bodyStyles: {
+                fillColor: [245, 245, 245], // Body row background color (light gray)
+                textColor: [56, 56, 54], // Body row text color
+            },
+            alternateRowStyles: {
+                fillColor: [255, 255, 255], // Alternate row background color (white)
+            },
+        });
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        const finalY = doc?.lastAutoTable?.finalY;
+        doc.text(`Total: ${CRCFormatter(totalAmount)}`, 14, finalY + 10);
+
+        doc.save("table-data.pdf");
+    };
+
+    return <div className="pt-8 mt-8">
+        <h1 className="font-medium text-xl text-secondary animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Filtros</h1>
         <div className="mb-8 mt-4">
-        <Form
-            onSubmit={() => {}}
-            initialValues={{
-                type: filter,
-            }}
-            render={() => <Field
-                name="type"
-                component={FormRadioBox as unknown as SupportedInputs}
-                label='Tipo de pago'
-                onFilter={(type: string) => {
-                    setFilter(type);
+            <Form
+                onSubmit={() => {
                 }}
-                className="justify-start"
-                options={PAYMENT_OPTIONS}
-            />}
-        />
+                initialValues={{
+                    type: filter,
+                }}
+                render={() => <Field
+                    name="type"
+                    component={FormRadioBox as unknown as SupportedInputs}
+                    label='Tipo de pago'
+                    onFilter={(type: string) => {
+                        setFilter(type);
+                    }}
+                    className="justify-start"
+                    options={PAYMENT_OPTIONS}
+                />}
+            />
+        </div>
+        <div className="flex justify-end my-2">
+            <Button
+                className="flex gap-2 items-center"
+                variant="secondary"
+                onClick={exportToPDF}
+            >
+                Exportar a PDF
+                <ExportFileIcon/>
+            </Button>
         </div>
         <DataTable
             data={filterData}
