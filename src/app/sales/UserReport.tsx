@@ -4,7 +4,7 @@ import {fetchUserInfo} from "@/components/Header/service";
 import {getSalesByUserId} from "@/services/sales/getSalesByUserId";
 import {CRCFormatter} from "@/lib/NumberFormats";
 import {SalesTable} from "@/app/sales/SalesTable";
-import {CreditCard, DollarSign, Wallet} from "lucide-react";
+import {CreditCard, HandCoins, Wallet} from "lucide-react";
 import {SalesFilter} from "@/app/sales/SalesFilter";
 
 interface Props {
@@ -44,7 +44,7 @@ const UserReport = async (props: Props) => {
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                 <div className="flex items-center justify-between mb-4">
                     <div className="p-2 bg-green-50 rounded-lg">
-                        <DollarSign className="text-green-600" size={24}/>
+                        <HandCoins className="text-green-600" size={24}/>
                     </div>
                     <span className="text-sm text-gray-500">Efectivo</span>
                 </div>

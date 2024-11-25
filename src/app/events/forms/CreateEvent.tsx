@@ -84,7 +84,7 @@ const EventWrapper = (props: EventWrapperProps) => {
         assetId: undefined,
         createdById: user.id,
         payment: {
-            price: undefined, cashAdvance: undefined, paid: false,
+            price: undefined, cashAdvance: undefined, type: undefined,
         },
         notes: undefined,
         isReferred: false,

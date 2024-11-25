@@ -124,7 +124,6 @@ export interface IPayment {
     id: string;
     price?: number;
     cashAdvance?: number;
-    paid?: boolean;
     paidDate?: Date;
     cashPaymentsAdvance?: ICashPaymentsAdvance[];
     createdAt: Date;
@@ -182,7 +181,7 @@ export interface IEventForm {
     assetId?: string;
     createdById?: string;
     payment?: {
-        price?: number; cashAdvance?: number; paid?: boolean;
+        price?: number; cashAdvance?: number; type?: PAYMENT_TYPE;
     }
     notes?: string;
     isReferred?: boolean;
@@ -201,6 +200,7 @@ export enum EventStatus {
     COMPLETED = 'COMPLETED',
     PAID = 'PAID',
     DELETED = 'DELETED',
+    PENDING = 'PENDING',
     IN_PROGRESS = 'IN_PROGRESS'
 }
 

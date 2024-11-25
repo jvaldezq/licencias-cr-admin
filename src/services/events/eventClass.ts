@@ -37,13 +37,23 @@ export const createClass = async (data: IEventForm) => {
                 data: {
                     price: data?.payment?.price ? +data.payment.price : 0,
                     cashAdvance: data?.payment?.cashAdvance ? +data.payment.cashAdvance : 0,
-                    paid: data?.payment?.paid || false,
                 },
             });
 
+            await prisma.cashPaymentsAdvance.create({
+                data: {
+                    amount: data?.payment?.cashAdvance ? +data.payment.cashAdvance : 0,
+                    userId: data.createdById || '',
+                    paymentId: payment?.id || '',
+                    type: data?.payment?.type,
+                }
+            })
+
+            const status = data?.payment?.price === data?.payment?.cashAdvance ? EventStatus.PAID : EventStatus.PENDING;
+
             await prisma.event.create({
                 data: {
-                    status:  EventStatus.IN_PROGRESS,
+                    status:  status,
                     assetId: data.assetId,
                     createdById: data.createdById || '',
                     customerId: customer.id,
@@ -106,15 +116,13 @@ export const updateClass = async (id: string, data: IEventForm): Promise<string>
                 where: {id: currentEvent?.paymentId},
                 data: {
                     price: data?.payment?.price ? +data.payment.price : 0,
-                    cashAdvance: data?.payment?.cashAdvance ? +data.payment.cashAdvance : 0,
-                    paid: data?.payment?.paid || false,
                 },
             });
+
 
             await prisma.event.update({
                 where: {id},
                 data: {
-                    status: EventStatus.IN_PROGRESS,
                     assetId: data.assetId,
                     createdById: data.createdById || '',
                     customerId: customer.id,
