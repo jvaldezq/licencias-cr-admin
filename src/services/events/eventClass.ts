@@ -45,7 +45,7 @@ export const createClass = async (data: IEventForm) => {
                     amount: data?.payment?.cashAdvance ? +data.payment.cashAdvance : 0,
                     userId: data.createdById || '',
                     paymentId: payment?.id || '',
-                    type: data?.payment?.type,
+                    type: data?.payment?.type || '',
                 }
             })
 
@@ -65,7 +65,6 @@ export const createClass = async (data: IEventForm) => {
                     date: eventDate,
                     time: selectedDate.format("HH:mm"),
                     notes: data.notes,
-                    isReferred: data.isReferred,
                 },
             });
 
@@ -134,7 +133,6 @@ export const updateClass = async (id: string, data: IEventForm): Promise<string>
                     date: eventDate,
                     time: selectedDate.format("HH:mm"),
                     notes: data.notes,
-                    isReferred: data.isReferred,
                     hasMedical: data.hasMedical,
                 },
             });

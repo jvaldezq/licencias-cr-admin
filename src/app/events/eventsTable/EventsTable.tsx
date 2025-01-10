@@ -90,6 +90,20 @@ export const EventsTable = (props: Props) => {
                 {dayjs().set('hour', +startTime).set('minute', +endTime).format('hh:mm A')}
             </div>
         },
+    },{
+        accessorKey: "type.name", header: () => {
+            return (<Button
+                className="px-0 font-bold text-base"
+                variant="ghost"
+            >
+                Tipo
+            </Button>)
+        }, cell: ({row}: { row: Row<IEvent> }) => {
+            const name = row?.original?.type?.name;
+            return <div className="capitalize">
+                {name}
+            </div>
+        },
     }, {
         accessorKey: "customer.name", header: () => {
             return (<Button
@@ -191,6 +205,7 @@ export const EventsTable = (props: Props) => {
             const clientName = row?.original?.customer?.name;
             const instructorName = row?.original?.instructor?.name || 'Sin asignar';
             const assetName = row?.original?.asset?.name || 'Sin asignar';
+            const eventType = row?.original?.type?.name || '-';
             const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
             const licenseType = row?.original?.licenseType?.name ? `(${row?.original?.licenseType?.name})` : undefined;
             if (row?.original?.type?.name?.includes('Clase')) {
@@ -206,6 +221,7 @@ export const EventsTable = (props: Props) => {
                         <strong>Fin: </strong>
                         {dayjs().set('hour', +startTimeEnding).set('minute', +endTimeEnding).format('hh:mm A')}
                     </p>
+                    <p><strong>Tipo:</strong> {eventType}</p>
                     <p><strong>Cliente:</strong> {clientName}</p>
                     <p><strong>Instructor:</strong> {instructorName}</p>
                     <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>
@@ -227,6 +243,7 @@ export const EventsTable = (props: Props) => {
                         {dayjs().set('hour', +startTimeEnding).set('minute', +endTimeEnding).format('hh:mm A')}
                     </span>
                 </p>
+                <p><strong>Tipo:</strong> {eventType}</p>
                 <p><strong>Cliente:</strong> {clientName}</p>
                 <p><strong>Instructor:</strong> {instructorName}</p>
                 <p className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}>

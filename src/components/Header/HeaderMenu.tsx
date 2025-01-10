@@ -12,6 +12,7 @@ import {LicenseIcon} from "@/assets/icons/LicenseIcon";
 import {CalendarIcon} from "@/assets/icons/CalendarIcon";
 import {PeopleIcon} from "@/assets/icons/PeopleIcon";
 import {SalesIcon} from "@/assets/icons/SalesIcon";
+import { GraduationCap } from "lucide-react";
 
 
 interface Props {
@@ -73,6 +74,13 @@ export const HeaderMenu = (props: Props) => {
                             className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/people' && isSelected}`}
                             key="people" href="/people">
                             <PeopleIcon/> Planilla
+                        </Link>
+                    </SheetClose>
+                    <SheetClose asChild aria-describedby="schools">
+                        <Link
+                            className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/schools' && isSelected}`}
+                            key="schools" href="/schools">
+                            <GraduationCap/> Escuelas
                         </Link>
                     </SheetClose>
                 </>}

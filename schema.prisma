@@ -27,6 +27,7 @@ model LicenseType {
   updatedAt          DateTime             @updatedAt
   events             Event[]
   assets             Asset[]
+  schoolPrices       SchoolPrices[]
 }
 
 model Asset {
@@ -94,7 +95,10 @@ model Event {
   time          String?
   typeId        String
   notes         String?
-  isReferred    Boolean      @default(false)
+  isInternalReferred    Boolean?      @default(false)
+  isExternalReferred    Boolean?      @default(false)
+  schoolId      String?
+  school        School?     @relation(fields: [schoolId], references: [id])
   hasMedical    Boolean      @default(false)
   type          EventType    @relation(fields: [typeId], references: [id])
 
@@ -112,6 +116,28 @@ model Customer {
   event          Event[]
   scheduleId     String? @unique
   schedule       Schedule?    @relation(fields: [scheduleId], references: [id])
+}
+
+model School {
+  id             String   @id @default(uuid())
+  name           String
+  status         Boolean
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  schoolPrices   SchoolPrices[]
+  Event Event[]
+}
+
+model SchoolPrices {
+  id             String   @id @default(uuid())
+  internalPrice  String
+  externalPrice  String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  schoolId       String?
+  school         School?  @relation(fields: [schoolId], references: [id])
+  licenseTypeId  String?  @unique
+  licenseType    LicenseType?  @relation(fields: [licenseTypeId], references: [id])
 }
 
 model Schedule {

@@ -6,7 +6,6 @@ import {TableSkeleton} from "@/components/TableSkeleton";
 import {CreateEvent} from "@/app/events/forms/CreateEvent";
 import {EventsFilters} from "@/app/events/eventsTable/EventsFilters";
 import EventsTableWrapper from "@/app/events/eventsTable/EventsTableWrapper";
-import ReferredTableWrapper from "@/app/events/referredTable/ReferredTableWrapper";
 
 interface Props {
     searchParams: {
@@ -37,9 +36,6 @@ export default async function Events(props: Props) {
         <EventsFilters filters={searchParams?.filters} user={user}/>
         <Suspense key={searchParams?.filters} fallback={<TableSkeleton/>}>
             <EventsTableWrapper filters={searchParams?.filters} user={user}/>
-        </Suspense>
-        <Suspense fallback={<TableSkeleton/>}>
-            <ReferredTableWrapper filters={searchParams?.filters} user={user}/>
         </Suspense>
     </main>);
 }

@@ -19,6 +19,7 @@ export interface ILicenseType {
     updatedAt: Date;
     events: IEvent[];
     assets: IAsset[];
+    schoolPrices: ISchoolPrices[];
 }
 
 export interface IAsset {
@@ -88,8 +89,9 @@ export interface IEvent {
     typeId: string;
     type: IEventType;
     notes?: string;
-    isReferred?: boolean;
     hasMedical?: boolean;
+    schoolId?: string;
+    school?: ISchool;
 }
 
 export interface ICustomer {
@@ -152,6 +154,27 @@ export interface IEventType {
     events: IEvent[];
 }
 
+export interface ISchool {
+    id: string;
+    name: string;
+    status: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolPrices: ISchoolPrices[];
+}
+
+export interface ISchoolPrices {
+    id: string;
+    internalPrice: string;
+    externalPrice: string;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolId: string;
+    school: ISchool;
+    licenseTypeId: string;
+    licenseType: ILicenseType;
+}
+
 export interface ILog {
     id: string;
     modelName: string;
@@ -184,7 +207,6 @@ export interface IEventForm {
         price?: number; cashAdvance?: number; type?: PAYMENT_TYPE;
     }
     notes?: string;
-    isReferred?: boolean;
     hasMedical?: boolean;
 }
 

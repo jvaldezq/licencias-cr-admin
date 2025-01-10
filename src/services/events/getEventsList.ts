@@ -75,9 +75,6 @@ export const getEventsList = async (filters: IEventFilter) => {
                 ...locationId,
                 ...instructorId,
                 ...licenseTypeId,
-                isReferred: {
-                    equals: false
-                },
                 customer: {
                     OR: [
                         { name: { contains: filters?.searchTerm || '', mode: 'insensitive' } },
@@ -152,9 +149,6 @@ export const getEventsReferredList = async (filters: IEventFilter) => {
                 status: {
                     in: [EventStatus.IN_PROGRESS, EventStatus.COMPLETED]
                 },
-                isReferred: {
-                    equals: true
-                }
             }
         });
         return events as unknown as IEvent[]
