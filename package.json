@@ -25,6 +25,7 @@
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.2",
     "@tanstack/react-table": "^8.20.5",
     "@vercel/postgres": "^0.10.0",
     "axios": "^1.7.7",
@@ -63,7 +64,10 @@
     "postcss": "^8",
     "prisma": "^5.19.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.4.2"
   },
   "packageManager": "pnpm@9.13.0+sha1.f149ab27b27e712ac9a58ce1717c307364ccdca8"
 }

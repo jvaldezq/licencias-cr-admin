@@ -13,7 +13,6 @@ export default async function EventsTableWrapper(props: Props) {
     if (filters) {
         const filtersJson = JSON.parse(atob(filters)) as IEventFilter;
         data = await getEventsList(filtersJson);
-        console.log('data', data);
     }
 
     return <EventsTable data={data} user={user} filters={filters} />
