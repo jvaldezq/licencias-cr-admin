@@ -79,7 +79,7 @@ export const EventsCalendar = (props: Props) => {
               key={event.id}
               className="absolute"
               style={{
-                top: `${top}px`,
+                top: isHovered ? `${top - 50}px` : `${top}px`,
                 left: `${left}px`,
                 zIndex: isHovered ? 50 : 1,
               }}
@@ -89,7 +89,7 @@ export const EventsCalendar = (props: Props) => {
                   isHovered ? 'scale-100' : 'scale-90'
                 }`}
                 style={{
-                  width: isHovered ? '200px' : '25px',
+                  width: isHovered ? '230px' : '25px',
                   height: isHovered ? '80px' : '15px',
                   backgroundColor: event?.type?.name?.includes('Clase')
                     ? '#8e24aa'
@@ -101,10 +101,11 @@ export const EventsCalendar = (props: Props) => {
                 onMouseLeave={() => setHoveredEvent(null)}
               >
                 {isHovered && (
-                  <div className="p-2 text-xs text-white">
+                  <div className="py-1 text-xs text-white pl-8 pr-1 flex flex-col justify-center items-end text-end">
                     <div className="font-medium">
                       {event?.licenseType?.name} / {event.type.name}
                     </div>
+                    <div className="opacity-90">{event.time}</div>
                     <div className="opacity-90">{event.customer.name}</div>
                     <div className="opacity-75 text-[10px]">
                       {event?.asset?.name} • {event?.instructor?.name}
