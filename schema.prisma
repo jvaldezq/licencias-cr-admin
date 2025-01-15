@@ -27,6 +27,7 @@ model LicenseType {
   updatedAt          DateTime             @updatedAt
   events             Event[]
   assets             Asset[]
+  schoolPrices       SchoolPrices[]
 }
 
 model Asset {
@@ -57,6 +58,7 @@ model User {
   location           Location?    @relation(fields: [locationId], references: [id])
   access             UserAccess?
   schedule           Schedule[]
+  cashPaymentsAdvance     CashPaymentsAdvance[]
 }
 
 model UserAccess {
@@ -93,7 +95,10 @@ model Event {
   time          String?
   typeId        String
   notes         String?
-  isReferred    Boolean      @default(false)
+  isInternalReferred    Boolean?      @default(false)
+  isExternalReferred    Boolean?      @default(false)
+  schoolId      String?
+  school        School?     @relation(fields: [schoolId], references: [id])
   hasMedical    Boolean      @default(false)
   type          EventType    @relation(fields: [typeId], references: [id])
 
@@ -113,6 +118,28 @@ model Customer {
   schedule       Schedule?    @relation(fields: [scheduleId], references: [id])
 }
 
+model School {
+  id             String   @id @default(uuid())
+  name           String
+  status         Boolean
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  schoolPrices   SchoolPrices[]
+  Event Event[]
+}
+
+model SchoolPrices {
+  id             String   @id @default(uuid())
+  internalPrice  String
+  externalPrice  String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  schoolId       String?
+  school         School?  @relation(fields: [schoolId], references: [id])
+  licenseTypeId  String?  @unique
+  licenseType    LicenseType?  @relation(fields: [licenseTypeId], references: [id])
+}
+
 model Schedule {
   id                  String   @id @default(uuid())
   startTime           String?
@@ -129,15 +156,27 @@ model Schedule {
 }
 
 model Payment {
+  id                      String   @id @default(uuid())
+  price                   Float?
+  cashAdvance             Float?
+  paid                    Boolean?  @default(false)
+  paidDate                DateTime?
+  cashPaymentsAdvance     CashPaymentsAdvance[]
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  event                   Event?
+}
+
+model CashPaymentsAdvance {
   id          String   @id @default(uuid())
-  price       Float?
-  cashAdvance Float?
-  paid        Boolean?  @default(false)
-  paidDate    DateTime?
-  type        String?
+  amount      Float
+  type        String
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  paymentId   String
+  payment     Payment    @relation(fields: [paymentId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  event       Event?
 }
 
 model EventType {

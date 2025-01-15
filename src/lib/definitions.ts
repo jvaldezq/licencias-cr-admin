@@ -19,6 +19,7 @@ export interface ILicenseType {
     updatedAt: Date;
     events: IEvent[];
     assets: IAsset[];
+    schoolPrices: ISchoolPrices[];
 }
 
 export interface IAsset {
@@ -49,6 +50,7 @@ export interface IUser {
     location?: ILocation;
     access?: IUserAccess;
     schedule: ISchedule[];
+    cashPaymentsAdvance:  ICashPaymentsAdvance[];
 }
 
 export interface IUserAccess {
@@ -87,8 +89,9 @@ export interface IEvent {
     typeId: string;
     type: IEventType;
     notes?: string;
-    isReferred?: boolean;
     hasMedical?: boolean;
+    schoolId?: string;
+    school?: ISchool;
 }
 
 export interface ICustomer {
@@ -123,11 +126,23 @@ export interface IPayment {
     id: string;
     price?: number;
     cashAdvance?: number;
-    paid?: boolean;
     paidDate?: Date;
+    cashPaymentsAdvance?: ICashPaymentsAdvance[];
     createdAt: Date;
     updatedAt: Date;
     event?: IEvent;
+}
+
+export interface ICashPaymentsAdvance {
+    id: string;
+    amount?: number;
+    type?: number;
+    userId?: string;
+    user?: IUser;
+    paymentId?: string;
+    payment?: IPayment;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface IEventType {
@@ -137,6 +152,27 @@ export interface IEventType {
     createdAt: Date;
     updatedAt: Date;
     events: IEvent[];
+}
+
+export interface ISchool {
+    id: string;
+    name: string;
+    status: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolPrices: ISchoolPrices[];
+}
+
+export interface ISchoolPrices {
+    id: string;
+    internalPrice: string;
+    externalPrice: string;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolId: string;
+    school: ISchool;
+    licenseTypeId: string;
+    licenseType: ILicenseType;
 }
 
 export interface ILog {
@@ -168,10 +204,9 @@ export interface IEventForm {
     assetId?: string;
     createdById?: string;
     payment?: {
-        price?: number; cashAdvance?: number; paid?: boolean;
+        price?: number; cashAdvance?: number; type?: PAYMENT_TYPE;
     }
     notes?: string;
-    isReferred?: boolean;
     hasMedical?: boolean;
 }
 
@@ -187,6 +222,7 @@ export enum EventStatus {
     COMPLETED = 'COMPLETED',
     PAID = 'PAID',
     DELETED = 'DELETED',
+    PENDING = 'PENDING',
     IN_PROGRESS = 'IN_PROGRESS'
 }
 

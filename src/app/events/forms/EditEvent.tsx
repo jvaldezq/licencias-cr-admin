@@ -99,10 +99,10 @@ const EventWrapper = (props: EventWrapperProps) => {
                 assetId: data?.assetId,
                 createdById: user.id,
                 payment: {
-                    price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance, paid: data?.payment?.paid,
+                    price: data?.payment?.price, cashAdvance: data?.payment?.cashAdvance,
                 },
                 notes: data.notes,
-                isReferred: data.isReferred
+                hasMedical: data.hasMedical
             }
         }
         return {
@@ -121,10 +121,9 @@ const EventWrapper = (props: EventWrapperProps) => {
             assetId: undefined,
             createdById: user.id,
             payment: {
-                price: undefined, cashAdvance: undefined, paid: false,
+                price: undefined, cashAdvance: undefined,
             },
             notes: undefined,
-            isReferred: false,
             hasMedical: false,
         }
     }, [data, user.id])
@@ -142,6 +141,6 @@ const EventWrapper = (props: EventWrapperProps) => {
             },
         }}
     >
-        {(formProps) => <EventForm {...formProps} />}
+        {(formProps) => <EventForm {...formProps} isEdit={true} />}
     </Form>
 }

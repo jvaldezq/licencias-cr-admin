@@ -21,7 +21,7 @@ const RootLayout = ({
 }>) => {
     return (<html lang="en">
     <body
-        className="h-dvh bg-white"
+        className="h-dvh bg-gray-50"
     >
     <QueryWrapper>
         <UserProvider>

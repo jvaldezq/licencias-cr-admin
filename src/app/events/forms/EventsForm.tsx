@@ -13,11 +13,15 @@ import {FormCalendar} from "@/components/Forms/Calendar/FormCalendar";
 import {CloseCircleIcon} from "@/assets/icons/CloseCircleIcon";
 import {FormTextarea} from "@/components/Forms/Textarea/FormTextarea";
 import {CRCFormatter} from "@/lib/NumberFormats";
+import {FormRadioBox} from "@/components/Forms/RadioBox.tsx/RadioBox";
+import {PAYMENT_OPTIONS} from "@/app/events/forms/PaymentEvent";
 
-export type EventFormProps = FormRenderProps<IEventForm>
+export type EventFormProps = FormRenderProps<IEventForm> & {
+    isEdit?: boolean;
+}
 
 export const EventForm = (props: EventFormProps) => {
-    const {values, handleSubmit, form} = props;
+    const {values, handleSubmit, form, isEdit = false} = props;
     const {data: locations, isLoading: isLocationsLoading} = useGetLocationList();
     const {data: eventTypes, isLoading: isEventTypesLoading} = useGetEventTypesList();
     const {data: licenses, isLoading: isLicensesLoading} = useGetLicenseList();
@@ -36,6 +40,7 @@ export const EventForm = (props: EventFormProps) => {
     const price = values?.payment?.price || 0;
     const cashAdvance = values?.payment?.cashAdvance || 0;
     const amountToPay = price - cashAdvance;
+
 
     return <form id="event-form" onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 py-4">
         <Field
@@ -194,27 +199,32 @@ export const EventForm = (props: EventFormProps) => {
             label='Precio'
             hidden={!showPriceInfo}
             validate={(value) => value !== undefined ? undefined : 'El precio es requerido'}
+            wrapperClassName="md:col-span-2"
         />
-        <Field
-            name="payment.cashAdvance"
-            component={FormInput as unknown as SupportedInputs}
-            placeholder='Adelanto'
-            label='Adelanto'
-            hidden={values?.payment?.paid || !showPriceInfo}
-        />
+        {!isEdit && <>
+            <Field
+                name="payment.cashAdvance"
+                component={FormInput as unknown as SupportedInputs}
+                placeholder='Adelanto'
+                label='Adelanto'
+                hidden={!showPriceInfo}
+                wrapperClassName="md:col-span-2"
+            />
+            <Field
+                name="payment.type"
+                component={FormRadioBox as unknown as SupportedInputs}
+                options={PAYMENT_OPTIONS}
+                wrapperClassName="w-full md:col-span-full"
+                label="Tipo de pago"
+                hidden={!showPriceInfo}
+                validate={(value) => cashAdvance > 0 ? value !== undefined ? undefined : 'El tipo de pago es requerido' : undefined}
+            />
+        </>}
 
-        {!(values?.payment?.paid || !showPriceInfo) && (<div className="flex flex-col justify-start items-start gap-2 w-full">
-                <p className="font-semibold text-primary/[0.9]">Pendiente</p>
-                <p className="font-bold text-error">{CRCFormatter(amountToPay)}</p>
-            </div>)}
-
-        <Field
-            name="payment.paid"
-            component={FormSwitch as unknown as SupportedInputs}
-            placeholder='Pagó total'
-            label='Pagó total'
-            hidden={!showPriceInfo}
-        />
+        {showPriceInfo && (<div className="flex flex-col justify-start items-start gap-2 w-full">
+            <p className="font-semibold text-primary/[0.9]">Pendiente</p>
+            <p className="font-bold text-error">{amountToPay === 0 ? 'Pagado' : CRCFormatter(amountToPay)}</p>
+        </div>)}
 
         {showPriceInfo &&
             <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1">Información

@@ -21,7 +21,6 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
                 type: true,
                 typeId: true,
                 notes: true,
-                isReferred: true,
                 customer: {
                     select: {
                         id: true, name: true, identification: true, phone: true, schedule: true,
@@ -38,7 +37,11 @@ export async function GET(req: NextRequest, {params}: { params: { id: string } }
                 asset: true,
                 assetId: true,
                 createdById: true,
-                payment: true,
+                payment: {
+                    select: {
+                        id: true, price: true, cashAdvance: true, paid: true, paidDate: true, cashPaymentsAdvance: true
+                    }
+                },
                 hasMedical: true,
             }, where: {
                 id: params.id

@@ -62,7 +62,7 @@ export const FormDropdown = forwardRef((props: IProps, ref: ForwardedRef<HTMLInp
                         'justify-between',
                         'text-tertiary',
                         'text-xs',
-                            valueLabel ? 'bg-success/[0.1]' : undefined
+                            valueLabel ? 'bg-success/[0.05]' : undefined
                     )
                         }>
                     {valueLabel ? valueLabel : placeholder}
