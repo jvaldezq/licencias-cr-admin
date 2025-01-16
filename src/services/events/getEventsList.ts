@@ -86,6 +86,9 @@ export const getEventsList = async (filters: IEventFilter) => {
         ...locationId,
         ...instructorId,
         ...licenseTypeId,
+        status: {
+          not: EventStatus.DELETED,
+        },
         customer: {
           OR: [
             {
