@@ -19,11 +19,24 @@ export const getEventsList = async (filters: IEventFilter) => {
       },
     };
 
-    const locationId = filters?.locationId
+    // const locationId = filters?.locationId
+    //   ? {
+    //       locationId: {
+    //         equals: filters.locationId,
+    //       },
+    //     }
+    //   : undefined;
+
+    const locationFilter = filters?.locationId
       ? {
-          locationId: {
-            equals: filters.locationId,
-          },
+          OR: [
+            { locationId: { equals: filters.locationId } },
+            {
+              asset: {
+                locationId: { equals: filters.locationId },
+              },
+            },
+          ],
         }
       : undefined;
 
@@ -71,6 +84,7 @@ export const getEventsList = async (filters: IEventFilter) => {
             color: true,
           },
         },
+        location: true,
         type: {
           select: {
             name: true,
@@ -83,11 +97,14 @@ export const getEventsList = async (filters: IEventFilter) => {
       },
       where: {
         ...dateFilter,
-        ...locationId,
+        ...locationFilter,
         ...instructorId,
         ...licenseTypeId,
         status: {
           not: EventStatus.DELETED,
+        },
+        isInternalReferred: {
+          equals: false,
         },
         customer: {
           OR: [
@@ -181,7 +198,10 @@ export const getEventsReferredList = async (filters: IEventFilter) => {
       where: {
         ...dateFilter,
         status: {
-          in: [EventStatus.IN_PROGRESS, EventStatus.COMPLETED],
+          not: EventStatus.DELETED,
+        },
+        isInternalReferred: {
+          equals: true,
         },
       },
     });

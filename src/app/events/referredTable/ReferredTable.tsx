@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef, Row } from '@tanstack/react-table';
-import { IEvent, IUser } from '@/lib/definitions';
+import { EventStatus, IEvent, IUser } from '@/lib/definitions';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import { DataTable } from '@/components/Table';
@@ -17,7 +17,7 @@ import { EditIcon } from '@/assets/icons/EditIcon';
 import { DeleteIcon } from '@/assets/icons/DeleteIcon';
 import { MoneyIcon } from '@/assets/icons/MoneyIcon';
 import { Dropdown } from '@/components/Dropdown';
-import { SettingsIcon } from '@/assets/icons/SettingsIcon';
+import { List } from 'lucide-react';
 
 dayjs.extend(advancedFormat);
 
@@ -212,7 +212,16 @@ export const ReferredTable = (props: Props) => {
             ),
             key: `delete ${row?.original?.id}`,
           },
-          {
+        ];
+
+        const hasPaid = [
+          EventStatus.PAID,
+          EventStatus.PRACTICING,
+          EventStatus.COMPLETED,
+        ].includes(row?.original?.status as EventStatus);
+
+        if (!hasPaid) {
+          options.push({
             content: (
               <Button
                 onClick={() => handleAction('payment', row?.original?.id)}
@@ -223,13 +232,14 @@ export const ReferredTable = (props: Props) => {
               </Button>
             ),
             key: `complete ${row?.original?.id}`,
-          },
-        ];
+          });
+        }
+
         return (
           <Dropdown
             trigger={
               <Button variant="outline">
-                <SettingsIcon />
+                <List />
               </Button>
             }
             options={options}
@@ -403,7 +413,7 @@ export const ReferredTable = (props: Props) => {
           <Dropdown
             trigger={
               <Button variant="outline">
-                <SettingsIcon />
+                <List />
               </Button>
             }
             options={options}
@@ -418,9 +428,9 @@ export const ReferredTable = (props: Props) => {
   }
 
   return (
-    <>
-      <h1 className="my-6 text-center py-2 text-lg font-semibold text-primary rounded-2xl bg-secondary/[0.2]">
-        Referidos
+    <div className="my-8">
+      <h1 className="text-center py-2 text-lg font-semibold text-warning-yellow bg-secondary rounded-2xl">
+        Referidos a otras escuelas
       </h1>
       <ViewEvent id={id} open={openView} setOpen={setOpenView} />
       <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit} />
@@ -437,6 +447,6 @@ export const ReferredTable = (props: Props) => {
       <div className="hidden md:block">
         <DataTable data={data} columns={columns} />
       </div>
-    </>
+    </div>
   );
 };

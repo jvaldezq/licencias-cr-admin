@@ -12,7 +12,6 @@ import { EditEvent } from '@/app/events/forms/EditEvent';
 import { DeleteEvent } from '@/app/events/forms/DeleteEvent';
 import { PaymentEvent } from '@/app/events/forms/PaymentEvent';
 import { Dropdown } from '@/components/Dropdown';
-import { SettingsIcon } from '@/assets/icons/SettingsIcon';
 import { ViewEvent } from '@/app/events/forms/ViewEvent';
 import { ViewIcon } from '@/assets/icons/ViewIcon';
 import { EditIcon } from '@/assets/icons/EditIcon';
@@ -20,7 +19,8 @@ import { DeleteIcon } from '@/assets/icons/DeleteIcon';
 import { MoneyIcon } from '@/assets/icons/MoneyIcon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EventsCalendar } from '@/app/events/eventsTable/EventsCalendar';
-import { Stethoscope } from 'lucide-react';
+import { Stethoscope, CircleCheck, NotebookPen, List } from 'lucide-react';
+import { PracticingEvent } from '@/app/events/forms/PracticingEvent';
 
 dayjs.extend(advancedFormat);
 
@@ -34,6 +34,7 @@ export const EventsTable = (props: Props) => {
   const [openView, setOpenView] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openPracticing, setOpenPracticing] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
   const [id, setId] = useState('');
 
@@ -50,6 +51,9 @@ export const EventsTable = (props: Props) => {
     if (action === 'payment') {
       setOpenPayment(true);
     }
+    if (action === 'practicing') {
+      setOpenPracticing(true);
+    }
 
     setId(id);
   }, []);
@@ -64,7 +68,7 @@ export const EventsTable = (props: Props) => {
       header: () => {
         return (
           <Button className="px-0 font-bold text-base" variant="ghost">
-            Hora cliente / Inicio
+            Inicio
           </Button>
         );
       },
@@ -115,20 +119,6 @@ export const EventsTable = (props: Props) => {
       },
     },
     {
-      accessorKey: 'type.name',
-      header: () => {
-        return (
-          <Button className="px-0 font-bold text-base" variant="ghost">
-            Tipo
-          </Button>
-        );
-      },
-      cell: ({ row }: { row: Row<IEvent> }) => {
-        const name = row?.original?.type?.name;
-        return <div className="capitalize">{name}</div>;
-      },
-    },
-    {
       accessorKey: 'customer.name',
       header: () => {
         return (
@@ -141,8 +131,10 @@ export const EventsTable = (props: Props) => {
         const name = row?.original?.customer?.name;
         return (
           <div className="capitalize flex gap-2 items-center">
-            {name}
-            {row?.original?.hasMedical && <Stethoscope className="h-4 w-4" />}
+            <p>{name}</p>
+            <p>
+              {row?.original?.hasMedical && <Stethoscope className="h-4 w-4" />}
+            </p>
           </div>
         );
       },
@@ -205,6 +197,54 @@ export const EventsTable = (props: Props) => {
       },
     },
     {
+      accessorKey: 'status',
+      header: () => {
+        return (
+          <Button className="px-0 font-bold text-base" variant="ghost">
+            Pagó
+          </Button>
+        );
+      },
+      cell: ({ row }: { row: Row<IEvent> }) => {
+        const hasPaid = [
+          EventStatus.PAID,
+          EventStatus.PRACTICING,
+          EventStatus.COMPLETED,
+        ].includes(row?.original?.status as EventStatus);
+        return (
+          <div className="flex gap-2 items-center">
+            {hasPaid ? (
+              <CircleCheck className="text-success" />
+            ) : (
+              <CircleCheck className="text-gray-500/[0.4]" />
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'locationId',
+      header: () => {
+        return (
+          <Button className="px-0 font-bold text-base" variant="ghost">
+            Otra sede
+          </Button>
+        );
+      },
+      cell: ({ row }: { row: Row<IEvent> }) => {
+        const isOtherLocation =
+          row?.original?.location?.id !== JSON.parse(atob(filters)).locationId;
+        if (isOtherLocation) {
+          return (
+            <div className="capitalize font-bold bg-secondary rounded-2xl p-2 text-center text-warning-yellow">
+              {row?.original?.location?.name}
+            </div>
+          );
+        }
+        return null;
+      },
+    },
+    {
       id: 'actions',
       header: () => {
         return (
@@ -215,7 +255,11 @@ export const EventsTable = (props: Props) => {
       },
       enableHiding: false,
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const hasPaid = row?.original.status === EventStatus.PAID;
+        const hasPaid = [
+          EventStatus.PAID,
+          EventStatus.PRACTICING,
+          EventStatus.COMPLETED,
+        ].includes(row?.original?.status as EventStatus);
         const options = [
           {
             content: (
@@ -268,12 +312,28 @@ export const EventsTable = (props: Props) => {
             ),
             key: `complete ${row?.original?.id}`,
           });
+        } else if (
+          !row?.original?.type?.name?.includes('Clase') &&
+          !row?.original?.status?.includes(EventStatus.PRACTICING)
+        ) {
+          options.push({
+            content: (
+              <Button
+                onClick={() => handleAction('practicing', row?.original?.id)}
+                className="w-full flex justify-start items-center gap-2 text-yellow-500"
+                variant="outline"
+              >
+                <NotebookPen /> Sale a practicar
+              </Button>
+            ),
+            key: `practicing ${row?.original?.id}`,
+          });
         }
         return (
           <Dropdown
             trigger={
               <Button variant="outline">
-                <SettingsIcon />
+                <List />
               </Button>
             }
             options={options}
@@ -299,9 +359,17 @@ export const EventsTable = (props: Props) => {
         const assetName = row?.original?.asset?.name || 'Sin asignar';
         const eventType = row?.original?.type?.name || '-';
         const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
+        const hasPaid = [
+          EventStatus.PAID,
+          EventStatus.PRACTICING,
+          EventStatus.COMPLETED,
+        ].includes(row?.original?.status as EventStatus);
         const licenseType = row?.original?.licenseType?.name
           ? `(${row?.original?.licenseType?.name})`
           : undefined;
+        const isOtherLocation =
+          row?.original?.location?.id !== JSON.parse(atob(filters)).locationId;
+
         if (row?.original?.type?.name?.includes('Clase')) {
           const [startTimeEnding, endTimeEnding] =
             row?.original?.customer?.schedule?.endTime?.split(':') || [];
@@ -324,9 +392,6 @@ export const EventsTable = (props: Props) => {
                   .set('minute', +endTimeEnding)
                   .format('hh:mm A')}
               </p>
-              <p>
-                <strong>Tipo:</strong> {eventType}
-              </p>
               <div className="capitalize flex gap-2 items-center">
                 <strong>Cliente:</strong> {clientName}
                 {row?.original?.hasMedical && (
@@ -345,6 +410,19 @@ export const EventsTable = (props: Props) => {
                 />
                 {`${licenseType} ${assetName}`}
               </p>
+              <div className="flex gap-2 items-center">
+                <strong>Pagó:</strong>
+                {hasPaid ? (
+                  <CircleCheck className="text-success h-5" />
+                ) : (
+                  <CircleCheck className="text-gray-500/[0.4] h-5" />
+                )}
+              </div>
+              {isOtherLocation && (
+                <div className="capitalize font-bold bg-secondary rounded-2xl p-2 text-center text-warning-yellow">
+                  {row?.original?.location?.name}
+                </div>
+              )}
             </div>
           );
         }
@@ -389,6 +467,19 @@ export const EventsTable = (props: Props) => {
               />
               {`${licenseType} ${assetName}`}
             </p>
+            <div className="flex gap-2 items-center">
+              <strong>Pagó:</strong>
+              {hasPaid ? (
+                <CircleCheck className="text-success h-5" />
+              ) : (
+                <CircleCheck className="text-gray-500/[0.4] h-5" />
+              )}
+            </div>
+            {isOtherLocation && (
+              <div className="capitalize font-bold bg-secondary rounded-2xl p-2 text-center text-warning-yellow">
+                {row?.original?.location?.name}
+              </div>
+            )}
           </div>
         );
       },
@@ -404,7 +495,11 @@ export const EventsTable = (props: Props) => {
       },
       enableHiding: false,
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const hasPaid = row?.original.status === EventStatus.PAID;
+        const hasPaid = [
+          EventStatus.PAID,
+          EventStatus.PRACTICING,
+          EventStatus.COMPLETED,
+        ].includes(row?.original?.status as EventStatus);
         const options = [
           {
             content: (
@@ -457,13 +552,29 @@ export const EventsTable = (props: Props) => {
             ),
             key: `complete ${row?.original?.id}`,
           });
+        } else if (
+          !row?.original?.type?.name?.includes('Clase') &&
+          !row?.original?.status?.includes(EventStatus.PRACTICING)
+        ) {
+          options.push({
+            content: (
+              <Button
+                onClick={() => handleAction('practicing', row?.original?.id)}
+                className="w-full flex justify-start items-center gap-2 text-yellow-500"
+                variant="outline"
+              >
+                <NotebookPen /> Sale a practicar
+              </Button>
+            ),
+            key: `practicing ${row?.original?.id}`,
+          });
         }
 
         return (
           <Dropdown
             trigger={
               <Button variant="outline">
-                <SettingsIcon />
+                <List />
               </Button>
             }
             options={options}
@@ -474,10 +585,18 @@ export const EventsTable = (props: Props) => {
   ].filter((column) => (allowActions ? true : column.id !== 'actions'));
 
   return (
-    <>
+    <div className="my-8">
+      <h1 className="mb-4 text-center py-2 text-lg font-semibold text-warning-yellow bg-secondary rounded-2xl">
+        Interno
+      </h1>
       <ViewEvent id={id} open={openView} setOpen={setOpenView} />
       <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit} />
       <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete} />
+      <PracticingEvent
+        id={id}
+        open={openPracticing}
+        setOpen={setOpenPracticing}
+      />
       <PaymentEvent
         id={id}
         user={user}
@@ -487,8 +606,8 @@ export const EventsTable = (props: Props) => {
 
       <Tabs defaultValue="table">
         <TabsList>
-          <TabsTrigger value="table">Tabla</TabsTrigger>
-          <TabsTrigger value="calendar">Disponibilidad</TabsTrigger>
+          <TabsTrigger value="table">Citas</TabsTrigger>
+          <TabsTrigger value="calendar">Calendario</TabsTrigger>
         </TabsList>
         <TabsContent value="table">
           <div className="block md:hidden">
@@ -502,6 +621,6 @@ export const EventsTable = (props: Props) => {
           <EventsCalendar {...props} />
         </TabsContent>
       </Tabs>
-    </>
+    </div>
   );
 };

@@ -97,6 +97,8 @@ export const createTest = async (data: IEventForm) => {
           time: data.startTime,
           notes: data.notes,
           hasMedical: data.hasMedical,
+          isExternalReferred: data.isExternalReferred,
+          isInternalReferred: data.isInternalReferred,
         },
       });
 
@@ -191,6 +193,8 @@ export const updateTest = async (
           time: data.startTime,
           notes: data.notes,
           hasMedical: data.hasMedical,
+          isExternalReferred: data.isExternalReferred,
+          isInternalReferred: data.isInternalReferred,
         },
       });
 

@@ -79,6 +79,8 @@ export const createClass = async (data: IEventForm) => {
           time: data?.startTime,
           notes: data.notes,
           hasMedical: data.hasMedical,
+          isExternalReferred: data.isExternalReferred,
+          isInternalReferred: data.isInternalReferred,
         },
       });
 
@@ -160,6 +162,8 @@ export const updateClass = async (
           time: data.startTime,
           notes: data.notes,
           hasMedical: data.hasMedical,
+          isExternalReferred: data.isExternalReferred,
+          isInternalReferred: data.isInternalReferred,
         },
       });
 
