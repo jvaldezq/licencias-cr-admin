@@ -234,7 +234,8 @@ export const EventsTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const isOtherLocation =
           row?.original?.location?.id !== JSON.parse(atob(filters)).locationId;
-        if (isOtherLocation) {
+        const isNotOwnAsset = row?.original?.asset?.name !== 'Propio';
+        if (isOtherLocation && isNotOwnAsset) {
           return (
             <div className="capitalize font-bold bg-secondary rounded-2xl p-2 text-center text-warning-yellow">
               {row?.original?.location?.name}
@@ -369,6 +370,7 @@ export const EventsTable = (props: Props) => {
           : undefined;
         const isOtherLocation =
           row?.original?.location?.id !== JSON.parse(atob(filters)).locationId;
+        const isNotOwnAsset = row?.original?.asset?.name !== 'Propio';
 
         if (row?.original?.type?.name?.includes('Clase')) {
           const [startTimeEnding, endTimeEnding] =
@@ -418,7 +420,7 @@ export const EventsTable = (props: Props) => {
                   <CircleCheck className="text-gray-500/[0.4] h-5" />
                 )}
               </div>
-              {isOtherLocation && (
+              {isOtherLocation && isNotOwnAsset && (
                 <div className="capitalize font-bold bg-secondary rounded-2xl p-2 text-center text-warning-yellow">
                   {row?.original?.location?.name}
                 </div>
@@ -475,7 +477,7 @@ export const EventsTable = (props: Props) => {
                 <CircleCheck className="text-gray-500/[0.4] h-5" />
               )}
             </div>
-            {isOtherLocation && (
+            {isOtherLocation && isNotOwnAsset && (
               <div className="capitalize font-bold bg-secondary rounded-2xl p-2 text-center text-warning-yellow">
                 {row?.original?.location?.name}
               </div>
