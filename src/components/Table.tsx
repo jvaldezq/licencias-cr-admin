@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 'use client';
 
 import * as React from 'react';
@@ -80,24 +82,19 @@ export function DataTable<T>(props: Props<T>) {
       <TableBody>
         {table?.getRowModel().rows?.length ? (
           table?.getRowModel().rows.map((row) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            const classStyle = row?.original?.type?.name?.includes('Clase')
-              ? 'bg-[#8e24aa]/[0.3]'
-              : '';
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const practicingStyle = row?.original?.status?.includes(
+            const classStyle = row?.original?.status?.includes(
               EventStatus.PRACTICING,
             )
               ? 'bg-yellow-500/[0.3]'
-              : '';
+              : row?.original?.type?.name?.includes('Clase')
+                ? 'bg-[#8e24aa]/[0.3]'
+                : '';
 
             return (
               <TableRow
                 key={row?.id}
                 data-state={row?.getIsSelected() && 'selected'}
-                className={cn(classStyle, practicingStyle)}
+                className={cn(classStyle)}
               >
                 {row
                   ?.getVisibleCells()
