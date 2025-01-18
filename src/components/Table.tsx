@@ -97,7 +97,7 @@ export function DataTable<T>(props: Props<T>) {
               <TableRow
                 key={row?.id}
                 data-state={row?.getIsSelected() && 'selected'}
-                className={cn(practicingStyle, classStyle)}
+                className={cn(classStyle, practicingStyle)}
               >
                 {row
                   ?.getVisibleCells()
