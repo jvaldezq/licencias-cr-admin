@@ -309,10 +309,7 @@ export const EventsTable = (props: Props) => {
             ),
             key: `complete ${row?.original?.id}`,
           });
-        } else if (
-          !row?.original?.type?.name?.includes('Clase') &&
-          !row?.original?.status?.includes(EventStatus.PRACTICING)
-        ) {
+        } else if (!row?.original?.status?.includes(EventStatus.PRACTICING)) {
           options.push({
             content: (
               <Button
@@ -546,10 +543,7 @@ export const EventsTable = (props: Props) => {
             ),
             key: `complete ${row?.original?.id}`,
           });
-        } else if (
-          !row?.original?.type?.name?.includes('Clase') &&
-          !row?.original?.status?.includes(EventStatus.PRACTICING)
-        ) {
+        } else if (!row?.original?.status?.includes(EventStatus.PRACTICING)) {
           options.push({
             content: (
               <Button
