@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef, Row } from '@tanstack/react-table';
-import { EventStatus, IEvent, IUser } from '@/lib/definitions';
+import { IEvent, IUser } from '@/lib/definitions';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import { DataTable } from '@/components/Table';
@@ -214,11 +214,9 @@ export const ReferredTable = (props: Props) => {
           },
         ];
 
-        const hasPaid = [
-          EventStatus.PAID,
-          EventStatus.PRACTICING,
-          EventStatus.COMPLETED,
-        ].includes(row?.original?.status as EventStatus);
+        const price = row?.original?.payment?.price || 0;
+        const cashAdvance = row?.original?.payment?.cashAdvance || 0;
+        const hasPaid = !(price - cashAdvance > 0);
 
         if (!hasPaid) {
           options.push({

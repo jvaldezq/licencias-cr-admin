@@ -228,7 +228,6 @@ export interface IEventFilter {
 
 export enum EventStatus {
   COMPLETED = 'COMPLETED',
-  PAID = 'PAID',
   PRACTICING = 'PRACTICING',
   DELETED = 'DELETED',
   PENDING = 'PENDING',

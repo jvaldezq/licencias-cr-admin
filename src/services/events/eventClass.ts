@@ -59,14 +59,9 @@ export const createClass = async (data: IEventForm) => {
         },
       });
 
-      const status =
-        data?.payment?.price === data?.payment?.cashAdvance
-          ? EventStatus.PAID
-          : EventStatus.PENDING;
-
       await prisma.event.create({
         data: {
-          status: status,
+          status: EventStatus.PENDING,
           assetId: data.assetId,
           createdById: data.createdById || '',
           customerId: customer.id,

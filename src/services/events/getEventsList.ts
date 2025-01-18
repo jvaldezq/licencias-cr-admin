@@ -19,14 +19,6 @@ export const getEventsList = async (filters: IEventFilter) => {
       },
     };
 
-    // const locationId = filters?.locationId
-    //   ? {
-    //       locationId: {
-    //         equals: filters.locationId,
-    //       },
-    //     }
-    //   : undefined;
-
     const locationFilter = filters?.locationId
       ? {
           OR: [
@@ -78,6 +70,7 @@ export const getEventsList = async (filters: IEventFilter) => {
           },
         },
         instructor: true,
+        payment: true,
         licenseType: {
           select: {
             name: true,

@@ -206,11 +206,9 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const hasPaid = [
-          EventStatus.PAID,
-          EventStatus.PRACTICING,
-          EventStatus.COMPLETED,
-        ].includes(row?.original?.status as EventStatus);
+        const price = row?.original?.payment?.price || 0;
+        const cashAdvance = row?.original?.payment?.cashAdvance || 0;
+        const hasPaid = !(price - cashAdvance > 0);
         return (
           <div className="flex gap-2 items-center">
             {hasPaid ? (
@@ -256,11 +254,9 @@ export const EventsTable = (props: Props) => {
       },
       enableHiding: false,
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const hasPaid = [
-          EventStatus.PAID,
-          EventStatus.PRACTICING,
-          EventStatus.COMPLETED,
-        ].includes(row?.original?.status as EventStatus);
+        const price = row?.original?.payment?.price || 0;
+        const cashAdvance = row?.original?.payment?.cashAdvance || 0;
+        const hasPaid = !(price - cashAdvance > 0);
         const options = [
           {
             content: (
@@ -360,11 +356,9 @@ export const EventsTable = (props: Props) => {
         const assetName = row?.original?.asset?.name || 'Sin asignar';
         const eventType = row?.original?.type?.name || '-';
         const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
-        const hasPaid = [
-          EventStatus.PAID,
-          EventStatus.PRACTICING,
-          EventStatus.COMPLETED,
-        ].includes(row?.original?.status as EventStatus);
+        const price = row?.original?.payment?.price || 0;
+        const cashAdvance = row?.original?.payment?.cashAdvance || 0;
+        const hasPaid = !(price - cashAdvance > 0);
         const licenseType = row?.original?.licenseType?.name
           ? `(${row?.original?.licenseType?.name})`
           : undefined;
@@ -497,11 +491,9 @@ export const EventsTable = (props: Props) => {
       },
       enableHiding: false,
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const hasPaid = [
-          EventStatus.PAID,
-          EventStatus.PRACTICING,
-          EventStatus.COMPLETED,
-        ].includes(row?.original?.status as EventStatus);
+        const price = row?.original?.payment?.price || 0;
+        const cashAdvance = row?.original?.payment?.cashAdvance || 0;
+        const hasPaid = !(price - cashAdvance > 0);
         const options = [
           {
             content: (
