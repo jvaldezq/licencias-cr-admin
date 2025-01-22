@@ -260,6 +260,7 @@ export const ReferredTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const clientName = row?.original?.customer?.name;
         const instructorName = row?.original?.instructor?.name || 'Sin asignar';
+        const sede = row?.original?.location?.name || 'Sin asignar';
         const assetName = row?.original?.asset?.name || 'Sin asignar';
         const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
         const licenseType = row?.original?.licenseType?.name
@@ -289,6 +290,9 @@ export const ReferredTable = (props: Props) => {
               </p>
               <p>
                 <strong>Cliente:</strong> {clientName}
+              </p>
+              <p>
+                <strong>Sede:</strong> {sede}
               </p>
               <p>
                 <strong>Instructor:</strong> {instructorName}
@@ -329,6 +333,9 @@ export const ReferredTable = (props: Props) => {
             </p>
             <p>
               <strong>Cliente:</strong> {clientName}
+            </p>
+            <p>
+              <strong>Sede:</strong> {sede}
             </p>
             <p>
               <strong>Instructor:</strong> {instructorName}

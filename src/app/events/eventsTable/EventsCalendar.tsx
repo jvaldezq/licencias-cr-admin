@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { useCallback, useState } from 'react';
 import { ViewEvent } from '@/app/events/forms/ViewEvent';
+import { filter } from 'lodash';
 
 dayjs.extend(advancedFormat);
 
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const EventsCalendar = (props: Props) => {
-  const { data } = props;
+  const { data, filters } = props;
   const [hoveredEvent, setHoveredEvent] = useState<IEvent | null>(null);
   const [openView, setOpenView] = useState<boolean>(false);
   const [id, setId] = useState<string>('');
@@ -43,6 +44,10 @@ export const EventsCalendar = (props: Props) => {
     setOpenView(true);
   }, []);
 
+  const filteredDate = filters
+    ? dayjs(JSON.parse(atob(filters)).date).format('YYYY-MM-DD')
+    : dayjs().format('YYYY-MM-DD');
+
   return (
     <section className="grid grid-cols-[60px_1fr] divide-x divide-gray-200 border border-solid rounded-2xl mt-4">
       <ViewEvent id={id} open={openView} setOpen={setOpenView} />
@@ -58,6 +63,11 @@ export const EventsCalendar = (props: Props) => {
       </div>
 
       <div className="relative overflow-x-scroll">
+        <div className="absolute top-0 left-0 flex justify-center items-center w-full h-full">
+          <h1 className="text-primary/[0.5] font-bold text-xl">
+            {filteredDate}
+          </h1>
+        </div>
         {data.map((event) => {
           const calendarStartHour = 6; // Calendar starts at 6:00 AM
           const hourHeight = 60; // Each hour is 60px tall

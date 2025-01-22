@@ -90,7 +90,7 @@ export const EventsTable = (props: Props) => {
       header: () => {
         return (
           <Button className="px-0 font-bold text-base" variant="ghost">
-            Hora prueba / Fin
+            Prueba / Fin
           </Button>
         );
       },
@@ -574,9 +574,6 @@ export const EventsTable = (props: Props) => {
 
   return (
     <div className="my-8">
-      <h1 className="mb-4 text-center py-2 text-lg font-semibold text-warning-yellow bg-secondary rounded-2xl">
-        Interno
-      </h1>
       <ViewEvent id={id} open={openView} setOpen={setOpenView} />
       <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit} />
       <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete} />
