@@ -27,7 +27,7 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { PracticingEvent } from '@/app/events/forms/PracticingEvent';
-import { Tooltip } from '@/components/Tooltip';
+import { Popover } from '@/components/Popover';
 
 dayjs.extend(advancedFormat);
 
@@ -149,9 +149,9 @@ export const EventsTable = (props: Props) => {
               </p>
               <p>
                 {row?.original?.notes && (
-                  <Tooltip text={row?.original?.notes}>
+                  <Popover text={row?.original?.notes}>
                     <MessageSquare className="h-4 w-4 cursor-pointer" />
-                  </Tooltip>
+                  </Popover>
                 )}
               </p>
             </div>
@@ -413,9 +413,9 @@ export const EventsTable = (props: Props) => {
                     <Stethoscope className="h-4 w-4" />
                   )}
                   {row?.original?.notes && (
-                    <Tooltip text={row?.original?.notes}>
+                    <Popover text={row?.original?.notes}>
                       <MessageSquare className="h-4 w-4 cursor-pointer" />
-                    </Tooltip>
+                    </Popover>
                   )}
                 </div>
               </div>
@@ -479,9 +479,9 @@ export const EventsTable = (props: Props) => {
                   <Stethoscope className="h-4 w-4" />
                 )}
                 {row?.original?.notes && (
-                  <Tooltip text={row?.original?.notes}>
+                  <Popover text={row?.original?.notes}>
                     <MessageSquare className="h-4 w-4 cursor-pointer" />
-                  </Tooltip>
+                  </Popover>
                 )}
               </div>
             </div>

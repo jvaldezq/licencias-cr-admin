@@ -13,7 +13,7 @@ interface TooltipProps {
 
 export const Tooltip = ({ children, text }: TooltipProps) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider skipDelayDuration={0} delayDuration={0}>
       <CnTooltip>
         <TooltipTrigger>{children}</TooltipTrigger>
         <TooltipContent>{text}</TooltipContent>

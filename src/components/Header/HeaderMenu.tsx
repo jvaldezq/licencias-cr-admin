@@ -87,6 +87,18 @@ export const HeaderMenu = (props: Props) => {
               </Link>
             </SheetClose>
           )}
+          {(user?.access?.admin || user?.access?.receptionist) && (
+            <SheetClose asChild aria-describedby="Vehículos">
+              <Link
+                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/assets' && isSelected}`}
+                key="assets"
+                href="/assets"
+              >
+                <CarIcon /> Vehículos
+              </Link>
+            </SheetClose>
+          )}
+
           {user?.access?.admin && (
             <>
               <p className="font-light text-xs pb-1 border-b border-primary/[0.2] text-primary/[0.7] border-solid">
@@ -101,15 +113,7 @@ export const HeaderMenu = (props: Props) => {
                   <LocationsIcon /> Sedes
                 </Link>
               </SheetClose>
-              <SheetClose asChild aria-describedby="Vehículos">
-                <Link
-                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/assets' && isSelected}`}
-                  key="assets"
-                  href="/assets"
-                >
-                  <CarIcon /> Vehículos
-                </Link>
-              </SheetClose>
+
               <SheetClose asChild aria-describedby="Licencias (Tipos)">
                 <Link
                   className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/licenses' && isSelected}`}
