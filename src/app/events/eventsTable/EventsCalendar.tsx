@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { useCallback, useState } from 'react';
 import { ViewEvent } from '@/app/events/forms/ViewEvent';
-import { filter } from 'lodash';
 
 dayjs.extend(advancedFormat);
 

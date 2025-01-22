@@ -186,7 +186,10 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const name = row?.original?.instructor?.name || 'Sin asignar';
+        const splitedName = row?.original?.instructor?.name.split(' ');
+        const name = row?.original?.instructor?.name
+          ? `${splitedName?.[0]} ${splitedName?.[1].charAt(0)}`
+          : 'Sin asignar';
         return (
           <div
             className={`capitalize flex gap-2 items-center ${!row?.original?.instructor?.name ? 'text-error font-bold' : ''}`}
@@ -349,7 +352,10 @@ export const EventsTable = (props: Props) => {
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
         const clientName = row?.original?.customer?.name;
-        const instructorName = row?.original?.instructor?.name || 'Sin asignar';
+        const splitedName = row?.original?.instructor?.name.split(' ');
+        const instructorName = row?.original?.instructor?.name
+          ? `${splitedName?.[0]} ${splitedName?.[1].charAt(0)}`
+          : 'Sin asignar';
         const assetName = row?.original?.asset?.name || 'Sin asignar';
         const eventType = row?.original?.type?.name || '-';
         const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
