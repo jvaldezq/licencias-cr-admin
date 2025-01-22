@@ -26,6 +26,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.7",
     "@tanstack/react-table": "^8.20.5",
     "@vercel/postgres": "^0.10.0",
     "axios": "^1.7.7",
@@ -61,13 +62,13 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
-    "postcss": "^8",
-    "prisma": "^5.19.1",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.4.2"
+    "postcss": "^8",
+    "prettier": "^3.4.2",
+    "prisma": "^5.19.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   },
   "packageManager": "pnpm@9.13.0+sha1.f149ab27b27e712ac9a58ce1717c307364ccdca8"
 }

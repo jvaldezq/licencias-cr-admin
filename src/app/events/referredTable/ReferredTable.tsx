@@ -111,20 +111,17 @@ export const ReferredTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const name = row?.original?.asset?.name || 'Sin asignar';
         const color = row?.original?.licenseType?.color || '#d3d3d3';
-        const licenseType = row?.original?.licenseType?.name
-          ? `(${row?.original?.licenseType?.name})`
-          : undefined;
         return (
           <div
             className={`flex flex-col gap-2 ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}
           >
-            <p className="flex gap-2">
+            <div className="flex gap-2">
               <span
-                className="h-4 w-4 rounded-full"
+                className="h-3.5 w-5 rounded"
                 style={{ backgroundColor: color }}
               />
-              {`${licenseType} ${name}`}
-            </p>
+              <p>{name}</p>
+            </div>
             {row?.original?.asset?.locationId !==
               JSON.parse(atob(filters)).locationId &&
               row?.original?.asset?.name !== undefined && (
@@ -262,9 +259,6 @@ export const ReferredTable = (props: Props) => {
         const sede = row?.original?.location?.name || 'Sin asignar';
         const assetName = row?.original?.asset?.name || 'Sin asignar';
         const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
-        const licenseType = row?.original?.licenseType?.name
-          ? `(${row?.original?.licenseType?.name})`
-          : undefined;
         if (row?.original?.type?.name?.includes('Clase')) {
           const [startTimeEnding, endTimeEnding] =
             row?.original?.customer?.schedule?.endTime?.split(':') || [];
@@ -293,15 +287,15 @@ export const ReferredTable = (props: Props) => {
               <p>
                 <strong>Sede:</strong> {sede}
               </p>
-              <p
+              <div
                 className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}
               >
                 <span
-                  className="h-4 w-4 rounded-full"
+                  className="h-3.5 w-5 rounded"
                   style={{ backgroundColor: assetColor }}
                 />
-                {`${licenseType} ${assetName}`}
-              </p>
+                <p>{assetName}</p>
+              </div>
             </div>
           );
         }
@@ -333,15 +327,15 @@ export const ReferredTable = (props: Props) => {
             <p>
               <strong>Sede:</strong> {sede}
             </p>
-            <p
+            <div
               className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}
             >
               <span
-                className="h-4 w-4 rounded-full"
+                className="h-3.5 w-5 rounded"
                 style={{ backgroundColor: assetColor }}
               />
-              {`${licenseType} ${assetName}`}
-            </p>
+              <p>{assetName}</p>
+            </div>
           </div>
         );
       },

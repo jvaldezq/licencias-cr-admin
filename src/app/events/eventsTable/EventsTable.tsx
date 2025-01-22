@@ -19,8 +19,15 @@ import { DeleteIcon } from '@/assets/icons/DeleteIcon';
 import { MoneyIcon } from '@/assets/icons/MoneyIcon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EventsCalendar } from '@/app/events/eventsTable/EventsCalendar';
-import { Stethoscope, CircleCheck, NotebookPen, List } from 'lucide-react';
+import {
+  Stethoscope,
+  NotebookPen,
+  List,
+  BadgeCent,
+  MessageSquare,
+} from 'lucide-react';
 import { PracticingEvent } from '@/app/events/forms/PracticingEvent';
+import { Tooltip } from '@/components/Tooltip';
 
 dayjs.extend(advancedFormat);
 
@@ -128,13 +135,26 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const name = row?.original?.customer?.name;
+        const splitedName = row?.original?.customer?.name.split(' ');
+        const name = `${splitedName?.[0]} ${splitedName?.[1]?.charAt?.(0) || ''}`;
+        console.log(row?.original);
         return (
           <div className="capitalize flex gap-2 items-center">
             <p>{name}</p>
-            <p>
-              {row?.original?.hasMedical && <Stethoscope className="h-4 w-4" />}
-            </p>
+            <div className="flex gap-1">
+              <p>
+                {row?.original?.hasMedical && (
+                  <Stethoscope className="h-4 w-4" />
+                )}
+              </p>
+              <p>
+                {row?.original?.notes && (
+                  <Tooltip text={row?.original?.notes}>
+                    <MessageSquare className="h-4 w-4 cursor-pointer" />
+                  </Tooltip>
+                )}
+              </p>
+            </div>
           </div>
         );
       },
@@ -151,20 +171,17 @@ export const EventsTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const name = row?.original?.asset?.name || 'Sin asignar';
         const color = row?.original?.licenseType?.color || '#d3d3d3';
-        const licenseType = row?.original?.licenseType?.name
-          ? `(${row?.original?.licenseType?.name})`
-          : undefined;
         return (
           <div
             className={`flex flex-col gap-2 ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}
           >
-            <p className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <span
-                className="h-4 w-4 rounded-full"
+                className="h-3.5 w-5 rounded"
                 style={{ backgroundColor: color }}
               />
-              {`${licenseType} ${name}`}
-            </p>
+              <p>{name}</p>
+            </div>
             {row?.original?.asset?.locationId !==
               JSON.parse(atob(filters)).locationId &&
               row?.original?.asset?.name !== undefined && (
@@ -215,9 +232,9 @@ export const EventsTable = (props: Props) => {
         return (
           <div className="flex gap-2 items-center">
             {hasPaid ? (
-              <CircleCheck className="text-success" />
+              <BadgeCent className="text-success" />
             ) : (
-              <CircleCheck className="text-gray-500/[0.4]" />
+              <BadgeCent className="text-gray-500/[0.4]" />
             )}
           </div>
         );
@@ -351,7 +368,8 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const clientName = row?.original?.customer?.name;
+        const splitedClientName = row?.original?.customer?.name.split(' ');
+        const clientName = `${splitedClientName?.[0]} ${splitedClientName?.[1]?.charAt?.(0) || ''}`;
         const splitedName = row?.original?.instructor?.name.split(' ');
         const instructorName = row?.original?.instructor?.name
           ? `${splitedName?.[0]} ${splitedName?.[1].charAt(0)}`
@@ -362,9 +380,6 @@ export const EventsTable = (props: Props) => {
         const price = row?.original?.payment?.price || 0;
         const cashAdvance = row?.original?.payment?.cashAdvance || 0;
         const hasPaid = !(price - cashAdvance > 0);
-        const licenseType = row?.original?.licenseType?.name
-          ? `(${row?.original?.licenseType?.name})`
-          : undefined;
         const isOtherLocation =
           row?.original?.location?.id !== JSON.parse(atob(filters)).locationId;
         const isNotOwnAsset = row?.original?.asset?.name !== 'Propio';
@@ -393,28 +408,35 @@ export const EventsTable = (props: Props) => {
               </p>
               <div className="capitalize flex gap-2 items-center">
                 <strong>Cliente:</strong> {clientName}
-                {row?.original?.hasMedical && (
-                  <Stethoscope className="h-4 w-4" />
-                )}
+                <div className="flex gap-1">
+                  {row?.original?.hasMedical && (
+                    <Stethoscope className="h-4 w-4" />
+                  )}
+                  {row?.original?.notes && (
+                    <Tooltip text={row?.original?.notes}>
+                      <MessageSquare className="h-4 w-4 cursor-pointer" />
+                    </Tooltip>
+                  )}
+                </div>
               </div>
               <p>
                 <strong>Instructor:</strong> {instructorName}
               </p>
-              <p
+              <div
                 className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}
               >
                 <span
-                  className="h-4 w-4 rounded-full"
+                  className="h-3.5 w-5 rounded"
                   style={{ backgroundColor: assetColor }}
                 />
-                {`${licenseType} ${assetName}`}
-              </p>
+                <p>{assetName}</p>
+              </div>
               <div className="flex gap-2 items-center">
                 <strong>Pagó:</strong>
                 {hasPaid ? (
-                  <CircleCheck className="text-success h-5" />
+                  <BadgeCent className="text-success h-5" />
                 ) : (
-                  <CircleCheck className="text-gray-500/[0.4] h-5" />
+                  <BadgeCent className="text-gray-500/[0.4] h-5" />
                 )}
               </div>
               {isOtherLocation && isNotOwnAsset && (
@@ -452,26 +474,35 @@ export const EventsTable = (props: Props) => {
             </p>
             <div className="capitalize flex gap-2 items-center">
               <strong>Cliente:</strong> {clientName}
-              {row?.original?.hasMedical && <Stethoscope className="h-4 w-4" />}
+              <div className="flex gap-1">
+                {row?.original?.hasMedical && (
+                  <Stethoscope className="h-4 w-4" />
+                )}
+                {row?.original?.notes && (
+                  <Tooltip text={row?.original?.notes}>
+                    <MessageSquare className="h-4 w-4 cursor-pointer" />
+                  </Tooltip>
+                )}
+              </div>
             </div>
             <p>
               <strong>Instructor:</strong> {instructorName}
             </p>
-            <p
+            <div
               className={`capitalize flex gap-2 items-center ${!row?.original?.asset?.name ? 'text-error font-bold' : ''}`}
             >
               <span
-                className="h-4 w-4 rounded-full"
+                className="h-3.5 w-5 rounded"
                 style={{ backgroundColor: assetColor }}
               />
-              {`${licenseType} ${assetName}`}
-            </p>
+              <p>{assetName}</p>
+            </div>
             <div className="flex gap-2 items-center">
               <strong>Pagó:</strong>
               {hasPaid ? (
-                <CircleCheck className="text-success h-5" />
+                <BadgeCent className="text-success h-5" />
               ) : (
-                <CircleCheck className="text-gray-500/[0.4] h-5" />
+                <BadgeCent className="text-gray-500/[0.4] h-5" />
               )}
             </div>
             {isOtherLocation && isNotOwnAsset && (
