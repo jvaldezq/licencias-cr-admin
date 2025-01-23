@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { PracticingEvent } from '@/app/events/forms/PracticingEvent';
 import { Popover } from '@/components/Popover';
+import { getInitials } from '@/lib/getInitials';
 
 dayjs.extend(advancedFormat);
 
@@ -135,9 +136,7 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const splitedName = row?.original?.customer?.name.split(' ');
-        const name = `${splitedName?.[0]} ${splitedName?.[1]?.charAt?.(0) || ''}`;
-        console.log(row?.original);
+        const name = getInitials(row?.original?.customer?.name);
         return (
           <div className="capitalize flex gap-2 items-center">
             <p>{name}</p>
@@ -203,10 +202,8 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const splitedName = row?.original?.instructor?.name.split(' ');
-        const name = row?.original?.instructor?.name
-          ? `${splitedName?.[0]} ${splitedName?.[1]?.charAt?.(0)}`
-          : 'Sin asignar';
+        const name =
+          getInitials(row?.original?.instructor?.name) || 'Sin asignar';
         return (
           <div
             className={`capitalize flex gap-2 items-center ${!row?.original?.instructor?.name ? 'text-error font-bold' : ''}`}
@@ -368,12 +365,9 @@ export const EventsTable = (props: Props) => {
         );
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
-        const splitedClientName = row?.original?.customer?.name.split(' ');
-        const clientName = `${splitedClientName?.[0]} ${splitedClientName?.[1]?.charAt?.(0) || ''}`;
-        const splitedName = row?.original?.instructor?.name.split(' ');
-        const instructorName = row?.original?.instructor?.name
-          ? `${splitedName?.[0]} ${splitedName?.[1].charAt(0)}`
-          : 'Sin asignar';
+        const clientName = getInitials(row?.original?.customer?.name);
+        const instructorName =
+          getInitials(row?.original?.instructor?.name) || 'Sin asignar';
         const assetName = row?.original?.asset?.name || 'Sin asignar';
         const eventType = row?.original?.type?.name || '-';
         const assetColor = row?.original?.licenseType?.color || '#d3d3d3';
