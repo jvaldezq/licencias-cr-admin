@@ -18,6 +18,8 @@ import {
 } from '@/app/events/services/client';
 import { usePathname, useRouter } from 'next/navigation';
 import { CloseCircleIcon } from '@/assets/icons/CloseCircleIcon';
+import { FormInput } from '@/components/Forms/Input/FormInput';
+import { debounce } from 'lodash';
 
 dayjs.extend(advancedFormat);
 
@@ -44,6 +46,7 @@ export const EventsFilters = (props: Props) => {
       date: new Date(),
       locationId: props.user?.location?.id,
       instructorId: undefined,
+      searchTerm: undefined,
     });
     params.set('filters', btoa(newFilters));
     replace(`${pathname}?${params.toString()}`);
@@ -99,12 +102,35 @@ const FiltersForm = (props: FiltersFormProps) => {
   const { data: instructors, isLoading: isInstructorsLoading } =
     useGetInstructorListByLocationId(values?.locationId);
 
+  const debouncedOnFilter = useMemo(
+    () =>
+      debounce((value: string) => {
+        handleFilterUpdate({ searchTerm: value });
+      }, 1000),
+    [handleFilterUpdate],
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedOnFilter.cancel();
+    };
+  }, [debouncedOnFilter]);
+
   return (
     <form
       id="event-filter-form"
       className="py-3 my-6 grid gap-4 md:grid-cols-3 lg:grid-cols-4"
       onSubmit={(e: FormEvent) => e.preventDefault()}
     >
+      <Field
+        name="searchTerm"
+        component={FormInput as unknown as SupportedInputs}
+        placeholder="Cliente, Cédula, Teléfono"
+        label="Buscar"
+        onFilter={(searchTerm: string) => {
+          debouncedOnFilter(searchTerm);
+        }}
+      />
       <Field
         name="date"
         component={FormCalendar as unknown as SupportedInputs}

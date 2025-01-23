@@ -26,6 +26,9 @@ export const getEventsList = async (filters: IEventFilter) => {
             {
               asset: {
                 locationId: { equals: filters.locationId },
+                id: {
+                  not: '33e56cb5-6581-475e-8ef1-a82bb39ae185',
+                },
               },
             },
           ],
@@ -36,14 +39,6 @@ export const getEventsList = async (filters: IEventFilter) => {
       ? {
           instructorId: {
             equals: filters.instructorId,
-          },
-        }
-      : undefined;
-
-    const licenseTypeId = filters?.licenseTypeId
-      ? {
-          licenseTypeId: {
-            equals: filters.licenseTypeId,
           },
         }
       : undefined;
@@ -92,7 +87,6 @@ export const getEventsList = async (filters: IEventFilter) => {
         ...dateFilter,
         ...locationFilter,
         ...instructorId,
-        ...licenseTypeId,
         status: {
           not: EventStatus.DELETED,
         },

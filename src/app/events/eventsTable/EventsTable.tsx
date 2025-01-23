@@ -67,6 +67,7 @@ export const EventsTable = (props: Props) => {
   }, []);
 
   const { data, user, filters } = props;
+  console.log('data', data);
 
   const allowActions = user?.access?.receptionist || user?.access?.admin;
 
