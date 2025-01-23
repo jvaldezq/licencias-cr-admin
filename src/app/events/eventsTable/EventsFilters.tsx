@@ -10,7 +10,7 @@ import {
   FormRenderProps,
   SupportedInputs,
 } from 'react-final-form';
-import { useCallback, useEffect, useMemo, FormEvent } from 'react';
+import { useCallback, useMemo, FormEvent, useEffect } from 'react';
 import { FormDropdown } from '@/components/Forms/Dropdown/FormDropdown';
 import {
   useGetInstructorListByLocationId,
@@ -18,7 +18,6 @@ import {
 } from '@/app/events/services/client';
 import { usePathname, useRouter } from 'next/navigation';
 import { CloseCircleIcon } from '@/assets/icons/CloseCircleIcon';
-import { debounce } from 'lodash';
 
 dayjs.extend(advancedFormat);
 
@@ -45,7 +44,6 @@ export const EventsFilters = (props: Props) => {
       date: new Date(),
       locationId: props.user?.location?.id,
       instructorId: undefined,
-      searchTerm: undefined,
     });
     params.set('filters', btoa(newFilters));
     replace(`${pathname}?${params.toString()}`);
@@ -64,9 +62,11 @@ export const EventsFilters = (props: Props) => {
     [replace, pathname, currentFilters],
   );
 
-  if (!filters) {
-    handleReset();
-  }
+  useEffect(() => {
+    if (!filters) {
+      handleReset();
+    }
+  }, [filters, handleReset]);
 
   const onSubmit = useCallback((data: IEventFilter) => {
     return data;
@@ -98,20 +98,6 @@ const FiltersForm = (props: FiltersFormProps) => {
     useGetLocationList();
   const { data: instructors, isLoading: isInstructorsLoading } =
     useGetInstructorListByLocationId(values?.locationId);
-
-  const debouncedOnFilter = useMemo(
-    () =>
-      debounce((value: string) => {
-        handleFilterUpdate({ searchTerm: value });
-      }, 1000),
-    [handleFilterUpdate],
-  );
-
-  useEffect(() => {
-    return () => {
-      debouncedOnFilter.cancel();
-    };
-  }, [debouncedOnFilter]);
 
   return (
     <form
