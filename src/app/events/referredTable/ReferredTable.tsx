@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef, Row } from '@tanstack/react-table';
-import { IEvent, IUser } from '@/lib/definitions';
+import { IEvent, IUser, OWNCAR } from '@/lib/definitions';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import { DataTable } from '@/components/Table';
@@ -124,7 +124,8 @@ export const ReferredTable = (props: Props) => {
             </div>
             {row?.original?.asset?.locationId !==
               JSON.parse(atob(filters)).locationId &&
-              row?.original?.asset?.name !== undefined && (
+              row?.original?.asset?.name !== undefined &&
+              row?.original?.asset?.id !== OWNCAR.OWN && (
                 <p className="text-error font-bold text-xs">
                   Vehículo fuera de sede
                 </p>

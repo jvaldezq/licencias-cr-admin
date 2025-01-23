@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { EventStatus, IEvent, IEventFilter } from '@/lib/definitions';
+import { EventStatus, IEvent, IEventFilter, OWNCAR } from '@/lib/definitions';
 import dayjs from 'dayjs';
 
 export const getEventsList = async (filters: IEventFilter) => {
@@ -27,7 +27,7 @@ export const getEventsList = async (filters: IEventFilter) => {
               asset: {
                 locationId: { equals: filters.locationId },
                 id: {
-                  not: '33e56cb5-6581-475e-8ef1-a82bb39ae185',
+                  not: OWNCAR.OWN,
                 },
               },
             },

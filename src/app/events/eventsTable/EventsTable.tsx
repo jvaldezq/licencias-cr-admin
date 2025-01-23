@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef, Row } from '@tanstack/react-table';
-import { EventStatus, IEvent, IUser } from '@/lib/definitions';
+import { EventStatus, IEvent, IUser, OWNCAR } from '@/lib/definitions';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import { DataTable } from '@/components/Table';
@@ -67,7 +67,6 @@ export const EventsTable = (props: Props) => {
   }, []);
 
   const { data, user, filters } = props;
-  console.log('data', data);
 
   const allowActions = user?.access?.receptionist || user?.access?.admin;
 
@@ -184,7 +183,8 @@ export const EventsTable = (props: Props) => {
             </div>
             {row?.original?.asset?.locationId !==
               JSON.parse(atob(filters)).locationId &&
-              row?.original?.asset?.name !== undefined && (
+              row?.original?.asset?.name !== undefined &&
+              row?.original?.asset?.id !== OWNCAR.OWN && (
                 <p className="text-error font-bold text-xs">
                   Vehículo fuera de sede
                 </p>
