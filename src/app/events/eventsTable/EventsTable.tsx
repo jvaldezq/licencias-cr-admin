@@ -205,7 +205,7 @@ export const EventsTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const splitedName = row?.original?.instructor?.name.split(' ');
         const name = row?.original?.instructor?.name
-          ? `${splitedName?.[0]} ${splitedName?.[1].charAt(0)}`
+          ? `${splitedName?.[0]} ${splitedName?.[1]?.charAt?.(0)}`
           : 'Sin asignar';
         return (
           <div
