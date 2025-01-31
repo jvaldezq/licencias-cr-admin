@@ -127,8 +127,6 @@ const EventWrapper = (props: EventWrapperProps) => {
     amount: amountToPay,
   };
 
-  console.log('JORDAN', data?.payment?.cashPaymentsAdvance);
-
   return (
     <Form initialValues={initialValues} onSubmit={onSubmit}>
       {(formProps) => (

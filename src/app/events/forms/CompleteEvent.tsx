@@ -15,9 +15,9 @@ import {
   FormRenderProps,
   SupportedInputs,
 } from 'react-final-form';
-import { FormSwitch } from '@/components/Forms/Switch/FormSwitch';
 import { CLASS_TYPE } from '@/lib/definitions';
 import { useRouter } from 'next/navigation';
+import { FormRadioBox } from '@/components/Forms/RadioBox.tsx/RadioBox';
 
 interface CompleteEventProps {
   id: string;
@@ -76,7 +76,7 @@ export const CompleteEvent = (props: CompleteEventProps) => {
       {!isLoading && (
         <Form
           initialValues={{
-            testPassed: false,
+            testPassed: true,
           }}
           onSubmit={onSubmit}
           mutators={{
@@ -98,6 +98,11 @@ export type CompleteFormProps = FormRenderProps<IEventCompleteForm> & {
   isClassType?: boolean;
 };
 
+export const OPTIONS = [
+  { name: 'Aprobada', id: true },
+  { name: 'Reprobada', id: false },
+];
+
 const CompleteForm = (props: CompleteFormProps) => {
   const { handleSubmit, isClassType } = props;
 
@@ -108,7 +113,8 @@ const CompleteForm = (props: CompleteFormProps) => {
       ) : (
         <Field
           name="testPassed"
-          component={FormSwitch as unknown as SupportedInputs}
+          component={FormRadioBox as unknown as SupportedInputs}
+          options={OPTIONS}
           placeholder="Prueba aprobada"
           label="Prueba aprobada"
         />
