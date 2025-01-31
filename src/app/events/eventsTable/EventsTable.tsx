@@ -167,7 +167,6 @@ export const EventsTable = (props: Props) => {
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
         const name = getInitials(row?.original?.customer?.name);
-        console.log('row?.original?', row?.original);
         const isTestType = row?.original?.typeId === CLASS_TYPE.DRIVE_TEST;
         const isCompleted = row?.original?.status?.includes(
           EventStatus.COMPLETED,
@@ -596,13 +595,16 @@ export const EventsTable = (props: Props) => {
           row?.original?.customer?.schedule?.startTime?.split(':') || [];
         return (
           <div className="flex flex-col gap-3">
-            <p>
-              <strong>Hora cliente: </strong>
-              {dayjs()
-                .set('hour', +startTime)
-                .set('minute', +endTime)
-                .format('hh:mm A')}
-            </p>
+            <div className="capitalize flex gap-2 items-center">
+              <p>
+                <strong>Hora cliente: </strong>
+                {dayjs()
+                  .set('hour', +startTime)
+                  .set('minute', +endTime)
+                  .format('hh:mm A')}
+              </p>
+              <p>{hasBeenContacted && <AlarmCheck className="h-4 w-4" />}</p>
+            </div>
             <p>
               <strong>Hora prueba: </strong>
               <span className="text-secondary font-bold">
