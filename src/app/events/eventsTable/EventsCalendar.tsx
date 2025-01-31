@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const EventsCalendar = (props: Props) => {
-  const { data, filters } = props;
+  const { data, filters, user } = props;
   const [hoveredEvent, setHoveredEvent] = useState<IEvent | null>(null);
   const [openView, setOpenView] = useState<boolean>(false);
   const [id, setId] = useState<string>('');
@@ -49,7 +49,7 @@ export const EventsCalendar = (props: Props) => {
 
   return (
     <section className="grid grid-cols-[60px_1fr] divide-x divide-gray-200 border border-solid rounded-2xl mt-4">
-      <ViewEvent id={id} open={openView} setOpen={setOpenView} />
+      <ViewEvent id={id} open={openView} setOpen={setOpenView} user={user} />
       <div className="border-r border-solid">
         {timeSlots.map((time) => (
           <div

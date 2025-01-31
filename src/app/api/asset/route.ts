@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { logEvent } from '@/services/logs/logEvent';
+// import { getChanges } from '@/lib/logging.utils';
+import { LOG_TITLES } from '@/lib/definitions';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -89,6 +92,13 @@ export async function POST(request: Request) {
     const asset = await prisma.asset.create({
       data: body,
     });
+
+    await logEvent({
+      title: LOG_TITLES.CREATED,
+      message: '',
+      assetId: asset.id,
+    });
+
     revalidatePath('/assets', 'page');
     return NextResponse.json(asset, { status: 200 });
   } catch (error) {
@@ -100,12 +110,23 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
+
+    // const changes = await getChanges(prisma.asset, body.id, body);
+
     const asset = await prisma.asset.update({
       where: {
         id: body.id,
       },
       data: body,
     });
+
+    // TODO need to fix this
+    await logEvent({
+      title: LOG_TITLES.UPDATED,
+      message: 'changes',
+      assetId: asset.id,
+    });
+
     revalidatePath('/assets', 'page');
     return NextResponse.json(asset, { status: 200 });
   } catch (error) {

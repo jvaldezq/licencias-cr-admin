@@ -94,6 +94,8 @@ export interface IEvent {
   isInternalReferred?: boolean;
   schoolId?: string;
   school?: ISchool;
+  hasBeenContacted?: boolean;
+  noShow?: boolean;
 }
 
 export interface ICustomer {
@@ -179,10 +181,12 @@ export interface ISchoolPrices {
 
 export interface ILog {
   id: string;
-  modelName: string;
-  modelId: string;
-  action: string;
-  changes: string;
+  title: string;
+  message: string;
+  assetId: string;
+  asset: IAsset;
+  eventId: string;
+  event: IEvent;
   createdAt: Date;
   changedById: string;
   changedBy: IUser;
@@ -231,6 +235,7 @@ export enum EventStatus {
   PRACTICING = 'PRACTICING',
   DELETED = 'DELETED',
   PENDING = 'PENDING',
+  NO_SHOW = 'NO_SHOW',
 }
 
 export enum OWNCAR {
@@ -246,4 +251,16 @@ export enum PAYMENT_TYPE {
   CASH = 'CASH',
   CARD = 'CARD',
   SINPE = 'SINPE',
+}
+
+export enum LOG_TITLES {
+  CREATED = 'CREATED',
+  DELETED = 'DELETED',
+  UPDATED = 'UPDATED',
+}
+
+export enum LOG_TITLES_TRANSLATED {
+  CREATED = 'Creación',
+  DELETED = 'Eliminación',
+  UPDATED = 'Actualización',
 }

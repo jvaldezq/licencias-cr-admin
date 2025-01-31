@@ -50,6 +50,9 @@ export const getEventsList = async (filters: IEventFilter) => {
         date: true,
         time: true,
         notes: true,
+        noShow: true,
+        hasBeenContacted: true,
+        typeId: true,
         asset: {
           select: {
             id: true,
@@ -62,6 +65,7 @@ export const getEventsList = async (filters: IEventFilter) => {
           select: {
             name: true,
             schedule: true,
+            testPassed: true,
           },
         },
         instructor: true,
@@ -148,6 +152,8 @@ export const getEventsReferredList = async (filters: IEventFilter) => {
         time: true,
         notes: true,
         hasMedical: true,
+        noShow: true,
+        hasBeenContacted: true,
         location: {
           select: {
             name: true,

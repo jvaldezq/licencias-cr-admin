@@ -11,9 +11,19 @@ import { clientApi } from '@/lib/clientApi';
 import { useMutation, useQuery } from 'react-query';
 import { AssetsByProps } from '@/app/events/services/types';
 
+interface IEventCompleteForm {
+  testPassed: boolean;
+  id: string;
+}
+
 const createEvent = async (data: IEventForm): Promise<IEvent> => {
-  const newListing = await clientApi.post('/event', data);
-  return newListing.data;
+  const event = await clientApi.post('/event', data);
+  return event.data;
+};
+
+const completeEvent = async (data: IEventCompleteForm): Promise<IEvent> => {
+  const event = await clientApi.patch(`/event/${data.id}/complete`, data);
+  return event.data;
 };
 
 export const useCreateMutation = () => {
@@ -22,6 +32,15 @@ export const useCreateMutation = () => {
       return createEvent(data);
     },
     mutationKey: ['event-create'],
+  });
+};
+
+export const useCompleteMutation = () => {
+  return useMutation({
+    mutationFn: (data: IEventCompleteForm) => {
+      return completeEvent(data);
+    },
+    mutationKey: ['event-complete'],
   });
 };
 
@@ -108,8 +127,18 @@ const deleteEvent = async (id: string): Promise<IEvent> => {
   return event.data;
 };
 
-const PracticingEvent = async (id: string): Promise<IEvent> => {
+const practicingEvent = async (id: string): Promise<IEvent> => {
   const event = await clientApi.patch(`/event/${id}/practicing`);
+  return event.data;
+};
+
+const noShowEvent = async (id: string): Promise<IEvent> => {
+  const event = await clientApi.patch(`/event/${id}/no-show`);
+  return event.data;
+};
+
+const confirmationEvent = async (id: string): Promise<IEvent> => {
+  const event = await clientApi.patch(`/event/${id}/confirmation`);
   return event.data;
 };
 
@@ -207,9 +236,27 @@ export const useDeleteMutation = () => {
 export const usePracticingMutation = () => {
   return useMutation({
     mutationFn: (id: string) => {
-      return PracticingEvent(id);
+      return practicingEvent(id);
     },
     mutationKey: ['event-practicing'],
+  });
+};
+
+export const useNoShowMutation = () => {
+  return useMutation({
+    mutationFn: (id: string) => {
+      return noShowEvent(id);
+    },
+    mutationKey: ['event-no-show'],
+  });
+};
+
+export const useConfirmationMutation = () => {
+  return useMutation({
+    mutationFn: (id: string) => {
+      return confirmationEvent(id);
+    },
+    mutationKey: ['event-confirmation'],
   });
 };
 

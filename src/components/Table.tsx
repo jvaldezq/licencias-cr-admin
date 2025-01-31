@@ -82,9 +82,10 @@ export function DataTable<T>(props: Props<T>) {
       <TableBody>
         {table?.getRowModel().rows?.length ? (
           table?.getRowModel().rows.map((row) => {
-            const classStyle = row?.original?.status?.includes?.(
+            const classStyle = [
               EventStatus.PRACTICING,
-            )
+              EventStatus.COMPLETED,
+            ].includes(row?.original?.status)
               ? 'bg-yellow-500/[0.3]'
               : row?.original?.type?.name?.includes('Clase')
                 ? 'bg-[#8e24aa]/[0.3]'

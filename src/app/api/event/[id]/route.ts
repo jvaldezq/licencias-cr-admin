@@ -31,6 +31,7 @@ export async function GET(
             identification: true,
             phone: true,
             schedule: true,
+            testPassed: true,
           },
         },
         location: true,

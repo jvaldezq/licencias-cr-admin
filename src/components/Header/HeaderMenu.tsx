@@ -60,7 +60,7 @@ export const HeaderMenu = (props: Props) => {
               key="calendar"
               href="/events"
             >
-              <CalendarIcon /> Citas
+              <CalendarIcon /> Pruebas prácticas / clases
             </Link>
           </SheetClose>
           {/*{(user?.access?.admin || user?.access?.receptionist) && (*/}

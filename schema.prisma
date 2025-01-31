@@ -43,6 +43,7 @@ model Asset {
   licenseTypeId      String
   licenseType        LicenseType            @relation(fields: [licenseTypeId], references: [id])
   schedule           Schedule[]
+  Log                 Log[]
 }
 
 model User {
@@ -100,7 +101,10 @@ model Event {
   schoolId      String?
   school        School?     @relation(fields: [schoolId], references: [id])
   hasMedical    Boolean      @default(false)
+  hasBeenContacted      Boolean?      @default(false)
+  noShow       Boolean?      @default(false)
   type          EventType    @relation(fields: [typeId], references: [id])
+  Log Log[]
 
   @@index([instructorId, createdById, date, paymentId, customerId, locationId, licenseTypeId])
 }
@@ -190,9 +194,12 @@ model EventType {
 
 model Log {
   id          String   @id @default(uuid())
-  modelName   String
-  action      String
-  changes     String
+  title       String
+  message     String
+  assetId     String?
+  asset       Asset?       @relation(fields: [assetId], references: [id])
+  eventId     String?
+  event       Event?    @relation(fields: [eventId], references: [id])
   createdAt   DateTime @default(now())
   changedById String
   changedBy   User     @relation(fields: [changedById], references: [id])

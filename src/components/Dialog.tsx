@@ -21,6 +21,7 @@ interface Props {
   onOpenChange?: (open: boolean) => void;
   isLoading?: boolean;
   loadingContent?: ReactNode;
+  cancelText?: string;
 }
 
 export const Dialog = (props: Props) => {
@@ -34,6 +35,7 @@ export const Dialog = (props: Props) => {
     onOpenChange,
     isLoading = false,
     loadingContent,
+    cancelText = 'Cancelar',
   } = props;
   return (
     <CnDialog open={open} onOpenChange={onOpenChange}>
@@ -57,7 +59,7 @@ export const Dialog = (props: Props) => {
               variant="outline"
               onClick={() => (onOpenChange ? onOpenChange(false) : null)}
             >
-              Cancelar
+              {cancelText}
             </Button>
             {footer}
           </DialogFooter>

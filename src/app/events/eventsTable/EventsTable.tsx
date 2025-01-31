@@ -1,7 +1,13 @@
 'use client';
 
 import { ColumnDef, Row } from '@tanstack/react-table';
-import { EventStatus, IEvent, IUser, OWNCAR } from '@/lib/definitions';
+import {
+  CLASS_TYPE,
+  EventStatus,
+  IEvent,
+  IUser,
+  OWNCAR,
+} from '@/lib/definitions';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import { DataTable } from '@/components/Table';
@@ -13,10 +19,6 @@ import { DeleteEvent } from '@/app/events/forms/DeleteEvent';
 import { PaymentEvent } from '@/app/events/forms/PaymentEvent';
 import { Dropdown } from '@/components/Dropdown';
 import { ViewEvent } from '@/app/events/forms/ViewEvent';
-import { ViewIcon } from '@/assets/icons/ViewIcon';
-import { EditIcon } from '@/assets/icons/EditIcon';
-import { DeleteIcon } from '@/assets/icons/DeleteIcon';
-import { MoneyIcon } from '@/assets/icons/MoneyIcon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EventsCalendar } from '@/app/events/eventsTable/EventsCalendar';
 import {
@@ -25,10 +27,22 @@ import {
   List,
   BadgeCent,
   MessageSquare,
+  Frown,
+  AlarmClock,
+  AlarmCheck,
+  CalendarCheck,
+  Trash2,
+  Eye,
+  PenLine,
+  HandCoins,
+  Award,
 } from 'lucide-react';
 import { PracticingEvent } from '@/app/events/forms/PracticingEvent';
 import { Popover } from '@/components/Popover';
 import { getInitials } from '@/lib/getInitials';
+import { NoShowEvent } from '@/app/events/forms/NoShowEvent';
+import { ConfirmEvent } from '@/app/events/forms/ConfirmEvent';
+import { CompleteEvent } from '@/app/events/forms/CompleteEvent';
 
 dayjs.extend(advancedFormat);
 
@@ -42,7 +56,10 @@ export const EventsTable = (props: Props) => {
   const [openView, setOpenView] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openComplete, setOpenComplete] = useState(false);
   const [openPracticing, setOpenPracticing] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openNoShow, setOpenNoShow] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
   const [id, setId] = useState('');
 
@@ -61,6 +78,15 @@ export const EventsTable = (props: Props) => {
     }
     if (action === 'practicing') {
       setOpenPracticing(true);
+    }
+    if (action === 'confirmation') {
+      setOpenConfirmation(true);
+    }
+    if (action === 'noShow') {
+      setOpenNoShow(true);
+    }
+    if (action === 'complete') {
+      setOpenComplete(true);
     }
 
     setId(id);
@@ -83,12 +109,16 @@ export const EventsTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const [startTime, endTime] =
           row?.original?.customer?.schedule?.startTime?.split(':') || [];
+        const hasBeenContacted = row?.original?.hasBeenContacted;
         return (
-          <div className="capitalize">
-            {dayjs()
-              .set('hour', +startTime)
-              .set('minute', +endTime)
-              .format('hh:mm A')}
+          <div className="capitalize flex gap-2 items-center">
+            <p>
+              {dayjs()
+                .set('hour', +startTime)
+                .set('minute', +endTime)
+                .format('hh:mm A')}
+            </p>
+            <p>{hasBeenContacted && <AlarmCheck className="h-4 w-4" />}</p>
           </div>
         );
       },
@@ -137,6 +167,22 @@ export const EventsTable = (props: Props) => {
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
         const name = getInitials(row?.original?.customer?.name);
+        console.log('row?.original?', row?.original);
+        const isTestType = row?.original?.typeId === CLASS_TYPE.DRIVE_TEST;
+        const isCompleted = row?.original?.status?.includes(
+          EventStatus.COMPLETED,
+        );
+        const testPassed = row?.original?.customer.testPassed;
+        const awardText = isCompleted
+          ? testPassed
+            ? 'Aprobó'
+            : 'Reprobó'
+          : 'Pendiente';
+        const awardColor = isCompleted
+          ? testPassed
+            ? 'text-success'
+            : 'text-error'
+          : 'text-gray-500';
         return (
           <div className="capitalize flex gap-2 items-center">
             <p>{name}</p>
@@ -150,6 +196,13 @@ export const EventsTable = (props: Props) => {
                 {row?.original?.notes && (
                   <Popover text={row?.original?.notes}>
                     <MessageSquare className="h-4 w-4 cursor-pointer" />
+                  </Popover>
+                )}
+              </p>
+              <p>
+                {isTestType && (
+                  <Popover text={awardText}>
+                    <Award className={`h-4 w-4 cursor-pointer ${awardColor}`} />
                   </Popover>
                 )}
               </p>
@@ -228,10 +281,15 @@ export const EventsTable = (props: Props) => {
         const price = row?.original?.payment?.price || 0;
         const cashAdvance = row?.original?.payment?.cashAdvance || 0;
         const hasPaid = !(price - cashAdvance > 0);
+        const noShow = row?.original?.noShow;
         return (
           <div className="flex gap-2 items-center">
             {hasPaid ? (
               <BadgeCent className="text-success" />
+            ) : noShow ? (
+              <Popover text="El cliente no se presentó">
+                <BadgeCent className="text-error" />
+              </Popover>
             ) : (
               <BadgeCent className="text-gray-500/[0.4]" />
             )}
@@ -275,6 +333,8 @@ export const EventsTable = (props: Props) => {
       cell: ({ row }: { row: Row<IEvent> }) => {
         const price = row?.original?.payment?.price || 0;
         const cashAdvance = row?.original?.payment?.cashAdvance || 0;
+        const hasBeenContacted = row?.original?.hasBeenContacted;
+        const noShow = row?.original?.noShow;
         const hasPaid = !(price - cashAdvance > 0);
         const options = [
           {
@@ -284,7 +344,7 @@ export const EventsTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <ViewIcon /> Ver
+                <Eye /> Ver
               </Button>
             ),
             key: `view ${row?.original?.id}`,
@@ -296,7 +356,7 @@ export const EventsTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <EditIcon /> Editar
+                <PenLine /> Editar
               </Button>
             ),
             key: `edit ${row?.original?.id}`,
@@ -308,39 +368,94 @@ export const EventsTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-secondary"
                 variant="outline"
               >
-                <DeleteIcon /> Eliminar
+                <Trash2 /> Eliminar
               </Button>
             ),
             key: `delete ${row?.original?.id}`,
           },
         ];
 
-        if (!hasPaid) {
-          options.push({
-            content: (
-              <Button
-                onClick={() => handleAction('payment', row?.original?.id)}
-                className="w-full flex justify-start items-center gap-2 text-success"
-                variant="outline"
-              >
-                <MoneyIcon /> Abono/Pago
-              </Button>
-            ),
-            key: `complete ${row?.original?.id}`,
-          });
-        } else if (!row?.original?.status?.includes(EventStatus.PRACTICING)) {
-          options.push({
-            content: (
-              <Button
-                onClick={() => handleAction('practicing', row?.original?.id)}
-                className="w-full flex justify-start items-center gap-2 text-yellow-500"
-                variant="outline"
-              >
-                <NotebookPen /> Sale a practicar
-              </Button>
-            ),
-            key: `practicing ${row?.original?.id}`,
-          });
+        if (!row?.original?.status?.includes(EventStatus.COMPLETED)) {
+          if (hasBeenContacted) {
+            if (!hasPaid) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() => handleAction('payment', row?.original?.id)}
+                    className="w-full flex justify-start items-center gap-2 text-success"
+                    variant="outline"
+                  >
+                    <HandCoins /> Abono/Pago
+                  </Button>
+                ),
+                key: `complete ${row?.original?.id}`,
+              });
+            } else if (
+              !row?.original?.status?.includes(EventStatus.PRACTICING)
+            ) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() =>
+                      handleAction('practicing', row?.original?.id)
+                    }
+                    className="w-full flex justify-start items-center gap-2 text-yellow-500"
+                    variant="outline"
+                  >
+                    <NotebookPen /> Sale a practicar
+                  </Button>
+                ),
+                key: `practicing ${row?.original?.id}`,
+              });
+            } else if (
+              row?.original?.status?.includes(EventStatus.PRACTICING)
+            ) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() => handleAction('complete', row?.original?.id)}
+                    className="w-full flex justify-start items-center gap-2 text-teal-500"
+                    variant="outline"
+                  >
+                    <CalendarCheck /> Completar
+                  </Button>
+                ),
+                key: `complete ${row?.original?.id}`,
+              });
+            }
+            if (
+              !noShow &&
+              !row?.original?.status?.includes(EventStatus.PRACTICING)
+            ) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() => handleAction('noShow', row?.original?.id)}
+                    className="w-full flex justify-start items-center gap-2 text-warning"
+                    variant="outline"
+                  >
+                    <Frown /> No se presentó
+                  </Button>
+                ),
+                key: `noShow ${row?.original?.id}`,
+              });
+            }
+          } else {
+            options.push({
+              content: (
+                <Button
+                  onClick={() =>
+                    handleAction('confirmation', row?.original?.id)
+                  }
+                  className="w-full flex justify-start items-center gap-2 text-blue-500"
+                  variant="outline"
+                >
+                  <AlarmClock /> Confirmar
+                </Button>
+              ),
+              key: `confirmation ${row?.original?.id}`,
+            });
+          }
         }
         return (
           <Dropdown
@@ -380,6 +495,23 @@ export const EventsTable = (props: Props) => {
         const isOtherLocation =
           row?.original?.location?.id !== JSON.parse(atob(filters)).locationId;
         const isNotOwnAsset = row?.original?.asset?.name !== 'Propio';
+        const hasBeenContacted = row?.original?.hasBeenContacted;
+        const noShow = row?.original?.noShow;
+        const isTestType = row?.original?.typeId === CLASS_TYPE.DRIVE_TEST;
+        const isCompleted = row?.original?.status?.includes(
+          EventStatus.COMPLETED,
+        );
+        const testPassed = row?.original?.customer.testPassed;
+        const awardText = isCompleted
+          ? testPassed
+            ? 'Aprobó'
+            : 'Reprobó'
+          : 'Pendiente';
+        const awardColor = isCompleted
+          ? testPassed
+            ? 'text-success'
+            : 'text-error'
+          : 'text-gray-500';
 
         if (row?.original?.type?.name?.includes('Clase')) {
           const [startTimeEnding, endTimeEnding] =
@@ -389,13 +521,16 @@ export const EventsTable = (props: Props) => {
 
           return (
             <div className="flex flex-col gap-3">
-              <p>
+              <div className="capitalize flex gap-2 items-center">
                 <strong>Inicio: </strong>
-                {dayjs()
-                  .set('hour', +startTime)
-                  .set('minute', +endTime)
-                  .format('hh:mm A')}
-              </p>
+                <p>
+                  {dayjs()
+                    .set('hour', +startTime)
+                    .set('minute', +endTime)
+                    .format('hh:mm A')}
+                </p>
+                <p>{hasBeenContacted && <AlarmCheck className="h-4 w-4" />}</p>
+              </div>
               <p>
                 <strong>Fin: </strong>
                 {dayjs()
@@ -412,6 +547,13 @@ export const EventsTable = (props: Props) => {
                   {row?.original?.notes && (
                     <Popover text={row?.original?.notes}>
                       <MessageSquare className="h-4 w-4 cursor-pointer" />
+                    </Popover>
+                  )}
+                  {isTestType && (
+                    <Popover text={awardText}>
+                      <Award
+                        className={`h-4 w-4 cursor-pointer ${awardColor}`}
+                      />
                     </Popover>
                   )}
                 </div>
@@ -432,6 +574,10 @@ export const EventsTable = (props: Props) => {
                 <strong>Pagó:</strong>
                 {hasPaid ? (
                   <BadgeCent className="text-success h-5" />
+                ) : noShow ? (
+                  <Popover text="El cliente no se presentó">
+                    <BadgeCent className="text-error" />
+                  </Popover>
                 ) : (
                   <BadgeCent className="text-gray-500/[0.4] h-5" />
                 )}
@@ -480,6 +626,11 @@ export const EventsTable = (props: Props) => {
                     <MessageSquare className="h-4 w-4 cursor-pointer" />
                   </Popover>
                 )}
+                {isTestType && (
+                  <Popover text={awardText}>
+                    <Award className={`h-4 w-4 cursor-pointer ${awardColor}`} />
+                  </Popover>
+                )}
               </div>
             </div>
             <p>
@@ -498,6 +649,10 @@ export const EventsTable = (props: Props) => {
               <strong>Pagó:</strong>
               {hasPaid ? (
                 <BadgeCent className="text-success h-5" />
+              ) : noShow ? (
+                <Popover text="El cliente no se presentó">
+                  <BadgeCent className="text-error" />
+                </Popover>
               ) : (
                 <BadgeCent className="text-gray-500/[0.4] h-5" />
               )}
@@ -525,6 +680,9 @@ export const EventsTable = (props: Props) => {
         const price = row?.original?.payment?.price || 0;
         const cashAdvance = row?.original?.payment?.cashAdvance || 0;
         const hasPaid = !(price - cashAdvance > 0);
+        const hasBeenContacted = row?.original?.hasBeenContacted;
+        const noShow = row?.original?.noShow;
+
         const options = [
           {
             content: (
@@ -533,7 +691,7 @@ export const EventsTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <ViewIcon /> Ver
+                <Eye /> Ver
               </Button>
             ),
             key: `view ${row?.original?.id}`,
@@ -545,7 +703,7 @@ export const EventsTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <EditIcon /> Editar
+                <PenLine /> Editar
               </Button>
             ),
             key: `edit ${row?.original?.id}`,
@@ -557,39 +715,94 @@ export const EventsTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-secondary"
                 variant="outline"
               >
-                <DeleteIcon /> Eliminar
+                <Trash2 /> Eliminar
               </Button>
             ),
             key: `delete ${row?.original?.id}`,
           },
         ];
 
-        if (!hasPaid) {
-          options.push({
-            content: (
-              <Button
-                onClick={() => handleAction('payment', row?.original?.id)}
-                className="w-full flex justify-start items-center gap-2 text-success"
-                variant="outline"
-              >
-                <MoneyIcon /> Abono/Pago
-              </Button>
-            ),
-            key: `complete ${row?.original?.id}`,
-          });
-        } else if (!row?.original?.status?.includes(EventStatus.PRACTICING)) {
-          options.push({
-            content: (
-              <Button
-                onClick={() => handleAction('practicing', row?.original?.id)}
-                className="w-full flex justify-start items-center gap-2 text-yellow-500"
-                variant="outline"
-              >
-                <NotebookPen /> Sale a practicar
-              </Button>
-            ),
-            key: `practicing ${row?.original?.id}`,
-          });
+        if (!row?.original?.status?.includes(EventStatus.COMPLETED)) {
+          if (hasBeenContacted) {
+            if (!hasPaid) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() => handleAction('payment', row?.original?.id)}
+                    className="w-full flex justify-start items-center gap-2 text-success"
+                    variant="outline"
+                  >
+                    <HandCoins /> Abono/Pago
+                  </Button>
+                ),
+                key: `complete ${row?.original?.id}`,
+              });
+            } else if (
+              !row?.original?.status?.includes(EventStatus.PRACTICING)
+            ) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() =>
+                      handleAction('practicing', row?.original?.id)
+                    }
+                    className="w-full flex justify-start items-center gap-2 text-yellow-500"
+                    variant="outline"
+                  >
+                    <NotebookPen /> Sale a practicar
+                  </Button>
+                ),
+                key: `practicing ${row?.original?.id}`,
+              });
+            } else if (
+              row?.original?.status?.includes(EventStatus.PRACTICING)
+            ) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() => handleAction('complete', row?.original?.id)}
+                    className="w-full flex justify-start items-center gap-2 text-teal-500"
+                    variant="outline"
+                  >
+                    <CalendarCheck /> Completar
+                  </Button>
+                ),
+                key: `complete ${row?.original?.id}`,
+              });
+            }
+            if (
+              !noShow &&
+              !row?.original?.status?.includes(EventStatus.PRACTICING)
+            ) {
+              options.push({
+                content: (
+                  <Button
+                    onClick={() => handleAction('noShow', row?.original?.id)}
+                    className="w-full flex justify-start items-center gap-2 text-warning"
+                    variant="outline"
+                  >
+                    <Frown /> No se presentó
+                  </Button>
+                ),
+                key: `noShow ${row?.original?.id}`,
+              });
+            }
+          } else {
+            options.push({
+              content: (
+                <Button
+                  onClick={() =>
+                    handleAction('confirmation', row?.original?.id)
+                  }
+                  className="w-full flex justify-start items-center gap-2 text-blue-500"
+                  variant="outline"
+                >
+                  <AlarmClock /> Confirmar
+                </Button>
+              ),
+              key: `confirmation ${row?.original?.id}`,
+            });
+          }
         }
 
         return (
@@ -608,13 +821,20 @@ export const EventsTable = (props: Props) => {
 
   return (
     <div className="my-8">
-      <ViewEvent id={id} open={openView} setOpen={setOpenView} />
+      <ViewEvent id={id} open={openView} setOpen={setOpenView} user={user} />
       <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit} />
       <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete} />
+      <CompleteEvent id={id} open={openComplete} setOpen={setOpenComplete} />
       <PracticingEvent
         id={id}
         open={openPracticing}
         setOpen={setOpenPracticing}
+      />
+      <NoShowEvent id={id} open={openNoShow} setOpen={setOpenNoShow} />
+      <ConfirmEvent
+        id={id}
+        open={openConfirmation}
+        setOpen={setOpenConfirmation}
       />
       <PaymentEvent
         id={id}

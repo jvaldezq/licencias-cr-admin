@@ -12,12 +12,8 @@ import { DeleteEvent } from '@/app/events/forms/DeleteEvent';
 import { PaymentEvent } from '@/app/events/forms/PaymentEvent';
 import { ViewEvent } from '@/app/events/forms/ViewEvent';
 import { useCallback, useState } from 'react';
-import { ViewIcon } from '@/assets/icons/ViewIcon';
-import { EditIcon } from '@/assets/icons/EditIcon';
-import { DeleteIcon } from '@/assets/icons/DeleteIcon';
-import { MoneyIcon } from '@/assets/icons/MoneyIcon';
 import { Dropdown } from '@/components/Dropdown';
-import { List } from 'lucide-react';
+import { List, Trash2, Eye, PenLine, HandCoins } from 'lucide-react';
 
 dayjs.extend(advancedFormat);
 
@@ -181,7 +177,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <ViewIcon /> Ver
+                <Eye /> Ver
               </Button>
             ),
             key: `view ${row?.original?.id}`,
@@ -193,7 +189,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <EditIcon /> Editar
+                <PenLine /> Editar
               </Button>
             ),
             key: `edit ${row?.original?.id}`,
@@ -205,7 +201,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-secondary"
                 variant="outline"
               >
-                <DeleteIcon /> Eliminar
+                <Trash2 /> Eliminar
               </Button>
             ),
             key: `delete ${row?.original?.id}`,
@@ -224,7 +220,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-success"
                 variant="outline"
               >
-                <MoneyIcon /> Abono/Pago
+                <HandCoins /> Abono/Pago
               </Button>
             ),
             key: `complete ${row?.original?.id}`,
@@ -360,7 +356,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <ViewIcon /> Ver
+                <Eye /> Ver
               </Button>
             ),
             key: `view ${row?.original?.id}`,
@@ -372,7 +368,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-primary"
                 variant="outline"
               >
-                <EditIcon /> Editar
+                <PenLine /> Editar
               </Button>
             ),
             key: `edit ${row?.original?.id}`,
@@ -384,7 +380,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-secondary"
                 variant="outline"
               >
-                <DeleteIcon /> Eliminar
+                <Trash2 /> Eliminar
               </Button>
             ),
             key: `delete ${row?.original?.id}`,
@@ -396,7 +392,7 @@ export const ReferredTable = (props: Props) => {
                 className="w-full flex justify-start items-center gap-2 text-success"
                 variant="outline"
               >
-                <MoneyIcon /> Abono/Pago
+                <HandCoins /> Abono/Pago
               </Button>
             ),
             key: `complete ${row?.original?.id}`,
@@ -425,7 +421,7 @@ export const ReferredTable = (props: Props) => {
       <h1 className="text-center py-2 text-lg font-semibold text-warning-yellow bg-secondary rounded-2xl">
         Referidos a otras escuelas
       </h1>
-      <ViewEvent id={id} open={openView} setOpen={setOpenView} />
+      <ViewEvent id={id} open={openView} setOpen={setOpenView} user={user} />
       <EditEvent id={id} user={user} open={openEdit} setOpen={setOpenEdit} />
       <DeleteEvent id={id} open={openDelete} setOpen={setOpenDelete} />
       <PaymentEvent
