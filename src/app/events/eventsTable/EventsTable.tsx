@@ -375,71 +375,7 @@ export const EventsTable = (props: Props) => {
         ];
 
         if (!row?.original?.status?.includes(EventStatus.COMPLETED)) {
-          if (hasBeenContacted) {
-            if (!hasPaid) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() => handleAction('payment', row?.original?.id)}
-                    className="w-full flex justify-start items-center gap-2 text-success"
-                    variant="outline"
-                  >
-                    <HandCoins /> Abono/Pago
-                  </Button>
-                ),
-                key: `complete ${row?.original?.id}`,
-              });
-            } else if (
-              !row?.original?.status?.includes(EventStatus.PRACTICING)
-            ) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() =>
-                      handleAction('practicing', row?.original?.id)
-                    }
-                    className="w-full flex justify-start items-center gap-2 text-yellow-500"
-                    variant="outline"
-                  >
-                    <NotebookPen /> Sale a practicar
-                  </Button>
-                ),
-                key: `practicing ${row?.original?.id}`,
-              });
-            } else if (
-              row?.original?.status?.includes(EventStatus.PRACTICING)
-            ) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() => handleAction('complete', row?.original?.id)}
-                    className="w-full flex justify-start items-center gap-2 text-teal-500"
-                    variant="outline"
-                  >
-                    <CalendarCheck /> Completar
-                  </Button>
-                ),
-                key: `complete ${row?.original?.id}`,
-              });
-            }
-            if (
-              !noShow &&
-              !row?.original?.status?.includes(EventStatus.PRACTICING)
-            ) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() => handleAction('noShow', row?.original?.id)}
-                    className="w-full flex justify-start items-center gap-2 text-warning"
-                    variant="outline"
-                  >
-                    <Frown /> No se presentó
-                  </Button>
-                ),
-                key: `noShow ${row?.original?.id}`,
-              });
-            }
-          } else {
+          if (!hasBeenContacted) {
             options.push({
               content: (
                 <Button
@@ -455,7 +391,72 @@ export const EventsTable = (props: Props) => {
               key: `confirmation ${row?.original?.id}`,
             });
           }
+          if (!hasPaid) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('payment', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-success"
+                  variant="outline"
+                >
+                  <HandCoins /> Abono/Pago
+                </Button>
+              ),
+              key: `complete ${row?.original?.id}`,
+            });
+          } else if (
+            !row?.original?.status?.includes(EventStatus.PRACTICING) &&
+            hasBeenContacted
+          ) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('practicing', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-yellow-500"
+                  variant="outline"
+                >
+                  <NotebookPen /> Sale a practicar
+                </Button>
+              ),
+              key: `practicing ${row?.original?.id}`,
+            });
+          } else if (
+            row?.original?.status?.includes(EventStatus.PRACTICING) &&
+            hasBeenContacted
+          ) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('complete', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-teal-500"
+                  variant="outline"
+                >
+                  <CalendarCheck /> Completar
+                </Button>
+              ),
+              key: `complete ${row?.original?.id}`,
+            });
+          }
+          if (
+            !noShow &&
+            !row?.original?.status?.includes(EventStatus.PRACTICING) &&
+            hasBeenContacted
+          ) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('noShow', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-warning"
+                  variant="outline"
+                >
+                  <Frown /> No se presentó
+                </Button>
+              ),
+              key: `noShow ${row?.original?.id}`,
+            });
+          }
         }
+
         return (
           <Dropdown
             trigger={
@@ -725,71 +726,7 @@ export const EventsTable = (props: Props) => {
         ];
 
         if (!row?.original?.status?.includes(EventStatus.COMPLETED)) {
-          if (hasBeenContacted) {
-            if (!hasPaid) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() => handleAction('payment', row?.original?.id)}
-                    className="w-full flex justify-start items-center gap-2 text-success"
-                    variant="outline"
-                  >
-                    <HandCoins /> Abono/Pago
-                  </Button>
-                ),
-                key: `complete ${row?.original?.id}`,
-              });
-            } else if (
-              !row?.original?.status?.includes(EventStatus.PRACTICING)
-            ) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() =>
-                      handleAction('practicing', row?.original?.id)
-                    }
-                    className="w-full flex justify-start items-center gap-2 text-yellow-500"
-                    variant="outline"
-                  >
-                    <NotebookPen /> Sale a practicar
-                  </Button>
-                ),
-                key: `practicing ${row?.original?.id}`,
-              });
-            } else if (
-              row?.original?.status?.includes(EventStatus.PRACTICING)
-            ) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() => handleAction('complete', row?.original?.id)}
-                    className="w-full flex justify-start items-center gap-2 text-teal-500"
-                    variant="outline"
-                  >
-                    <CalendarCheck /> Completar
-                  </Button>
-                ),
-                key: `complete ${row?.original?.id}`,
-              });
-            }
-            if (
-              !noShow &&
-              !row?.original?.status?.includes(EventStatus.PRACTICING)
-            ) {
-              options.push({
-                content: (
-                  <Button
-                    onClick={() => handleAction('noShow', row?.original?.id)}
-                    className="w-full flex justify-start items-center gap-2 text-warning"
-                    variant="outline"
-                  >
-                    <Frown /> No se presentó
-                  </Button>
-                ),
-                key: `noShow ${row?.original?.id}`,
-              });
-            }
-          } else {
+          if (!hasBeenContacted) {
             options.push({
               content: (
                 <Button
@@ -803,6 +740,70 @@ export const EventsTable = (props: Props) => {
                 </Button>
               ),
               key: `confirmation ${row?.original?.id}`,
+            });
+          }
+          if (!hasPaid) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('payment', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-success"
+                  variant="outline"
+                >
+                  <HandCoins /> Abono/Pago
+                </Button>
+              ),
+              key: `complete ${row?.original?.id}`,
+            });
+          } else if (
+            !row?.original?.status?.includes(EventStatus.PRACTICING) &&
+            hasBeenContacted
+          ) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('practicing', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-yellow-500"
+                  variant="outline"
+                >
+                  <NotebookPen /> Sale a practicar
+                </Button>
+              ),
+              key: `practicing ${row?.original?.id}`,
+            });
+          } else if (
+            row?.original?.status?.includes(EventStatus.PRACTICING) &&
+            hasBeenContacted
+          ) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('complete', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-teal-500"
+                  variant="outline"
+                >
+                  <CalendarCheck /> Completar
+                </Button>
+              ),
+              key: `complete ${row?.original?.id}`,
+            });
+          }
+          if (
+            !noShow &&
+            !row?.original?.status?.includes(EventStatus.PRACTICING) &&
+            hasBeenContacted
+          ) {
+            options.push({
+              content: (
+                <Button
+                  onClick={() => handleAction('noShow', row?.original?.id)}
+                  className="w-full flex justify-start items-center gap-2 text-warning"
+                  variant="outline"
+                >
+                  <Frown /> No se presentó
+                </Button>
+              ),
+              key: `noShow ${row?.original?.id}`,
             });
           }
         }
