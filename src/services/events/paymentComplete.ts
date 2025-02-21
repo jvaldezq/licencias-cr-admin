@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
-import { IUser, PAYMENT_TYPE } from '@/lib/definitions';
+import { IUser, LOG_TITLES, PAYMENT_TYPE } from '@/lib/definitions';
+import { logEvent } from '@/services/logs/logEvent';
 
 export const paymentComplete = async (
   id: string,
@@ -14,6 +15,7 @@ export const paymentComplete = async (
     const event = await prisma.event.findUnique({
       where: { id },
       select: {
+        id: true,
         payment: true,
       },
     });
@@ -27,21 +29,6 @@ export const paymentComplete = async (
       throw new Error('Payment exceeds the price');
     }
 
-    // if (cashAdvanceAndPayment === price) {
-    //     await prisma.event.update({
-    //         where: {id}, data: {
-    //             status: EventStatus.PAID,
-    //         },
-    //     });
-    // }
-
-    await prisma.payment.update({
-      where: { id: payment?.id },
-      data: {
-        cashAdvance: cashAdvanceTotal,
-      },
-    });
-
     await prisma.cashPaymentsAdvance.create({
       data: {
         amount: body.amount,
@@ -50,6 +37,25 @@ export const paymentComplete = async (
         type: body.type,
       },
     });
+
+    const newPayment = await prisma.payment.update({
+      select: {
+        cashPaymentsAdvance: true,
+      },
+      where: { id: payment?.id },
+      data: {
+        cashAdvance: cashAdvanceTotal,
+      },
+    });
+
+    if (event?.id) {
+      await logEvent({
+        title: LOG_TITLES.UPDATED,
+        message: JSON.stringify({ payment: newPayment }),
+        eventId: event.id,
+      });
+    }
+
     return 'Payment applied successfully';
   } catch (error) {
     throw new Error(`Failed to complete event: ${error}`);

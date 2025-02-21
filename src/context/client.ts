@@ -24,7 +24,7 @@ const getLogs = async (data: getLogsProps): Promise<Response> => {
 export const useGetLogs = (data: getLogsProps) => {
   return useQuery({
     enabled: !!data?.eventId || !!data?.assetId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1,
     refetchOnWindowFocus: false,
     queryKey: ['get-logs', data?.eventId, data?.assetId],
     queryFn: () => getLogs(data),

@@ -1,12 +1,18 @@
 import prisma from '@/lib/prisma';
-import { EventStatus } from '@/lib/definitions';
+import { EventStatus, LOG_TITLES } from '@/lib/definitions';
+import { logEvent } from '@/services/logs/logEvent';
 
 export const completeEvent = async (id: string, testPassed: boolean) => {
   try {
-    console.log('testPassed', testPassed);
-    await prisma.event.update({
+    const event = await prisma.event.update({
       select: {
-        customerId: true,
+        id: true,
+        status: true,
+        customer: {
+          select: {
+            testPassed: true,
+          },
+        },
       },
       where: { id },
       data: {
@@ -17,6 +23,12 @@ export const completeEvent = async (id: string, testPassed: boolean) => {
           },
         },
       },
+    });
+
+    await logEvent({
+      title: LOG_TITLES.UPDATED,
+      message: JSON.stringify(event),
+      eventId: event.id,
     });
     return 'Event completed successfully';
   } catch (error) {

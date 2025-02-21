@@ -93,12 +93,6 @@ export async function POST(request: Request) {
       data: body,
     });
 
-    await logEvent({
-      title: LOG_TITLES.CREATED,
-      message: '',
-      assetId: asset.id,
-    });
-
     revalidatePath('/assets', 'page');
     return NextResponse.json(asset, { status: 200 });
   } catch (error) {
@@ -114,16 +108,31 @@ export async function PATCH(request: Request) {
     // const changes = await getChanges(prisma.asset, body.id, body);
 
     const asset = await prisma.asset.update({
+      select: {
+        id: true,
+        name: true,
+        plate: true,
+        status: true,
+        location: {
+          select: {
+            name: true,
+          },
+        },
+        licenseType: {
+          select: {
+            name: true,
+          },
+        },
+      },
       where: {
         id: body.id,
       },
       data: body,
     });
 
-    // TODO need to fix this
     await logEvent({
       title: LOG_TITLES.UPDATED,
-      message: 'changes',
+      message: JSON.stringify(asset),
       assetId: asset.id,
     });
 

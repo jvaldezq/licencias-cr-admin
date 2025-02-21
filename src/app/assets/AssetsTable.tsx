@@ -2,12 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, NotebookPen } from 'lucide-react';
 import * as React from 'react';
 import { DataTable } from '@/components/Table';
 import { IAsset, ILicenseType, ILocation, IUser } from '@/lib/definitions';
 import { DeleteAsset } from '@/app/assets/forms/DeleteAsset';
 import { EditAsset } from '@/app/assets/forms/EditAsset';
+import { useLogContext } from '@/context/LogsContext';
 
 interface Props {
   data: IAsset[];
@@ -16,6 +17,11 @@ interface Props {
 
 export const AssetsTable = (props: Props) => {
   const { data, user } = props;
+  const { showLogs } = useLogContext();
+
+  const handleLogsClick = (id: string) => {
+    showLogs({ assetId: id });
+  };
 
   const columns: ColumnDef<IAsset>[] = [
     {
@@ -127,6 +133,14 @@ export const AssetsTable = (props: Props) => {
           <div className="flex gap-4">
             <EditAsset id={row.original.id} />
             {user?.access?.admin && <DeleteAsset id={row.original.id} />}
+            {user?.access?.admin && (
+              <Button
+                variant="outline"
+                onClick={() => handleLogsClick(`${row.original.id}`)}
+              >
+                <NotebookPen className="text-primary h-5" />
+              </Button>
+            )}
           </div>
         );
       },

@@ -116,8 +116,6 @@ const ViewEventWrapper = (props: ViewEventWrapperProps) => {
     return null;
   }
 
-  console.log('data?.customer?.phone', data?.customer?.phone);
-
   return (
     <section className="grid md:grid-cols-2 gap-4">
       <div className="flex justify-between items-center border-b border-solid border-primary/[0.2] w-full pb-1 md:col-span-2">

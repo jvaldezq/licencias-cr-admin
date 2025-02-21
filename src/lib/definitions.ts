@@ -258,9 +258,10 @@ export enum LOG_TITLES {
   DELETED = 'DELETED',
   UPDATED = 'UPDATED',
 }
+export const LOG_TITLES_TRANSLATED: { [key in LogTitleKeys]: string } = {
+  CREATED: 'Creación',
+  DELETED: 'Eliminación',
+  UPDATED: 'Actualización',
+};
 
-export enum LOG_TITLES_TRANSLATED {
-  CREATED = 'Creación',
-  DELETED = 'Eliminación',
-  UPDATED = 'Actualización',
-}
+export type LogTitleKeys = 'CREATED' | 'UPDATED' | 'DELETED';

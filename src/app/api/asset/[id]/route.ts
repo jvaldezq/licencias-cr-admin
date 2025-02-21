@@ -23,7 +23,7 @@ export async function GET(
     });
     return NextResponse.json(asset, { status: 200 });
   } catch (error) {
-    console.log('Error fetching asset', error);
+    console.error('Error fetching asset', error);
     return NextResponse.json({ error }, { status: 500 });
   }
 }
@@ -34,19 +34,36 @@ export async function DELETE(
 ) {
   try {
     const asset = await prisma.asset.delete({
+      select: {
+        id: true,
+        name: true,
+        plate: true,
+        status: true,
+        location: {
+          select: {
+            name: true,
+          },
+        },
+        licenseType: {
+          select: {
+            name: true,
+          },
+        },
+      },
       where: {
         id: params.id,
       },
     });
+
     await logEvent({
       title: LOG_TITLES.DELETED,
-      message: '',
+      message: JSON.stringify(asset),
       assetId: asset.id,
     });
     revalidatePath('/assets', 'page');
     return NextResponse.json(asset, { status: 200 });
   } catch (error) {
-    console.log('Error deleting asset', error);
+    console.error('Error deleting asset', error);
     return NextResponse.json({ error }, { status: 500 });
   }
 }

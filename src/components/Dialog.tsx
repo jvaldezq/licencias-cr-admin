@@ -43,7 +43,7 @@ export const Dialog = (props: Props) => {
         {trigger}
       </DialogTrigger>
       <DialogContent
-        className="max-h-full overflow-scroll"
+        className="max-h-full overflow-scroll p-3.5"
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>

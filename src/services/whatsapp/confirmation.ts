@@ -30,5 +30,5 @@ export const WhatsAppConfirmation = async (props: Props) => {
       },
     },
   );
-  console.log(response.data);
+  console.log(response);
 };
