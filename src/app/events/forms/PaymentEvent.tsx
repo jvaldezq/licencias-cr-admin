@@ -160,7 +160,7 @@ const EventWrapper = (props: EventWrapperProps) => {
           {data?.payment?.cashPaymentsAdvance?.map((payment, index) => (
             <div
               key={`payment-${index}`}
-              className="flex justify-between items-center gap-2 w-full"
+              className="flex justify-between items-center gap-2 w-full border-dashed border-b border-primary/[0.2]"
             >
               <p className="text-sm font-semibold text-primary/[0.9] flex gap-2">
                 <span>

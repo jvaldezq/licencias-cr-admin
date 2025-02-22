@@ -195,7 +195,7 @@ const ViewEventWrapper = (props: ViewEventWrapperProps) => {
         PRECIOS
       </p>
 
-      <div className="w-full col-span-full">
+      <div className="w-full col-span-full flex flex-col gap-2">
         <div className="flex justify-between items-center gap-2 w-full">
           <p className="font-semibold text-primary/[0.9]">Monto Total</p>
           <p className="font-semibold text-primary">{CRCFormatter(price)}</p>
@@ -204,7 +204,7 @@ const ViewEventWrapper = (props: ViewEventWrapperProps) => {
         {data?.payment?.cashPaymentsAdvance?.map((payment, index) => (
           <div
             key={`payment-${index}`}
-            className="flex justify-between items-center gap-2 w-full"
+            className="flex justify-between items-center gap-2 w-full border-dashed border-b border-primary/[0.2]"
           >
             <p className="text-sm font-semibold text-primary/[0.9] flex gap-2">
               <span>

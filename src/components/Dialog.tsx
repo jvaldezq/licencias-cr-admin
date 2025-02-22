@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface Props {
   trigger: ReactNode;
@@ -22,6 +23,7 @@ interface Props {
   isLoading?: boolean;
   loadingContent?: ReactNode;
   cancelText?: string;
+  className?: string;
 }
 
 export const Dialog = (props: Props) => {
@@ -35,6 +37,7 @@ export const Dialog = (props: Props) => {
     onOpenChange,
     isLoading = false,
     loadingContent,
+    className,
     cancelText = 'Cancelar',
   } = props;
   return (
@@ -43,7 +46,12 @@ export const Dialog = (props: Props) => {
         {trigger}
       </DialogTrigger>
       <DialogContent
-        className="max-h-full overflow-scroll p-3.5"
+        className={cn(
+          'overflow-scroll p-3.5 border-0',
+          'max-w-screen-lg',
+          'max-h-[95%]',
+          className,
+        )}
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
@@ -52,7 +60,7 @@ export const Dialog = (props: Props) => {
         </DialogHeader>
         {isLoading && loadingContent}
         {children}
-        {!isLoading && (
+        {!isLoading && onOpenChange && (
           <DialogFooter className="flex gap-4" is="div">
             <Button
               className="w-full md:w-fit rounded-3xl"
