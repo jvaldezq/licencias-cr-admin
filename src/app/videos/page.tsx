@@ -82,7 +82,7 @@ const VideoWrapper = (props: VideoWrapperProps) => {
   return (
     <div className="justify-center items-center flex flex-col p-4 rounded-lg gap-2">
       <p className="text-primary font-bold text-lg">{title}</p>
-      <video src={src} controls className="rounded-lg border border-primary">
+      <video src={src} controls className="rounded-lg border border-primary" controlsList="nodownload">
         <source src={src} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
