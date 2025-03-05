@@ -11,6 +11,7 @@ import { IUser, PAYMENT_TYPE } from '@/lib/definitions';
 import { Button } from '@/components/ui/button';
 import { useLogContext } from '@/context/LogsContext';
 import { WhatsappIcon } from '@/assets/icons/WhatsappIcon';
+import { Stethoscope } from 'lucide-react';
 
 export const PAYMENT_OPTIONS = [
   { name: 'Efectivo', id: PAYMENT_TYPE.CASH },
@@ -189,6 +190,14 @@ const ViewEventWrapper = (props: ViewEventWrapperProps) => {
       <div className="w-full">
         <p className="text-primary/[0.7] text-sm">Vehículo</p>
         <p className="font-semibold text-primary">{data?.asset?.name}</p>
+      </div>
+
+      <div className="w-full">
+        <p className="text-primary/[0.7] text-sm">Dictamen Médico</p>
+        <p className="font-semibold text-primary flex items-center gap-2">
+          {data?.hasMedical && <Stethoscope className="h-4 w-4" />}
+          {data?.hasMedical ? 'Si' : 'No'}
+        </p>
       </div>
 
       <p className="md:col-span-2 border-b border-solid border-primary/[0.2] font-semibold pb-1 capitalize">

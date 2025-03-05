@@ -16,6 +16,7 @@ model Location {
   updatedAt   DateTime @updatedAt
   assets      Asset[]
   events      Event[]
+  tasks       Task[]
   instructors User[]
 }
 
@@ -43,7 +44,8 @@ model Asset {
   licenseTypeId      String
   licenseType        LicenseType            @relation(fields: [licenseTypeId], references: [id])
   schedule           Schedule[]
-  Log                 Log[]
+  tasks              Task[]
+  Log                Log[]
 }
 
 model User {
@@ -55,6 +57,8 @@ model User {
   updatedAt          DateTime    @updatedAt
   eventsAsCreator    Event[]     @relation("CreatorRelation")
   eventsAsInstructor Event[]     @relation("InstructorRelation")
+  tasksAsAssignedTo  Task[]      @relation("TaskAssignedTo")
+  tasksAsCreator     Task[]      @relation("TaskCreatorRelation")
   logs               Log[]
   location           Location?    @relation(fields: [locationId], references: [id])
   access             UserAccess?
@@ -129,7 +133,7 @@ model School {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   schoolPrices   SchoolPrices[]
-  Event Event[]
+  Event          Event[]
 }
 
 model SchoolPrices {
@@ -200,7 +204,28 @@ model Log {
   asset       Asset?       @relation(fields: [assetId], references: [id])
   eventId     String?
   event       Event?    @relation(fields: [eventId], references: [id])
+  taskId      String?
+  task        Task?    @relation(fields: [taskId], references: [id])
   createdAt   DateTime @default(now())
   changedById String
   changedBy   User     @relation(fields: [changedById], references: [id])
+}
+
+model Task {
+  id            String       @id @default(uuid())
+  status        String
+  title         String
+  assetId       String?
+  asset         Asset?       @relation(fields: [assetId], references: [id])
+  locationId    String
+  location      Location     @relation(fields: [locationId], references: [id])
+  date          DateTime?
+  notes         String?
+  Log           Log[]
+  assignedToId  String?
+  assignedTo    User?        @relation("TaskAssignedTo", fields: [assignedToId], references: [id])
+  createdById   String
+  createdBy     User         @relation("TaskCreatorRelation", fields: [createdById], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }

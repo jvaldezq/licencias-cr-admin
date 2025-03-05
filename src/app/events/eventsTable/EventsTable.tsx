@@ -5,6 +5,7 @@ import {
   CLASS_TYPE,
   EventStatus,
   IEvent,
+  ITask,
   IUser,
   OWNCAR,
 } from '@/lib/definitions';
@@ -43,6 +44,7 @@ import { getInitials } from '@/lib/getInitials';
 import { NoShowEvent } from '@/app/events/forms/NoShowEvent';
 import { ConfirmEvent } from '@/app/events/forms/ConfirmEvent';
 import { CompleteEvent } from '@/app/events/forms/CompleteEvent';
+import { Tasks } from '@/app/events/tasks/Tasks';
 
 dayjs.extend(advancedFormat);
 
@@ -50,6 +52,7 @@ interface Props {
   filters: string;
   data: IEvent[];
   user: IUser;
+  tasks?: ITask[];
 }
 
 export const EventsTable = (props: Props) => {
@@ -92,7 +95,9 @@ export const EventsTable = (props: Props) => {
     setId(id);
   }, []);
 
-  const { data, user, filters } = props;
+  const { data, user, filters, tasks } = props;
+
+  const filterLocationId = filters ? JSON.parse(atob(filters)).locationId : '';
 
   const allowActions = user?.access?.receptionist || user?.access?.admin;
 
@@ -850,6 +855,14 @@ export const EventsTable = (props: Props) => {
         <TabsList>
           <TabsTrigger value="table">Citas</TabsTrigger>
           <TabsTrigger value="calendar">Calendario</TabsTrigger>
+          {allowActions && (
+            <TabsTrigger value="tasks">
+              Tareas
+              {tasks && tasks.length > 0 && (
+                <span className="text-secondary ml-1">({tasks?.length})</span>
+              )}
+            </TabsTrigger>
+          )}
         </TabsList>
         <TabsContent value="table">
           <div className="block md:hidden">
@@ -861,6 +874,9 @@ export const EventsTable = (props: Props) => {
         </TabsContent>
         <TabsContent value="calendar">
           <EventsCalendar {...props} />
+        </TabsContent>
+        <TabsContent value="tasks">
+          <Tasks user={user} locationId={filterLocationId} tasks={tasks} />
         </TabsContent>
       </Tabs>
     </div>

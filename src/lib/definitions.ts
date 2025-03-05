@@ -230,6 +230,23 @@ export interface IEventFilter {
   searchTerm: string;
 }
 
+export interface ITask {
+  id?: string;
+  title?: string;
+  status?: string;
+  assetId?: string;
+  asset?: IAsset;
+  locationId?: string;
+  location?: ILocation;
+  date?: string;
+  notes?: string;
+  log?: ILog[];
+  createdById?: string;
+  createdBy?: IUser;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export enum EventStatus {
   COMPLETED = 'COMPLETED',
   PRACTICING = 'PRACTICING',
@@ -265,3 +282,9 @@ export const LOG_TITLES_TRANSLATED: { [key in LogTitleKeys]: string } = {
 };
 
 export type LogTitleKeys = 'CREATED' | 'UPDATED' | 'DELETED';
+
+export enum TaskStatus {
+  COMPLETED = 'COMPLETED',
+  DELETED = 'DELETED',
+  PENDING = 'PENDING',
+}

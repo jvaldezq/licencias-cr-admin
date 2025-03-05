@@ -18,8 +18,7 @@ import { LicenseIcon } from '@/assets/icons/LicenseIcon';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { PeopleIcon } from '@/assets/icons/PeopleIcon';
 import { SalesIcon } from '@/assets/icons/SalesIcon';
-import { GraduationCap } from 'lucide-react';
-// import { HandCoins } from 'lucide-react';
+import { GraduationCap, Video } from 'lucide-react';
 
 interface Props {
   trigger: ReactNode;
@@ -63,18 +62,6 @@ export const HeaderMenu = (props: Props) => {
               <CalendarIcon /> Pruebas prácticas / clases
             </Link>
           </SheetClose>
-          {/*{(user?.access?.admin || user?.access?.receptionist) && (*/}
-          {/*  <SheetClose asChild aria-describedby="Citas">*/}
-          {/*    <Link*/}
-          {/*      className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/sales' && isSelected}`}*/}
-          {/*      key="calendar"*/}
-          {/*      href="/sales"*/}
-          {/*    >*/}
-          {/*      <HandCoins className="w-5 h-5" />*/}
-          {/*      Facturación*/}
-          {/*    </Link>*/}
-          {/*  </SheetClose>*/}
-          {/*)}*/}
           {(user?.access?.admin || user?.access?.receptionist) && (
             <SheetClose asChild aria-describedby="Citas">
               <Link
@@ -98,6 +85,16 @@ export const HeaderMenu = (props: Props) => {
               </Link>
             </SheetClose>
           )}
+
+          <SheetClose asChild aria-describedby="Videos">
+            <Link
+              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/videos' && isSelected}`}
+              key="calendar"
+              href="/videos"
+            >
+              <Video /> Videos
+            </Link>
+          </SheetClose>
 
           {user?.access?.admin && (
             <>
