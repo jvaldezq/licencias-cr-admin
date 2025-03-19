@@ -231,7 +231,7 @@ export interface IEventFilter {
 }
 
 export interface ITask {
-  id?: string;
+  id: string;
   title?: string;
   status?: string;
   assetId?: string;
@@ -241,6 +241,8 @@ export interface ITask {
   date?: string;
   notes?: string;
   log?: ILog[];
+  assignedToId?: string;
+  assignedTo?: IUser;
   createdById?: string;
   createdBy?: IUser;
   createdAt: Date;

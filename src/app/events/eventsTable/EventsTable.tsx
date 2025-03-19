@@ -859,7 +859,7 @@ export const EventsTable = (props: Props) => {
             <TabsTrigger value="tasks">
               Tareas
               {tasks && tasks.length > 0 && (
-                <span className="text-secondary ml-1">({tasks?.length})</span>
+                <span className="ml-1">({tasks?.length})</span>
               )}
             </TabsTrigger>
           )}

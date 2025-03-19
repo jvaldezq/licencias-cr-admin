@@ -10,6 +10,14 @@ interface Filters {
 export const getTasks = async (filters: Filters) => {
   const endOfDay = dayjs(filters?.date).endOf('day').toISOString();
   return (await prisma.task.findMany({
+    select: {
+      id: true,
+      title: true,
+      notes: true,
+      assignedTo: true,
+      date: true,
+      status: true,
+    },
     where: {
       status: {
         equals: TaskStatus.PENDING,

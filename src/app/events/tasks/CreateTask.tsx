@@ -66,10 +66,12 @@ interface TaskWrapperProps {
 }
 
 export interface ITaskForm {
+  id: string;
   title?: string;
   status?: string;
   assetId?: string;
   locationId?: string;
+  assignedTo?: string;
   date?: string;
   notes?: string;
 }
