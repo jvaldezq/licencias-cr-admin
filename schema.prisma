@@ -18,6 +18,7 @@ model Location {
   events      Event[]
   tasks       Task[]
   instructors User[]
+  prices      Price[]
 }
 
 model LicenseType {
@@ -29,6 +30,7 @@ model LicenseType {
   events             Event[]
   assets             Asset[]
   schoolPrices       SchoolPrices[]
+  prices             Price[]
 }
 
 model Asset {
@@ -46,6 +48,9 @@ model Asset {
   schedule           Schedule[]
   tasks              Task[]
   Log                Log[]
+  note               String?
+  coolantDate        DateTime?        @default(now())
+  oilDate            DateTime?        @default(now())
 }
 
 model User {
@@ -232,11 +237,26 @@ model Task {
 
 model Supplier {
   id            String       @id @default(uuid())
-  name          String
+  name          String?
+  category      String?
   businessName  String
   phone         String
-  status        String
   address       String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Price {
+  id            String       @id @default(uuid())
+  title         String?
+  note          String?
+  price         Float?
+  offerPrice    Float?
+  offerEndDate  DateTime?
+  licenseTypeId String
+  licenseType   LicenseType @relation(fields: [licenseTypeId], references: [id])
+  locationId    String
+  location      Location     @relation(fields: [locationId], references: [id])
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 }

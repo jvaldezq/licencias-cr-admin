@@ -6,10 +6,20 @@ import { Suspense } from 'react';
 import { CreateAsset } from '@/app/assets/forms/CreateAsset';
 import { fetchUserInfo } from '@/components/Header/service';
 import { getSession } from '@auth0/nextjs-auth0';
+import { AssetsFilters } from '@/app/assets/AssetsFilters';
+import { IAssetFilter, IEventFilter } from '@/lib/definitions';
 
-const Assets = async () => {
+interface Props {
+  searchParams: {
+    filters: string;
+  };
+}
+
+const Assets = async (props: Props) => {
+  const { searchParams } = props;
   const session = await getSession();
-  const data = await fetchAssets();
+  const filtersJson = searchParams?.filters ? JSON.parse(atob(searchParams.filters)) as IEventFilter : null;
+  const data = await fetchAssets(filtersJson as IAssetFilter);
   const user = await fetchUserInfo({
     userId: session?.user?.sub?.split('|')[1],
   });
@@ -23,6 +33,7 @@ const Assets = async () => {
           </h1>
           {user?.access?.admin && <CreateAsset />}
         </div>
+        <AssetsFilters filters={searchParams?.filters}  user={user}/>
         <AssetsTable data={data} user={user} />
       </Suspense>
     </main>

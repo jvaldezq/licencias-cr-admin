@@ -18,7 +18,7 @@ import { LicenseIcon } from '@/assets/icons/LicenseIcon';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { PeopleIcon } from '@/assets/icons/PeopleIcon';
 import { SalesIcon } from '@/assets/icons/SalesIcon';
-import { GraduationCap, Video } from 'lucide-react';
+import { Contact, GraduationCap, Video } from 'lucide-react';
 
 interface Props {
   trigger: ReactNode;
@@ -55,7 +55,7 @@ export const HeaderMenu = (props: Props) => {
         <div className="grow flex flex-col gap-4">
           <SheetClose asChild aria-describedby="Citas">
             <Link
-              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/events' && isSelected}`}
+              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/events' && isSelected}`}
               key="calendar"
               href="/events"
             >
@@ -65,7 +65,7 @@ export const HeaderMenu = (props: Props) => {
           {(user?.access?.admin || user?.access?.receptionist) && (
             <SheetClose asChild aria-describedby="Citas">
               <Link
-                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/sales' && isSelected}`}
+                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/sales' && isSelected}`}
                 key="calendar"
                 href="/sales"
               >
@@ -77,7 +77,7 @@ export const HeaderMenu = (props: Props) => {
           {(user?.access?.admin || user?.access?.receptionist) && (
             <SheetClose asChild aria-describedby="Vehículos">
               <Link
-                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/assets' && isSelected}`}
+                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/assets' && isSelected}`}
                 key="assets"
                 href="/assets"
               >
@@ -88,11 +88,21 @@ export const HeaderMenu = (props: Props) => {
 
           <SheetClose asChild aria-describedby="Videos">
             <Link
-              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/videos' && isSelected}`}
+              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/videos' && isSelected}`}
               key="calendar"
               href="/videos"
             >
               <Video /> Videos
+            </Link>
+          </SheetClose>
+
+          <SheetClose asChild aria-describedby="Proveedores">
+            <Link
+              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/suppliers' && isSelected}`}
+              key="calendar"
+              href="/suppliers"
+            >
+              <Contact /> Proveedores
             </Link>
           </SheetClose>
 
@@ -103,7 +113,7 @@ export const HeaderMenu = (props: Props) => {
               </p>
               <SheetClose asChild aria-describedby="Sedes">
                 <Link
-                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/locations' && isSelected}`}
+                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/locations' && isSelected}`}
                   key="assets"
                   href="/locations"
                 >
@@ -113,7 +123,7 @@ export const HeaderMenu = (props: Props) => {
 
               <SheetClose asChild aria-describedby="Licencias (Tipos)">
                 <Link
-                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/licenses' && isSelected}`}
+                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/licenses' && isSelected}`}
                   key="licenses"
                   href="/licenses"
                 >
@@ -122,7 +132,7 @@ export const HeaderMenu = (props: Props) => {
               </SheetClose>
               <SheetClose asChild aria-describedby="Planilla">
                 <Link
-                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/people' && isSelected}`}
+                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/people' && isSelected}`}
                   key="people"
                   href="/people"
                 >
@@ -131,7 +141,7 @@ export const HeaderMenu = (props: Props) => {
               </SheetClose>
               <SheetClose asChild aria-describedby="schools">
                 <Link
-                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold ${path === '/schools' && isSelected}`}
+                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/schools' && isSelected}`}
                   key="schools"
                   href="/schools"
                 >

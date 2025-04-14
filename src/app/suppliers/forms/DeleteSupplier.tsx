@@ -1,28 +1,29 @@
 'use client';
 
 import { useCallback } from 'react';
-import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/Dialog';
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { FormSavingLoader } from '@/components/FormLoader';
-import { useDeleteMutation } from '@/app/assets/services/client';
+import { Button } from '@/components/ui/button';
+import { useDeleteSupplierMutation } from '@/app/suppliers/services/deleteSupplier';
+import { useRouter } from 'next/navigation';
 
-interface Props {
+interface CompleteEventProps {
   id: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export const DeleteAsset = (props: Props) => {
+export const DeleteSupplier = (props: CompleteEventProps) => {
   const { id, open, setOpen } = props;
-  const { mutateAsync, isLoading } = useDeleteMutation();
+  const { mutateAsync, isLoading } = useDeleteSupplierMutation();
   const router = useRouter();
 
-  const onDelete = useCallback(() => {
+  const handleDelete = useCallback(() => {
     mutateAsync(id).then(() => {
       setOpen(false);
       router.refresh();
+
     });
   }, [id, mutateAsync, router, setOpen]);
 
@@ -30,12 +31,13 @@ export const DeleteAsset = (props: Props) => {
     <Dialog
       open={open}
       onOpenChange={setOpen}
-      title="Eliminar Vehículo"
+      title="Eliminar Proovedor"
       isLoading={isLoading}
-      loadingContent={<FormSavingLoader message="Eliminando Vehículo" />}
+      loadingContent={<FormSavingLoader message="Eliminando Proovedor" />}
       footer={
         <Button
-          onClick={onDelete}
+          type="button"
+          onClick={handleDelete}
           className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in"
         >
           Eliminar
@@ -43,11 +45,7 @@ export const DeleteAsset = (props: Props) => {
       }
       trigger={null}
     >
-      {isLoading ? null : (
-        <p className="text-primary text-base font-medium">
-          Está seguro que desea eliminar la Vehículo
-        </p>
-      )}
+      Seguro que desea eliminar este proovedor
     </Dialog>
   );
 };

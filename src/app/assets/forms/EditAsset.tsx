@@ -7,12 +7,17 @@ import {Dialog} from "@/components/Dialog";
 import * as React from "react";
 import {useGetAssetById, useUpdateMutation} from "@/app/assets/services/client";
 import {useRouter} from "next/navigation";
-import {EditIcon} from "@/assets/icons/EditIcon";
 import {AssetForm, AssetFormProps} from "@/app/assets/forms/AssetForm";
 import {FormSavingLoader} from "@/components/FormLoader";
 
-export const EditAsset = ({id}: { id: string }) => {
-    const [open, setOpen] = useState(false);
+interface Props {
+    id: string;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+}
+
+export const EditAsset = (props: Props) => {
+    const { id, open, setOpen } = props;
     const [isLoading, setIsLoading] = useState(true);
     const [loadingContent, setLoadingContent] = useState<React.ReactNode>(<FormSavingLoader
         message="Cargando información de la Sede"/>);
@@ -32,7 +37,7 @@ export const EditAsset = ({id}: { id: string }) => {
         footer={<Button
             type="submit" form="asset-form"
             className="bg-secondary text-white rounded-3xl animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">Guardar</Button>}
-        trigger={<Button variant="outline"><EditIcon/></Button>}>
+        trigger={null}>
         <AssetWrapper id={id} setOpen={setOpen} setIsLoading={setIsLoading} setLoadingContent={setLoadingContent}/>
     </Dialog>)
 }

@@ -9,6 +9,7 @@ export interface ILocation {
   assets: IAsset[];
   events: IEvent[];
   instructors: IUser[];
+  prices: IPrice[];
 }
 
 export interface ILicenseType {
@@ -20,6 +21,7 @@ export interface ILicenseType {
   events: IEvent[];
   assets: IAsset[];
   schoolPrices: ISchoolPrices[];
+  prices: IPrice[];
 }
 
 export interface IAsset {
@@ -27,14 +29,17 @@ export interface IAsset {
   name: string;
   plate: string;
   status: boolean;
-  createdAt: Date;
-  updatedAt: Date;
   locationId: string;
   location: ILocation;
   events: IEvent[];
   licenseTypeId: string;
   licenseType: ILicenseType;
   schedule: ISchedule[];
+  note: string;
+  coolantDate: Date;
+  oilDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IUser {
@@ -230,6 +235,11 @@ export interface IEventFilter {
   searchTerm: string;
 }
 
+export interface IAssetFilter {
+  locationId: string;
+  licenseTypeId: string;
+}
+
 export interface ITask {
   id: string;
   title?: string;
@@ -245,6 +255,43 @@ export interface ITask {
   assignedTo?: IUser;
   createdById?: string;
   createdBy?: IUser;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ITask {
+  id: string;
+  name?: string;
+  businessName?: string;
+  phone?: string;
+  status?: string;
+  address?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ISupplier {
+  id: string;
+  name?: string;
+  businessName?: string;
+  phone?: string;
+  status?: string;
+  address?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IPrice {
+  id: string;
+  title?: string;
+  note?: string;
+  price?: number;
+  offerPrice?: number;
+  offerEndDate: Date;
+  licenseTypeId?: string;
+  licenseType?: ILicenseType;
+  locationId?: string;
+  location?: ILocation;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -27,6 +27,14 @@ export async function GET(request: Request) {
         }
       : {};
 
+    const locationIdFilter = locationIdParam
+      ? {
+        locationId: {
+          equals: locationIdParam,
+        },
+      }
+      : {};
+
     if (list) {
       let locationId = {};
       // Return all if locationId is not San Ramon or Ciudad Vial
@@ -72,6 +80,12 @@ export async function GET(request: Request) {
           status: true,
           location: true,
           licenseType: true,
+          coolantDate: true,
+          oilDate: true,
+        },
+        where: {
+          ...licenseType,
+          ...locationIdFilter,
         },
         orderBy: {
           name: 'asc',
@@ -105,14 +119,14 @@ export async function PATCH(request: Request) {
   try {
     const body = await request.json();
 
-    // const changes = await getChanges(prisma.asset, body.id, body);
-
     const asset = await prisma.asset.update({
       select: {
         id: true,
         name: true,
         plate: true,
         status: true,
+        coolantDate: true,
+        oilDate: true,
         location: {
           select: {
             name: true,

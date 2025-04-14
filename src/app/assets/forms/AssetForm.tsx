@@ -9,6 +9,7 @@ import {
 } from '@/app/assets/services/client';
 import { FormSwitch } from '@/components/Forms/Switch/FormSwitch';
 import { FormDropdown } from '@/components/Forms/Dropdown/FormDropdown';
+import { FormTextarea } from '@/components/Forms/Textarea/FormTextarea';
 
 export interface AssetFormProps {
   name: string;
@@ -16,6 +17,7 @@ export interface AssetFormProps {
   status: boolean;
   locationId: string;
   licenseTypeId: string;
+  note?: string;
 }
 
 export type FormProps = FormRenderProps<AssetFormProps>;
@@ -77,6 +79,14 @@ export const AssetForm = (props: FormProps) => {
         component={FormSwitch as unknown as SupportedInputs}
         placeholder="Activo"
         label="Activo"
+      />
+      <Field
+        name="note"
+        component={FormTextarea as unknown as SupportedInputs}
+        type=""
+        placeholder="Comentarios/Notas"
+        label="Comentarios/Notas"
+        wrapperClassName="md:col-span-2"
       />
     </form>
   );
