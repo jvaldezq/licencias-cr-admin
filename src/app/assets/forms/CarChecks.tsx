@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { FormSavingLoader } from '@/components/FormLoader';
 import { FormSwitch } from '@/components/Forms/Switch/FormSwitch';
 import { FormTextarea } from '@/components/Forms/Textarea/FormTextarea';
+import { ValidationErrors } from 'final-form';
 
 export interface CarChecksFormProps {
   coolantDate: boolean;
@@ -100,6 +101,18 @@ const CarChecksWrapper = (props: CarChecksWrapperProps) => {
     [mutateAsync, router, setIsLoading, setLoadingContent, setOpen],
   );
 
+  const validate = useCallback(async (data: CarChecksFormProps) => {
+    const errors: Record<string, string> = {};
+
+    if (data.coolantDate || data.oilDate) {
+    } else {
+      errors.coolantDate = 'Se necesita al menos una revisión';
+      errors.oilDate = 'Se necesita al menos una revisión';
+    }
+
+    return errors as ValidationErrors;
+  }, []);
+
   useEffect(() => {
     if (!isLoading) {
       setIsLoading(false);
@@ -113,12 +126,13 @@ const CarChecksWrapper = (props: CarChecksWrapperProps) => {
   return (
     <Form
       initialValues={{
-        coolantDate: true,
-        oilDate: true,
+        coolantDate: false,
+        oilDate: false,
         note: data?.note,
         id: data?.id
       }}
       onSubmit={onSubmit}
+      validate={validate}
     >
       {(formProps) => <CarChecksForm {...formProps} />}
     </Form>
