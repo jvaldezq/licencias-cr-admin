@@ -74,17 +74,15 @@ export const HeaderMenu = (props: Props) => {
               </Link>
             </SheetClose>
           )}
-          {(user?.access?.admin || user?.access?.receptionist) && (
-            <SheetClose asChild aria-describedby="Vehículos">
-              <Link
-                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/assets' && isSelected}`}
-                key="assets"
-                href="/assets"
-              >
-                <CarIcon /> Vehículos
-              </Link>
-            </SheetClose>
-          )}
+          <SheetClose asChild aria-describedby="Vehículos">
+            <Link
+              className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/assets' && isSelected}`}
+              key="assets"
+              href="/assets"
+            >
+              <CarIcon /> Vehículos
+            </Link>
+          </SheetClose>
 
           <SheetClose asChild aria-describedby="Videos">
             <Link
