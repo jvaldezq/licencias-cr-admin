@@ -4,6 +4,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 import Header from '@/components/Header/Header';
 import { QueryWrapper } from '@/components/QueryWrapper';
 import { LogContextProvider } from '@/context/LogsContext';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'Licencia Costa Rica',
@@ -31,6 +32,7 @@ const RootLayout = ({
             <LogContextProvider>
               <Header />
               {children}
+              <Toaster/>
             </LogContextProvider>
           </UserProvider>
         </QueryWrapper>

@@ -18,7 +18,7 @@ import { LicenseIcon } from '@/assets/icons/LicenseIcon';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { PeopleIcon } from '@/assets/icons/PeopleIcon';
 import { SalesIcon } from '@/assets/icons/SalesIcon';
-import { Banknote, Contact, GraduationCap, Video } from 'lucide-react';
+import { Banknote, Contact, Video } from 'lucide-react';
 
 interface Props {
   trigger: ReactNode;
@@ -150,15 +150,15 @@ export const HeaderMenu = (props: Props) => {
                   <PeopleIcon /> Planilla
                 </Link>
               </SheetClose>
-              <SheetClose asChild aria-describedby="schools">
-                <Link
-                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/schools' && isSelected}`}
-                  key="schools"
-                  href="/schools"
-                >
-                  <GraduationCap /> Escuelas
-                </Link>
-              </SheetClose>
+              {/*<SheetClose asChild aria-describedby="schools">*/}
+              {/*  <Link*/}
+              {/*    className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/schools' && isSelected}`}*/}
+              {/*    key="schools"*/}
+              {/*    href="/schools"*/}
+              {/*  >*/}
+              {/*    <GraduationCap /> Escuelas*/}
+              {/*  </Link>*/}
+              {/*</SheetClose>*/}
             </>
           )}
         </div>

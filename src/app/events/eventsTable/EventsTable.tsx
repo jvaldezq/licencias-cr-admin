@@ -45,6 +45,8 @@ import { NoShowEvent } from '@/app/events/forms/NoShowEvent';
 import { ConfirmEvent } from '@/app/events/forms/ConfirmEvent';
 import { CompleteEvent } from '@/app/events/forms/CompleteEvent';
 import { Tasks } from '@/app/events/tasks/Tasks';
+import toast from 'react-hot-toast';
+import { cvClass, cvTest, srClass, srTest } from '@/lib/confirmationText';
 
 dayjs.extend(advancedFormat);
 
@@ -64,6 +66,9 @@ export const EventsTable = (props: Props) => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [openNoShow, setOpenNoShow] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
+  const [textTime, setTextTime] = useState('');
+  const [phone, setPhone] = useState('');
+  const [isTest, setIsTest] = useState(false);
   const [id, setId] = useState('');
 
   const handleAction = useCallback((action: string, id: string) => {
@@ -99,6 +104,53 @@ export const EventsTable = (props: Props) => {
 
   const filterLocationId = filters ? JSON.parse(atob(filters)).locationId : '';
 
+  const handleCopyConfirmation = useCallback(async () => {
+    try {
+      let formatedText = '';
+      if (isTest) {
+        if (filterLocationId === '5c7a2198-1ec4-4111-b926-172aefbd7f1c') {
+          formatedText = cvTest(textTime);
+        } else {
+          formatedText = srTest(textTime);
+        }
+      } else {
+        if (filterLocationId === '5c7a2198-1ec4-4111-b926-172aefbd7f1c') {
+          formatedText = cvClass(textTime);
+        } else {
+          formatedText = srClass(textTime);
+        }
+      }
+      await navigator.clipboard.writeText(formatedText);
+      toast.success('Mensaje de confirmación copiado al portapapeles');
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  }, [filterLocationId, isTest, textTime]);
+
+  const handleCopyWhatsApp = useCallback(async () => {
+    try {
+      let formatedText = '';
+      if (isTest) {
+        if (filterLocationId === '5c7a2198-1ec4-4111-b926-172aefbd7f1c') {
+          formatedText = cvTest(textTime);
+        } else {
+          formatedText = srTest(textTime);
+        }
+      } else {
+        if (filterLocationId === '5c7a2198-1ec4-4111-b926-172aefbd7f1c') {
+          formatedText = cvClass(textTime);
+        } else {
+          formatedText = srClass(textTime);
+        }
+      }
+      const encodedMessage = encodeURIComponent(formatedText);
+      const whatsappURL = `https://wa.me/+506${phone.replace('-','')}?text=${encodedMessage}`;
+      window.open(whatsappURL, '_blank');
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  }, [filterLocationId, isTest, phone, textTime]);
+
   const allowActions = user?.access?.receptionist || user?.access?.admin;
 
   const columns: ColumnDef<IEvent>[] = [
@@ -115,14 +167,14 @@ export const EventsTable = (props: Props) => {
         const [startTime, endTime] =
           row?.original?.customer?.schedule?.startTime?.split(':') || [];
         const hasBeenContacted = row?.original?.hasBeenContacted;
+        const formatedTime = dayjs()
+          .set('hour', +startTime)
+          .set('minute', +endTime)
+          .format('hh:mm A');
+
         return (
           <div className="capitalize flex gap-2 items-center">
-            <p>
-              {dayjs()
-                .set('hour', +startTime)
-                .set('minute', +endTime)
-                .format('hh:mm A')}
-            </p>
+            <p>{formatedTime}</p>
             <p>{hasBeenContacted && <AlarmCheck className="h-4 w-4" />}</p>
           </div>
         );
@@ -340,6 +392,13 @@ export const EventsTable = (props: Props) => {
         const hasBeenContacted = row?.original?.hasBeenContacted;
         const noShow = row?.original?.noShow;
         const hasPaid = !(price - cashAdvance > 0);
+        const [startTime, endTime] =
+          row?.original?.customer?.schedule?.startTime?.split(':') || [];
+        const formatedTime = dayjs()
+          .set('hour', +startTime)
+          .set('minute', +endTime)
+          .format('hh:mm A');
+        const isTestType = row?.original?.typeId === CLASS_TYPE.DRIVE_TEST;
         const options = [
           {
             content: (
@@ -384,9 +443,12 @@ export const EventsTable = (props: Props) => {
             options.push({
               content: (
                 <Button
-                  onClick={() =>
-                    handleAction('confirmation', row?.original?.id)
-                  }
+                  onClick={() => {
+                    setIsTest(isTestType);
+                    setTextTime(formatedTime);
+                    setPhone(row?.original?.customer?.phone);
+                    handleAction('confirmation', row?.original?.id);
+                  }}
                   className="w-full flex justify-start items-center gap-2 text-blue-500"
                   variant="outline"
                 >
@@ -690,7 +752,13 @@ export const EventsTable = (props: Props) => {
         const hasPaid = !(price - cashAdvance > 0);
         const hasBeenContacted = row?.original?.hasBeenContacted;
         const noShow = row?.original?.noShow;
-
+        const [startTime, endTime] =
+          row?.original?.customer?.schedule?.startTime?.split(':') || [];
+        const formatedTime = dayjs()
+          .set('hour', +startTime)
+          .set('minute', +endTime)
+          .format('hh:mm A');
+        const isTestType = row?.original?.typeId === CLASS_TYPE.DRIVE_TEST;
         const options = [
           {
             content: (
@@ -735,9 +803,12 @@ export const EventsTable = (props: Props) => {
             options.push({
               content: (
                 <Button
-                  onClick={() =>
-                    handleAction('confirmation', row?.original?.id)
-                  }
+                  onClick={() => {
+                    setIsTest(isTestType);
+                    setTextTime(formatedTime);
+                    setPhone(row?.original?.customer?.phone);
+                    handleAction('confirmation', row?.original?.id);
+                  }}
                   className="w-full flex justify-start items-center gap-2 text-blue-500"
                   variant="outline"
                 >
@@ -843,6 +914,8 @@ export const EventsTable = (props: Props) => {
         id={id}
         open={openConfirmation}
         setOpen={setOpenConfirmation}
+        handleCopyConfirmation={handleCopyConfirmation}
+        handleCopyWhatsApp={handleCopyWhatsApp}
       />
       <PaymentEvent
         id={id}

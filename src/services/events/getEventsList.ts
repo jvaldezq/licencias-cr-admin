@@ -66,6 +66,7 @@ export const getEventsList = async (filters: IEventFilter) => {
             name: true,
             schedule: true,
             testPassed: true,
+            phone: true,
           },
         },
         instructor: true,
