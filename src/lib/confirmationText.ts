@@ -17,7 +17,7 @@ Esta sería nuestra ubicación en Waze: https://waze.com/ul/hd1gcmvhkm
 
 *Por favor ser puntual para poder realizar la preparación completa.*
 
-Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://firebasestorage.googleapis.com/v0/b/carrocr-6bcb0.appspot.com/o/Reglamento%20de%20Evaluacio%CC%81n.pdf?alt=media&token=1a73a9a1-15ce-44f8-91a6-506752d6a947`;
+Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://firebasestorage.googleapis.com/v0/b/carrocr-6bcb0.appspot.com/o/Reglamento.pdf?alt=media&token=f9223640-3f81-400d-89f2-5a9bb5663ff8`;
 export const cvTest = (
   time: string,
 ) => `Te recordamos tu cita para el día mañana. Debes presentarte a las ${time} en nuestra oficina que se encuentra 75 mts Oeste de entrada principal de COSEVI Ciudad Vial. 
@@ -25,4 +25,4 @@ Esta sería nuestra ubicación en Waze: https://waze.com/ul/hd1u0qu1zm
 
 *Por favor ser puntual para poder realizar la preparación completa.*
 
-Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://firebasestorage.googleapis.com/v0/b/carrocr-6bcb0.appspot.com/o/Reglamento%20de%20Evaluacio%CC%81n.pdf?alt=media&token=1a73a9a1-15ce-44f8-91a6-506752d6a947`;
+Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://firebasestorage.googleapis.com/v0/b/carrocr-6bcb0.appspot.com/o/Reglamento.pdf?alt=media&token=f9223640-3f81-400d-89f2-5a9bb5663ff8`;
