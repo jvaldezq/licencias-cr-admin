@@ -18,7 +18,7 @@ import { LicenseIcon } from '@/assets/icons/LicenseIcon';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { PeopleIcon } from '@/assets/icons/PeopleIcon';
 import { SalesIcon } from '@/assets/icons/SalesIcon';
-import { Contact, GraduationCap, Video } from 'lucide-react';
+import { Banknote, Contact, GraduationCap, Video } from 'lucide-react';
 
 interface Props {
   trigger: ReactNode;
@@ -83,6 +83,19 @@ export const HeaderMenu = (props: Props) => {
               <CarIcon /> Vehículos
             </Link>
           </SheetClose>
+
+          {(user?.access?.admin || user?.access?.receptionist) && (
+            <SheetClose asChild aria-describedby="Price">
+              <Link
+                className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/prices' && isSelected}`}
+                key="price"
+                href="/prices"
+              >
+                <Banknote />
+                Precios
+              </Link>
+            </SheetClose>
+          )}
 
           <SheetClose asChild aria-describedby="Videos">
             <Link

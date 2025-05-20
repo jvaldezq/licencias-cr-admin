@@ -240,6 +240,10 @@ export interface IAssetFilter {
   licenseTypeId: string;
 }
 
+export interface IPriceFilter {
+  locationId: string;
+}
+
 export interface ITask {
   id: string;
   title?: string;
@@ -290,6 +294,18 @@ export interface IPrice {
   offerEndDate: Date;
   licenseTypeId?: string;
   licenseType?: ILicenseType;
+  locationId?: string;
+  location?: ILocation;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IBasePrice {
+  id: string;
+  note: string;
+  description: string;
+  priceClient: number;
+  priceSchool: number;
   locationId?: string;
   location?: ILocation;
   createdAt: Date;

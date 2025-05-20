@@ -19,6 +19,7 @@ model Location {
   tasks       Task[]
   instructors User[]
   prices      Price[]
+  basePrices  BasePrice[]
 }
 
 model LicenseType {
@@ -51,6 +52,7 @@ model Asset {
   note               String?
   coolantDate        DateTime?        @default(now())
   oilDate            DateTime?        @default(now())
+  inspection         DateTime?        @default(now())
 }
 
 model User {
@@ -68,6 +70,7 @@ model User {
   location           Location?    @relation(fields: [locationId], references: [id])
   access             UserAccess?
   schedule           Schedule[]
+  assetMaintenance   AssetMaintenance[]
   cashPaymentsAdvance     CashPaymentsAdvance[]
 }
 
@@ -259,4 +262,25 @@ model Price {
   location      Location     @relation(fields: [locationId], references: [id])
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+}
+
+model BasePrice {
+  id            String       @id @default(uuid())
+  note          String?
+  description   String
+  priceClient   Float?
+  priceSchool   Float?
+  locationId    String
+  location      Location     @relation(fields: [locationId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model AssetMaintenance {
+  id                 String              @id @default(uuid())
+  description        String              @unique
+  createdById        String
+  createdBy          User                @relation(fields: [createdById], references: [id])
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }

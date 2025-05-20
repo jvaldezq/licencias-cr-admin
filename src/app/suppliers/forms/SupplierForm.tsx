@@ -53,9 +53,6 @@ export const SupplierForm = (props: FormProps) => {
         component={FormInput as unknown as SupportedInputs}
         placeholder="Dirección del proovedor (Google)"
         label="Dirección del proovedor (Google)"
-        validate={(value) =>
-          value !== undefined ? undefined : 'La dirección es requerida'
-        }
       />
     </form>
   );
