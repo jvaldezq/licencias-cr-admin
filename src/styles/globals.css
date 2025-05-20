@@ -1,82 +1,168 @@
-@import url("@fontsource-variable/montserrat");
-@import url("@fontsource-variable/montserrat/wght-italic.css");
-
+@import url('@fontsource-variable/montserrat');
+@import url('@fontsource-variable/montserrat/wght-italic.css');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-    font-family: 'Montserrat Variable', sans-serif;
-    box-sizing: border-box;
+  font-family: 'Montserrat Variable', sans-serif;
+  box-sizing: border-box;
 }
 
-button:focus, button:focus-visible, svg:focus, svg:focus-visible {
-    outline: none;
-    --ring-color: none !important;
-    --ring-width: 0;
+button:focus,
+button:focus-visible,
+svg:focus,
+svg:focus-visible {
+  outline: none;
+  --ring-color: none !important;
+  --ring-width: 0;
 }
 
 /* HTML: <div class="loader"></div> */
 .loader {
-    width: 4px;
-    color: #ca0b10;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    box-shadow: 19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
-    19px 0 0 5px, 38px 0 0 5px, 57px 0 0 5px,
-    19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 0px;
-    transform: translateX(-38px);
-    animation: l26 2s infinite linear;
+  width: 4px;
+  color: #ca0b10;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow:
+    19px -19px 0 0px,
+    38px -19px 0 0px,
+    57px -19px 0 0px,
+    19px 0 0 5px,
+    38px 0 0 5px,
+    57px 0 0 5px,
+    19px 19px 0 0px,
+    38px 19px 0 0px,
+    57px 19px 0 0px;
+  transform: translateX(-38px);
+  animation: l26 2s infinite linear;
 }
 
 @keyframes l26 {
-    12.5% {
-        box-shadow: 19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 5px,
-        19px 0 0 5px, 38px 0 0 0px, 57px 0 0 5px,
-        19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 0px
-    }
-    25% {
-        box-shadow: 19px -19px 0 5px, 38px -19px 0 0px, 57px -19px 0 5px,
-        19px 0 0 0px, 38px 0 0 0px, 57px 0 0 0px,
-        19px 19px 0 0px, 38px 19px 0 5px, 57px 19px 0 0px
-    }
-    50% {
-        box-shadow: 19px -19px 0 5px, 38px -19px 0 5px, 57px -19px 0 0px,
-        19px 0 0 0px, 38px 0 0 0px, 57px 0 0 0px,
-        19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 5px
-    }
-    62.5% {
-        box-shadow: 19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
-        19px 0 0 5px, 38px 0 0 0px, 57px 0 0 0px,
-        19px 19px 0 0px, 38px 19px 0 5px, 57px 19px 0 5px
-    }
-    75% {
-        box-shadow: 19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
-        19px 0 0 0px, 38px 0 0 0px, 57px 0 0 5px,
-        19px 19px 0 0px, 38px 19px 0 0px, 57px 19px 0 5px
-    }
-    87.5% {
-        box-shadow: 19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
-        19px 0 0 0px, 38px 0 0 5px, 57px 0 0 0px,
-        19px 19px 0 5px, 38px 19px 0 0px, 57px 19px 0 0px
-    }
+  12.5% {
+    box-shadow:
+      19px -19px 0 0px,
+      38px -19px 0 0px,
+      57px -19px 0 5px,
+      19px 0 0 5px,
+      38px 0 0 0px,
+      57px 0 0 5px,
+      19px 19px 0 0px,
+      38px 19px 0 0px,
+      57px 19px 0 0px;
+  }
+  25% {
+    box-shadow:
+      19px -19px 0 5px,
+      38px -19px 0 0px,
+      57px -19px 0 5px,
+      19px 0 0 0px,
+      38px 0 0 0px,
+      57px 0 0 0px,
+      19px 19px 0 0px,
+      38px 19px 0 5px,
+      57px 19px 0 0px;
+  }
+  50% {
+    box-shadow:
+      19px -19px 0 5px,
+      38px -19px 0 5px,
+      57px -19px 0 0px,
+      19px 0 0 0px,
+      38px 0 0 0px,
+      57px 0 0 0px,
+      19px 19px 0 0px,
+      38px 19px 0 0px,
+      57px 19px 0 5px;
+  }
+  62.5% {
+    box-shadow:
+      19px -19px 0 0px,
+      38px -19px 0 0px,
+      57px -19px 0 0px,
+      19px 0 0 5px,
+      38px 0 0 0px,
+      57px 0 0 0px,
+      19px 19px 0 0px,
+      38px 19px 0 5px,
+      57px 19px 0 5px;
+  }
+  75% {
+    box-shadow:
+      19px -19px 0 0px,
+      38px -19px 0 5px,
+      57px -19px 0 0px,
+      19px 0 0 0px,
+      38px 0 0 0px,
+      57px 0 0 5px,
+      19px 19px 0 0px,
+      38px 19px 0 0px,
+      57px 19px 0 5px;
+  }
+  87.5% {
+    box-shadow:
+      19px -19px 0 0px,
+      38px -19px 0 5px,
+      57px -19px 0 0px,
+      19px 0 0 0px,
+      38px 0 0 5px,
+      57px 0 0 0px,
+      19px 19px 0 5px,
+      38px 19px 0 0px,
+      57px 19px 0 0px;
+  }
 }
 
 .input-loader {
-    color: #ca0b10;
-    width: 1px;
-    aspect-ratio: 1;
-    border-radius: 80%;
-    box-shadow: 19px 0 0 7px, 38px 0 0 3px, 57px 0 0 0;
-    animation: l21 .5s infinite alternate linear;
+  color: #ca0b10;
+  width: 1px;
+  aspect-ratio: 1;
+  border-radius: 80%;
+  box-shadow:
+    19px 0 0 7px,
+    38px 0 0 3px,
+    57px 0 0 0;
+  animation: l21 0.5s infinite alternate linear;
 }
 
 @keyframes l21 {
-    50% {
-        box-shadow: 19px 0 0 3px, 38px 0 0 7px, 57px 0 0 3px
-    }
-    100% {
-        box-shadow: 19px 0 0 0, 38px 0 0 3px, 57px 0 0 7px
-    }
+  50% {
+    box-shadow:
+      19px 0 0 3px,
+      38px 0 0 7px,
+      57px 0 0 3px;
+  }
+  100% {
+    box-shadow:
+      19px 0 0 0,
+      38px 0 0 3px,
+      57px 0 0 7px;
+  }
+}
+
+/* Define a custom animation for the background pulse */
+@keyframes pulse-bg-lr {
+  0% {
+    background-position: 0% 50%; /* Start position */
+  }
+  50% {
+    background-position: 100% 50%; /* Middle position */
+  }
+  100% {
+    background-position: 0% 50%; /* Return to start */
+  }
+}
+
+/* Apply the animation and gradient */
+.animate-pulse-bg-lr {
+  background: linear-gradient(
+    -45deg,
+    #ffffff,
+    #ffffff,
+    rgba(239, 177, 0, 0.4),
+    rgba(239, 177, 0, 0.4)
+  );
+  background-size: 400% 400%;
+  animation: pulse-bg-lr 3s ease infinite;
 }

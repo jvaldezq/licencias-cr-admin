@@ -89,7 +89,10 @@ export function DataTable<T>(props: Props<T>) {
               ? 'bg-yellow-500/[0.3]'
               : row?.original?.type?.name?.includes('Clase')
                 ? 'bg-[#8e24aa]/[0.3]'
-                : '';
+                : row?.original?.payment?.cashAdvance ==
+                    row?.original?.payment?.price
+                  ? 'animate-pulse-bg-lr'
+                  : '';
 
             return (
               <TableRow
