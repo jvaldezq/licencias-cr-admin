@@ -20,10 +20,23 @@ export interface FormInputProps
     Omit<InputWrapperProps, 'children'>,
     Omit<InputHTMLAttributes<HTMLInputElement>, 'label' | 'name' | 'onChange'> {
   icon?: JSX.Element;
-  mask?: string | object;
+  maskType?: string;
   hidden?: boolean;
   onFilter?: (value: string) => void;
 }
+
+const MASKS: Record<string, string | object> = {
+  number: {
+    mask: Number,
+    scale: 0,
+    signed: false,
+    padFractionalZeros: false,
+    normalizeZeros: true,
+    radix: '.',
+    mapToRadix: ['.'],
+    min: 0,
+  },
+};
 
 export const FormInput = forwardRef(
   (props: FormInputProps, ref: ForwardedRef<HTMLInputElement>) => {
@@ -40,7 +53,7 @@ export const FormInput = forwardRef(
       wrapperClassName,
       childrenClassName,
       icon,
-      mask,
+      maskType,
       hidden = false,
       onFilter,
       required,
@@ -49,16 +62,33 @@ export const FormInput = forwardRef(
     const { onChange, value, ...inputRest } = input;
     const myRef = useRef<HTMLInputElement | null>(null);
 
+    // useEffect(() => {
+    //   if (myRef?.current) {
+    //     if (mask) {
+    //       IMask(
+    //         myRef.current,
+    //         typeof mask === 'string' ? { mask: mask } : mask,
+    //       );
+    //     }
+    //   }
+    // }, [mask, hidden]);
+
     useEffect(() => {
       if (myRef?.current) {
-        if (mask) {
+        if (!maskType) {
+          return;
+        }
+        const maskPattern = MASKS[maskType!];
+        if (maskPattern) {
           IMask(
             myRef.current,
-            typeof mask === 'string' ? { mask: mask } : mask,
+            typeof maskPattern === 'string'
+              ? { mask: maskPattern }
+              : maskPattern,
           );
         }
       }
-    }, [mask, hidden]);
+    }, [maskType]);
 
     const myOnChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {

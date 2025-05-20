@@ -38,20 +38,21 @@ export const PriceForm = (props: FormProps) => {
         validate={(value) =>
           value !== undefined ? undefined : 'La description es requerida'
         }
+        wrapperClassName="md:col-span-2"
       />
       <Field
         name="priceClient"
         component={FormInput as unknown as SupportedInputs}
         placeholder="Precio cliente"
         label="Precio cliente"
-        wrapperClassName="md:col-span-2"
+        maskType="number"
       />
       <Field
         name="priceSchool"
         component={FormInput as unknown as SupportedInputs}
         placeholder="Precio escuela"
         label="Precio escuela"
-        wrapperClassName="md:col-span-2"
+        maskType="number"
       />
       <Field
         name="locationId"

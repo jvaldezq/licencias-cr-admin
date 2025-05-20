@@ -79,7 +79,11 @@ const PriceWrapper = (props: PriceWrapperProps) => {
         <FormSavingLoader message="Guardando información del Precio" />,
       );
       setIsLoading(true);
-      mutateAsync(data).then(() => {
+      mutateAsync({
+        ...data,
+        priceClient: +data.priceClient,
+        priceSchool: +data.priceSchool,
+      }).then(() => {
         setOpen(false);
         router.refresh();
       });
