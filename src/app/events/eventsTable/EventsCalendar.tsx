@@ -94,12 +94,12 @@ export const EventsCalendar = (props: Props) => {
               }}
             >
               <div
-                className={`rounded cursor-pointer transition-all duration-200 ${
+                className={`rounded cursor-pointer transition-all duration-200 flex flex-col items-center justify-center ${
                   isHovered ? 'scale-100' : 'scale-90'
                 }`}
                 style={{
-                  width: isHovered ? '230px' : '25px',
-                  height: isHovered ? '80px' : '15px',
+                  width: isHovered ? '230px' : '30px',
+                  height: isHovered ? '80px' : '20px',
                   backgroundColor: event?.type?.name?.includes('Clase')
                     ? '#8e24aa'
                     : event?.licenseType?.color,
@@ -109,6 +109,16 @@ export const EventsCalendar = (props: Props) => {
                 onMouseEnter={() => setHoveredEvent(event)}
                 onMouseLeave={() => setHoveredEvent(null)}
               >
+                {!isHovered && (
+                  <p className="text-white font-bold">
+                    {event?.asset?.name
+                      .trim()
+                      .split(/\s+/) // Split by any amount of whitespace
+                      .map((word) => word[0].toUpperCase())
+                      .join('')
+                      .slice(0, 2)}
+                  </p>
+                )}
                 {isHovered && (
                   <div className="py-1 text-xs text-white pl-8 pr-1 flex flex-col justify-center items-end text-end">
                     <div className="font-medium">
