@@ -82,6 +82,17 @@ export const EventsCalendar = (props: Props) => {
           const left = index * 30;
           const isHovered = hoveredEvent?.id === event.id;
 
+          const start = dayjs(
+            `2000-01-01 ${event?.customer?.schedule?.startTime}`,
+            'YYYY-MM-DD hh:mm A',
+          );
+          const end = dayjs(
+            `2000-01-01 ${event?.customer?.schedule?.endTime}`,
+            'YYYY-MM-DD hh:mm A',
+          );
+
+          const hoursDiff = end.diff(start, 'hour', true);
+
           return (
             <div
               onClick={() => handleClick(event)}
@@ -89,7 +100,7 @@ export const EventsCalendar = (props: Props) => {
               className="absolute"
               style={{
                 top: isHovered ? `${top - 50}px` : `${top}px`,
-                left: `${left}px`,
+                left: `${left * hoursDiff}px`,
                 zIndex: isHovered ? 50 : 1,
               }}
             >
@@ -98,7 +109,8 @@ export const EventsCalendar = (props: Props) => {
                   isHovered ? 'scale-100' : 'scale-90'
                 }`}
                 style={{
-                  width: isHovered ? '230px' : '30px',
+                  width: isHovered ? '230px' : event?.type?.name?.includes('Clase')
+                    ? `${hoursDiff * 30}px` : '30px',
                   height: isHovered ? '80px' : '20px',
                   backgroundColor: event?.type?.name?.includes('Clase')
                     ? '#8e24aa'
@@ -120,7 +132,7 @@ export const EventsCalendar = (props: Props) => {
                   </p>
                 )}
                 {isHovered && (
-                  <div className="py-1 text-xs text-white pl-8 pr-1 flex flex-col justify-center items-end text-end">
+                  <div className="py-1 text-xs text-white pl-8 pr-1 flex flex-col justify-center items-end text-end z-50">
                     <div className="font-medium">
                       {event?.licenseType?.name} / {event.type.name}
                     </div>
