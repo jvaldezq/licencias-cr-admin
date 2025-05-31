@@ -7,6 +7,7 @@ import { CreateEvent } from '@/app/events/forms/CreateEvent';
 import { EventsFilters } from '@/app/events/eventsTable/EventsFilters';
 import EventsTableWrapper from '@/app/events/eventsTable/EventsTableWrapper';
 import ReferredTableWrapper from '@/app/events/referredTable/ReferredTableWrapper';
+import { Inactivity } from '@/app/events/Inactivity';
 
 interface Props {
   searchParams: {
@@ -34,6 +35,7 @@ export default async function Events(props: Props) {
 
   return (
     <main className="max-w-screen-2xl mx-auto px-6 pt-24 pb-8">
+      <Inactivity />
       <div className="flex justify-between items-center my-4">
         <h1 className="font-semibold text-3xl text-secondary animate-fade-right animate-once animate-duration-500 animate-delay-100 animate-ease-in">
           Citas
