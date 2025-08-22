@@ -8,6 +8,8 @@
 * {
   font-family: 'Montserrat Variable', sans-serif;
   box-sizing: border-box;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 button:focus,
@@ -165,4 +167,16 @@ svg:focus-visible {
   );
   background-size: 400% 400%;
   animation: pulse-bg-lr 3s ease infinite;
+}
+
+/* globals.css */
+html,
+body,
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }

@@ -233,6 +233,7 @@ export interface IEventFilter {
   instructorId: string;
   licenseTypeId: string;
   searchTerm: string;
+  assetId?: string;
 }
 
 export interface IAssetFilter {

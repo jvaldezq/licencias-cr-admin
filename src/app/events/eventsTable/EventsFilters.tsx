@@ -16,6 +16,7 @@ import {
   useGetInstructorListByLocationId,
   useGetLocationList,
 } from '@/app/events/services/client';
+import { useGetAssetsByLocationId } from '@/app/events/services/client';
 import { usePathname, useRouter } from 'next/navigation';
 import { CloseCircleIcon } from '@/assets/icons/CloseCircleIcon';
 import { FormInput } from '@/components/Forms/Input/FormInput';
@@ -46,6 +47,7 @@ export const EventsFilters = (props: Props) => {
       date: new Date(),
       locationId: props.user?.location?.id,
       instructorId: undefined,
+      assetId: undefined,
       searchTerm: undefined,
     });
     params.set('filters', btoa(newFilters));
@@ -101,6 +103,8 @@ const FiltersForm = (props: FiltersFormProps) => {
     useGetLocationList();
   const { data: instructors, isLoading: isInstructorsLoading } =
     useGetInstructorListByLocationId(values?.locationId);
+  const { data: assets, isLoading: isAssetsLoading } =
+    useGetAssetsByLocationId(values?.locationId);
 
   const debouncedOnFilter = useMemo(
     () =>
@@ -171,6 +175,29 @@ const FiltersForm = (props: FiltersFormProps) => {
               onClick={(event) => {
                 event.preventDefault();
                 handleFilterUpdate({ instructorId: undefined });
+              }}
+            />
+          ) : undefined
+        }
+      />
+
+      <Field
+        name="assetId"
+        component={FormDropdown as unknown as SupportedInputs}
+        placeholder="Vehículo"
+        label="Vehículo"
+        options={assets || []}
+        onFilter={(value: number) => {
+          handleFilterUpdate({ assetId: value });
+        }}
+        isLoading={isAssetsLoading}
+        secondaryAction={
+          values.assetId ? (
+            <CloseCircleIcon
+              className="hover:[&>path]:fill-secondary"
+              onClick={(event) => {
+                event.preventDefault();
+                handleFilterUpdate({ assetId: undefined });
               }}
             />
           ) : undefined

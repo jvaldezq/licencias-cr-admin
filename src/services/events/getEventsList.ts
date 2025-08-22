@@ -43,6 +43,14 @@ export const getEventsList = async (filters: IEventFilter) => {
         }
       : undefined;
 
+    const assetId = filters?.assetId
+      ? {
+          assetId: {
+            equals: filters.assetId,
+          },
+        }
+      : undefined;
+
     const events = await prisma.event.findMany({
       select: {
         id: true,
@@ -92,6 +100,7 @@ export const getEventsList = async (filters: IEventFilter) => {
         ...dateFilter,
         ...locationFilter,
         ...instructorId,
+        ...assetId,
         status: {
           not: EventStatus.DELETED,
         },

@@ -113,6 +113,26 @@ export const useGetInstructorListByLocationId = (id: string) => {
   });
 };
 
+const getAssetsByLocationId = async (id: string): Promise<IAsset[]> => {
+  const assetList = await clientApi.get('/assets', {
+    params: {
+      locationId: id,
+    },
+  });
+  return assetList.data;
+};
+
+export const useGetAssetsByLocationId = (id: string) => {
+  return useQuery({
+    enabled: !!id,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    queryKey: ['assets-by-location', id],
+    queryFn: () => getAssetsByLocationId(id),
+    retry: 2,
+  });
+};
+
 const getEventTypesList = async (): Promise<IEventType[]> => {
   const locationList = await clientApi.get('/event-type', {
     params: {
