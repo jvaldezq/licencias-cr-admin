@@ -18,7 +18,7 @@ import { LicenseIcon } from '@/assets/icons/LicenseIcon';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { PeopleIcon } from '@/assets/icons/PeopleIcon';
 import { SalesIcon } from '@/assets/icons/SalesIcon';
-import { Banknote, Contact, Video } from 'lucide-react';
+import { Banknote, Contact, Video, Gift } from 'lucide-react';
 
 interface Props {
   trigger: ReactNode;
@@ -122,6 +122,16 @@ export const HeaderMenu = (props: Props) => {
               <p className="font-light text-xs pb-1 border-b border-primary/[0.2] text-primary/[0.7] border-solid">
                 Administrador
               </p>
+              <SheetClose asChild aria-describedby="Promo Navideña">
+                <Link
+                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/promo-navidena' && isSelected}`}
+                  key="promo-navidena"
+                  href="/promo-navidena"
+                >
+                  <Gift className="text-amber-600" /> Promo Navideña
+                </Link>
+              </SheetClose>
+
               <SheetClose asChild aria-describedby="Sedes">
                 <Link
                   className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path === '/locations' && isSelected}`}

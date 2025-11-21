@@ -23,7 +23,7 @@ Esta sería nuestra ubicación en Waze: https://waze.com/ul/hd1gcmvhkm
 
 *Por favor ser puntual para poder realizar la preparación completa.*
 
-Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://firebasestorage.googleapis.com/v0/b/carrocr-6bcb0.appspot.com/o/Reglamento.pdf?alt=media&token=f9223640-3f81-400d-89f2-5a9bb5663ff8
+Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://www.licenciacostarica.com/assets/ReglamentoEvaluacion.pdf
 
 **Le informamos que en nuestra oficina el método de pago autorizado es exclusivamente en efectivo.
 No recibimos sinpe móvil, tarjeta ni transferencia bancaria.**`;
@@ -34,7 +34,7 @@ Esta sería nuestra ubicación en Waze: https://waze.com/ul/hd1u0qu1zm
 
 *Por favor ser puntual para poder realizar la preparación completa.*
 
-Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://firebasestorage.googleapis.com/v0/b/carrocr-6bcb0.appspot.com/o/Reglamento.pdf?alt=media&token=f9223640-3f81-400d-89f2-5a9bb5663ff8
+Te envío el reglamento de evaluación para que tengas claro los puntos a evaluar en la prueba: https://www.licenciacostarica.com/assets/ReglamentoEvaluacion.pdf
 
 **Le informamos que en nuestra oficina el método de pago autorizado es exclusivamente en efectivo.
 No recibimos sinpe móvil, tarjeta ni transferencia bancaria.**`;

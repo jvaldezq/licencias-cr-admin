@@ -13,7 +13,8 @@ import { PaymentEvent } from '@/app/events/forms/PaymentEvent';
 import { ViewEvent } from '@/app/events/forms/ViewEvent';
 import { useCallback, useState } from 'react';
 import { Dropdown } from '@/components/Dropdown';
-import { List, Trash2, Eye, PenLine, HandCoins } from 'lucide-react';
+import { List, Trash2, Eye, PenLine, HandCoins, Bike } from 'lucide-react';
+import { Popover } from '@/components/Popover';
 
 dayjs.extend(advancedFormat);
 
@@ -155,7 +156,16 @@ export const ReferredTable = (props: Props) => {
       },
       cell: ({ row }: { row: Row<IEvent> }) => {
         const name = row?.original?.customer?.name;
-        return <div className="capitalize">{name}</div>;
+        return (
+          <div className="capitalize flex gap-2 items-center">
+            <p>{name}</p>
+            {row?.original?.hasPromo && (
+              <Popover text="Participante de Promo">
+                <Bike className="h-4 w-4 cursor-pointer text-error" />
+              </Popover>
+            )}
+          </div>
+        );
       },
     },
     {

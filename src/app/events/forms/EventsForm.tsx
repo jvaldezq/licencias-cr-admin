@@ -343,6 +343,15 @@ export const EventForm = (props: EventFormProps) => {
       />
 
       <Field
+        name="hasPromo"
+        component={FormSwitch as unknown as SupportedInputs}
+        placeholder="🎁 Participante de Promo"
+        label="🎁 Participante de Promo"
+        hidden={!showPriceInfo}
+        className="text-amber-600"
+      />
+
+      <Field
         name="notes"
         component={FormTextarea as unknown as SupportedInputs}
         type=""

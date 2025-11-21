@@ -69,6 +69,7 @@ export const getEventsList = async (filters: IEventFilter) => {
           },
         },
         hasMedical: true,
+        hasPromo: true,
         customer: {
           select: {
             name: true,
@@ -162,6 +163,7 @@ export const getEventsReferredList = async (filters: IEventFilter) => {
         time: true,
         notes: true,
         hasMedical: true,
+        hasPromo: true,
         noShow: true,
         hasBeenContacted: true,
         location: {

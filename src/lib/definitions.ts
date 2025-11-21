@@ -101,6 +101,7 @@ export interface IEvent {
   school?: ISchool;
   hasBeenContacted?: boolean;
   noShow?: boolean;
+  hasPromo?: boolean;
 }
 
 export interface ICustomer {
@@ -225,6 +226,7 @@ export interface IEventForm {
   hasMedical?: boolean;
   isExternalReferred?: boolean;
   isInternalReferred?: boolean;
+  hasPromo?: boolean;
 }
 
 export interface IEventFilter {

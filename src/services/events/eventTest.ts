@@ -95,6 +95,7 @@ export const createTest = async (data: IEventForm) => {
           hasMedical: data.hasMedical,
           isExternalReferred: data.isExternalReferred,
           isInternalReferred: data.isInternalReferred,
+          hasPromo: data.hasPromo,
         },
       });
 
@@ -233,6 +234,7 @@ export const updateTest = async (
           hasMedical: true,
           isInternalReferred: true,
           isExternalReferred: true,
+          hasPromo: true,
         },
         data: {
           assetId: data.assetId,
@@ -248,6 +250,7 @@ export const updateTest = async (
           hasMedical: data.hasMedical,
           isExternalReferred: data.isExternalReferred,
           isInternalReferred: data.isInternalReferred,
+          hasPromo: data.hasPromo,
         },
       });
 

@@ -115,6 +115,7 @@ model Event {
   hasMedical    Boolean      @default(false)
   hasBeenContacted      Boolean?      @default(false)
   noShow       Boolean?      @default(false)
+  hasPromo      Boolean      @default(false)
   type          EventType    @relation(fields: [typeId], references: [id])
   Log Log[]
 

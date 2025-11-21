@@ -37,6 +37,7 @@ import {
   PenLine,
   HandCoins,
   Award,
+  Bike,
 } from 'lucide-react';
 import { PracticingEvent } from '@/app/events/forms/PracticingEvent';
 import { Popover } from '@/components/Popover';
@@ -259,6 +260,13 @@ export const EventsTable = (props: Props) => {
                 {isTestType && (
                   <Popover text={awardText}>
                     <Award className={`h-4 w-4 cursor-pointer ${awardColor}`} />
+                  </Popover>
+                )}
+              </p>
+              <p>
+                {row?.original?.hasPromo && (
+                  <Popover text="Participante de Promo">
+                    <Bike className="h-4 w-4 cursor-pointer text-error" />
                   </Popover>
                 )}
               </p>

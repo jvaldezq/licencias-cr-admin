@@ -77,6 +77,7 @@ export const createClass = async (data: IEventForm) => {
           hasMedical: data.hasMedical,
           isExternalReferred: data.isExternalReferred,
           isInternalReferred: data.isInternalReferred,
+          hasPromo: data.hasPromo,
         },
       });
 
@@ -201,6 +202,7 @@ export const updateClass = async (
           hasMedical: true,
           isInternalReferred: true,
           isExternalReferred: true,
+          hasPromo: true,
         },
         where: { id },
         data: {
@@ -217,6 +219,7 @@ export const updateClass = async (
           hasMedical: data.hasMedical,
           isExternalReferred: data.isExternalReferred,
           isInternalReferred: data.isInternalReferred,
+          hasPromo: data.hasPromo,
         },
       });
 
