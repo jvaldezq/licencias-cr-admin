@@ -1,30 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async headers() {
-    return [
-      {
-        source: '/api/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: 'http://localhost:3000,https://www.licenciacostarica.com',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization',
-          },
-          {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true',
-          },
-        ],
-      },
-    ];
-  },
+  // CORS headers are now handled in middleware.ts
 };
 
 export default nextConfig;
