@@ -7,12 +7,12 @@ const allowedOrigins = [
   'https://www.licenciacostarica.com'
 ];
 
-function corsMiddleware(request: NextRequest) {
-  const origin = request.headers.get('origin');
-  const isAllowedOrigin = origin && allowedOrigins.includes(origin);
-
-  // Handle preflight OPTIONS request
+export default withMiddlewareAuthRequired(async function middleware(request: NextRequest) {
+  // Handle preflight OPTIONS requests (these don't need auth)
   if (request.method === 'OPTIONS') {
+    const origin = request.headers.get('origin');
+    const isAllowedOrigin = origin && allowedOrigins.includes(origin);
+
     return new NextResponse(null, {
       status: 204,
       headers: {
@@ -25,27 +25,23 @@ function corsMiddleware(request: NextRequest) {
     });
   }
 
-  // Handle actual request
+  // Continue with Auth0 protection for all routes
   const response = NextResponse.next();
 
-  if (isAllowedOrigin) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    response.headers.set('Access-Control-Allow-Credentials', 'true');
+  // Apply CORS headers to API routes after auth
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    const origin = request.headers.get('origin');
+    const isAllowedOrigin = origin && allowedOrigins.includes(origin);
+
+    if (isAllowedOrigin) {
+      response.headers.set('Access-Control-Allow-Origin', origin);
+      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      response.headers.set('Access-Control-Allow-Credentials', 'true');
+    }
   }
 
   return response;
-}
-
-export default withMiddlewareAuthRequired(async function middleware(request: NextRequest) {
-  // Apply CORS middleware for API routes (bypass auth)
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    return corsMiddleware(request);
-  }
-
-  // Continue with Auth0 protection for non-API routes
-  return NextResponse.next();
 });
 
 export const config = {
