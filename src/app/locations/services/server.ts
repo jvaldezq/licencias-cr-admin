@@ -1,12 +1,19 @@
-import {serverApi} from "@/lib/serverApi";
+import prisma from "@/lib/prisma";
 import {ILocation} from "@/lib/definitions";
 
 export const fetchLocations = async (): Promise<ILocation[]> => {
     try {
-        const response = await serverApi({
-            method: 'GET', path: '/location'
+        const locations = await prisma.location.findMany({
+            select: {
+                id: true,
+                name: true,
+                status: true,
+            },
+            orderBy: {
+                name: 'asc'
+            }
         });
-        return response as ILocation[];
+        return locations as ILocation[];
     } catch (error) {
         console.error("Error fetching locations", error);
         return [] as ILocation[];
