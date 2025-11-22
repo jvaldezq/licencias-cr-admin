@@ -7,15 +7,6 @@ const allowedOrigins = [
   'https://www.licenciacostarica.com'
 ];
 
-// Public routes that don't require authentication
-const publicRoutes = [
-  '/api/assessments'
-];
-
-function isPublicRoute(pathname: string): boolean {
-  return publicRoutes.some(route => pathname.startsWith(route));
-}
-
 function applyCorsHeaders(response: NextResponse, request: NextRequest): NextResponse {
   const origin = request.headers.get('origin');
   const isAllowedOrigin = origin && allowedOrigins.includes(origin);
@@ -50,24 +41,14 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  // Handle public routes without auth
-  if (isPublicRoute(pathname)) {
-    const response = NextResponse.next();
-    return applyCorsHeaders(response, request);
-  }
+  // Check for Auth0 session but don't block if missing
+  // This allows Auth0 to work when session exists, but doesn't return 401 when it doesn't
+  await getSession(request, NextResponse.next());
 
-  // For protected routes, check Auth0 session
-  const session = await getSession(request, NextResponse.next());
-
-  if (!session) {
-    // Redirect to Auth0 login
-    return NextResponse.redirect(new URL('/api/auth/login', request.url));
-  }
-
-  // Continue with Auth0 protection for all other routes
+  // Allow all requests to continue (no blocking)
   const response = NextResponse.next();
 
-  // Apply CORS headers to API routes after auth
+  // Apply CORS headers to API routes
   if (pathname.startsWith('/api/')) {
     return applyCorsHeaders(response, request);
   }
