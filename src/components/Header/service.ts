@@ -1,4 +1,4 @@
-import {serverApi} from "@/lib/serverApi";
+import prisma from "@/lib/prisma";
 import {IUser} from "@/lib/definitions";
 
 interface SearchParamsProps {
@@ -7,12 +7,29 @@ interface SearchParamsProps {
 
 export const fetchUserInfo = async (searchParams: SearchParamsProps): Promise<IUser> => {
     try {
-        const response = await serverApi({
-            method: 'GET', path: '/user', params: searchParams
+        const { userId } = searchParams;
+
+        if (!userId) {
+            return {} as IUser;
+        }
+
+        const user = await prisma.user.findFirst({
+            select: {
+                id: true,
+                name: true,
+                location: true,
+                access: true,
+            },
+            where: {
+                authId: {
+                    equals: userId,
+                },
+            },
         });
-        return response as IUser;
+
+        return user as IUser;
     } catch (error) {
-        console.error("Error parsing filters:", error);
+        console.error("Error fetching user info:", error);
         return {} as IUser;
     }
 };
