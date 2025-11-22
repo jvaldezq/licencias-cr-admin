@@ -18,7 +18,7 @@ import { LicenseIcon } from '@/assets/icons/LicenseIcon';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { PeopleIcon } from '@/assets/icons/PeopleIcon';
 import { SalesIcon } from '@/assets/icons/SalesIcon';
-import { Banknote, Contact, Video, Gift } from 'lucide-react';
+import { Banknote, Contact, Video, Gift, FileText } from 'lucide-react';
 
 interface Props {
   trigger: ReactNode;
@@ -129,6 +129,16 @@ export const HeaderMenu = (props: Props) => {
                   href="/promo-navidena"
                 >
                   <Gift className="text-amber-600" /> Promo Navideña
+                </Link>
+              </SheetClose>
+
+              <SheetClose asChild aria-describedby="Evaluaciones">
+                <Link
+                  className={`text-sm flex gap-2 py-3 px-2 rounded text-primary hover:font-bold items-center ${path?.startsWith('/admin/assessments') && isSelected}`}
+                  key="assessments"
+                  href="/admin/assessments"
+                >
+                  <FileText /> Manuales de Evaluación
                 </Link>
               </SheetClose>
 

@@ -118,9 +118,12 @@ const SearchDialog = (props: Props) => {
   const { data, isLoading } = useGetSearchEvents(search);
 
   const debouncedSubmit = useCallback(
-    debounce((values: SearchFormProps) => {
-      setSearch(values?.search);
-    }, 500),
+    (values: SearchFormProps) => {
+      const debouncedFn = debounce(() => {
+        setSearch(values?.search);
+      }, 500);
+      debouncedFn();
+    },
     [setSearch],
   );
   const allowActions = user?.access?.receptionist || user?.access?.admin;

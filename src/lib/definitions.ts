@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import { ManualStatus } from '@prisma/client';
 
 export interface ILocation {
   id: string;
@@ -355,4 +356,81 @@ export enum TaskStatus {
   COMPLETED = 'COMPLETED',
   DELETED = 'DELETED',
   PENDING = 'PENDING',
+}
+
+// Assessment System Types
+export interface IManual {
+  id: string;
+  title: string;
+  description?: string | null;
+  status: ManualStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  chapters?: IChapter[];
+}
+
+export { ManualStatus };
+
+export interface IChapter {
+  id: string;
+  manualId: string;
+  manual?: IManual;
+  title: string;
+  order: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  questions?: IQuestion[];
+}
+
+export interface IQuestion {
+  id: string;
+  chapterId: string;
+  chapter?: IChapter;
+  text: string;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+  answers?: IAnswer[];
+}
+
+export interface IAnswer {
+  id: string;
+  questionId: string;
+  question?: IQuestion;
+  text: string;
+  isCorrect: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IManualForm {
+  id?: string;
+  title: string;
+  description?: string | null;
+  status?: ManualStatus;
+}
+
+export interface IChapterForm {
+  id?: string;
+  manualId: string;
+  title: string;
+  order?: number;
+  content?: string;
+}
+
+export interface IQuestionForm {
+  id?: string;
+  chapterId: string;
+  text: string;
+  order?: number;
+  answers: IAnswerForm[];
+}
+
+export interface IAnswerForm {
+  id?: string;
+  text: string;
+  isCorrect: boolean;
+  order: number;
 }

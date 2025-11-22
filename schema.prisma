@@ -285,3 +285,59 @@ model AssetMaintenance {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 }
+
+model Manual {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  status      ManualStatus  @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  chapters    Chapter[]
+}
+
+enum ManualStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Chapter {
+  id          String      @id @default(cuid())
+  manualId    String
+  manual      Manual      @relation(fields: [manualId], references: [id], onDelete: Cascade)
+  title       String
+  order       Int
+  content     String      @db.Text
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  questions   Question[]
+
+  @@index([manualId])
+}
+
+model Question {
+  id          String      @id @default(cuid())
+  chapterId   String
+  chapter     Chapter     @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  text        String      @db.Text
+  order       Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  answers     Answer[]
+
+  @@index([chapterId])
+}
+
+model Answer {
+  id          String      @id @default(cuid())
+  questionId  String
+  question    Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text        String
+  isCorrect   Boolean     @default(false)
+  order       Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([questionId])
+}
