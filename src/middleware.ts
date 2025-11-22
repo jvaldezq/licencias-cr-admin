@@ -38,15 +38,15 @@ function corsMiddleware(request: NextRequest) {
   return response;
 }
 
-export default function middleware(request: NextRequest) {
-  // Apply CORS middleware for API routes
+export default withMiddlewareAuthRequired(async function middleware(request: NextRequest) {
+  // Apply CORS middleware for API routes (bypass auth)
   if (request.nextUrl.pathname.startsWith('/api/')) {
     return corsMiddleware(request);
   }
 
-  // Apply Auth0 middleware for protected pages
-  return withMiddlewareAuthRequired()(request);
-}
+  // Continue with Auth0 protection for non-API routes
+  return NextResponse.next();
+});
 
 export const config = {
   matcher: ["/api/:path*", "/events", "/locations", "/assets", "/licenses", "/people"],
