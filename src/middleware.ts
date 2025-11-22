@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withMiddlewareAuthRequired, getSession } from "@auth0/nextjs-auth0/edge";
+import { getSession } from "@auth0/nextjs-auth0/edge";
 
 const allowedOrigins = [
   'http://localhost:3000',
