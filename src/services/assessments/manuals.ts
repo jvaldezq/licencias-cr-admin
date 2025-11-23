@@ -348,11 +348,7 @@ export async function gradeAssessment(
   let summary = 'Great job! You answered all questions correctly.';
 
   if (shouldReview) {
-    const chapterNames = weakChapters
-      .slice(0, 3)
-      .map((ch) => ch.chapterTitle)
-      .join(', ');
-    summary = `Review: ${chapterNames}`;
+    summary = '';
   }
 
   return {

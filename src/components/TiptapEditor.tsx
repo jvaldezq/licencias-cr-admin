@@ -4,7 +4,6 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Underline from '@tiptap/extension-underline';
-import { CldUploadWidget } from 'next-cloudinary';
 import {
   Bold,
   Italic,
@@ -16,7 +15,7 @@ import {
   Undo,
   Redo,
 } from 'lucide-react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 interface TiptapEditorProps {
   content: string;
@@ -30,6 +29,9 @@ export function TiptapEditor({
   onChange,
   minHeight = '200px',
 }: TiptapEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   // Parse content if it's a JSON string, otherwise use as-is
   const parsedContent = useMemo(() => {
     if (!content) return '';
@@ -75,11 +77,58 @@ export function TiptapEditor({
 
   const addImage = useCallback(
     (url: string) => {
-      if (editor) {
-        editor.chain().focus().setImage({ src: url }).run();
+      if (editor && !editor.isDestroyed) {
+        try {
+          editor.chain().focus().setImage({ src: url }).run();
+        } catch (error) {
+          console.error('Error inserting image:', error);
+        }
       }
     },
     [editor]
+  );
+
+  const handleFileSelect = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      setIsUploading(true);
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append(
+          'upload_preset',
+          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'default'
+        );
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        addImage(data.secure_url);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Error al subir la imagen. Por favor intenta de nuevo.');
+      } finally {
+        setIsUploading(false);
+        // Reset the input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }
+    },
+    [addImage]
   );
 
   if (!editor) {
@@ -167,27 +216,26 @@ export function TiptapEditor({
 
         <div className="w-px bg-gray-300 mx-1" />
 
-        <CldUploadWidget
-          uploadPreset={
-            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'default'
-          }
-          onSuccess={(result: { info?: { secure_url: string } | string }) => {
-            if (result.info && typeof result.info !== 'string') {
-              addImage(result.info.secure_url);
-            }
-          }}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className={`p-2 rounded hover:bg-gray-200 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          title="Insert Image"
         >
-          {({ open }) => (
-            <button
-              type="button"
-              onClick={() => open()}
-              className="p-2 rounded hover:bg-gray-200"
-              title="Insert Image"
-            >
-              <ImageIcon className="w-4 h-4" />
-            </button>
+          {isUploading ? (
+            <span className="w-4 h-4 inline-block animate-spin">⏳</span>
+          ) : (
+            <ImageIcon className="w-4 h-4" />
           )}
-        </CldUploadWidget>
+        </button>
 
         <div className="w-px bg-gray-300 mx-1" />
 

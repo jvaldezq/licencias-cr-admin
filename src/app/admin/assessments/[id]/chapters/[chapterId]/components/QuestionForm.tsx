@@ -7,10 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TiptapEditor } from '@/components/TiptapEditor';
+import { RichTextDisplay } from '@/components/RichTextDisplay';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { useCreateQuestionMutation, useUpdateQuestionMutation } from '../../../../services/client';
 import { IQuestion, IAnswerForm } from '@/lib/definitions';
 import { toast } from 'sonner';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Eye } from 'lucide-react';
 
 interface QuestionFormProps {
   chapterId: string;
@@ -30,6 +37,7 @@ export function QuestionForm({ chapterId, question, onSuccess }: QuestionFormPro
     })) || [
       { text: '', isCorrect: true, order: 1 },
       { text: '', isCorrect: false, order: 2 },
+      { text: '', isCorrect: false, order: 3 },
     ]
   );
 
@@ -119,6 +127,10 @@ export function QuestionForm({ chapterId, question, onSuccess }: QuestionFormPro
   const isLoading = createMutation.isLoading || updateMutation.isLoading;
   const correctAnswerIndex = answers.findIndex((a) => a.isCorrect);
 
+  const getAnswerLetter = (index: number) => {
+    return String.fromCharCode(65 + index); // A, B, C, D
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
@@ -193,6 +205,89 @@ export function QuestionForm({ chapterId, question, onSuccess }: QuestionFormPro
           Selecciona el círculo para marcar la respuesta correcta
         </p>
       </div>
+
+      {/* Question Preview Section */}
+      <Accordion type="single" collapsible>
+        <AccordionItem value="preview">
+          <AccordionTrigger className="text-base font-medium">
+            <div className="flex items-center gap-2">
+              <Eye className="w-4 h-4" />
+              Vista Previa de la Pregunta
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="border rounded-lg p-6 bg-gray-50">
+              {/* Question Text */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium text-gray-600">Pregunta:</span>
+                </div>
+                <div className="bg-white p-4 rounded-lg border">
+                  {text ? (
+                    <RichTextDisplay content={text} />
+                  ) : (
+                    <p className="text-gray-400 italic">
+                      El texto de la pregunta aparecerá aquí...
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Answer Options */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-sm font-medium text-gray-600">Opciones:</span>
+                </div>
+                <div className="space-y-3">
+                  {answers.map((answer, index) => {
+                    const isCorrect = answer.isCorrect;
+                    return (
+                      <div
+                        key={index}
+                        className={`
+                          p-4 rounded-lg border-2 transition-all
+                          ${
+                            isCorrect
+                              ? 'border-green-500 bg-green-50'
+                              : 'border-gray-200 bg-white'
+                          }
+                        `}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div
+                            className={`
+                              flex items-center justify-center w-8 h-8 rounded-full shrink-0 font-semibold text-sm
+                              ${
+                                isCorrect
+                                  ? 'bg-green-500 text-white'
+                                  : 'bg-gray-100 text-gray-700'
+                              }
+                            `}
+                          >
+                            {getAnswerLetter(index)}
+                          </div>
+                          <div className="flex-1 text-gray-700">
+                            {answer.text || (
+                              <span className="text-gray-400 italic">
+                                Texto de la respuesta {index + 1}...
+                              </span>
+                            )}
+                          </div>
+                          {isCorrect && (
+                            <span className="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded">
+                              Correcta
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <div className="flex justify-end gap-2 pt-4">
         <Button type="submit" disabled={isLoading}>
